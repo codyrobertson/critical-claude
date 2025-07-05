@@ -856,21 +856,24 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: 'brutal_timeline',
-        description: 'Generate a brutal reality-check implementation plan with realistic timelines',
+        description:
+          'Generate brutal reality-based project plans from natural language. Say things like "I want to build X" or "Here\'s my PRD, make me a plan" or "Based on this requirements doc, give me a timeline"',
         inputSchema: {
           type: 'object',
           properties: {
-            requirement: {
+            input: {
               type: 'string',
-              description: 'The feature or project requirement/description',
+              description:
+                'Natural language description of what you want to build. Can be a simple request like "user authentication system", a detailed requirements document, a PRD, or any project description. The tool will intelligently extract requirements and generate a realistic plan.',
             },
             estimatedDays: {
               type: 'number',
-              description: 'Your optimistic estimate in days (default: 10)',
+              description:
+                'Your optimistic estimate in days (optional - tool will estimate if not provided)',
             },
             context: {
               type: 'object',
-              description: 'Project context',
+              description: 'Additional context (all optional)',
               properties: {
                 teamSize: {
                   type: 'number',
@@ -888,7 +891,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               },
             },
           },
-          required: ['requirement'],
+          required: ['input'],
         },
       },
     ],
@@ -1157,23 +1160,34 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     case 'brutal_timeline': {
-      const requirement = String(request.params.arguments?.requirement || '');
-      const estimatedDays = Number(request.params.arguments?.estimatedDays || 10);
+      const input = String(request.params.arguments?.input || '');
+      const estimatedDays = Number(request.params.arguments?.estimatedDays || 0); // 0 means auto-estimate
       const context = request.params.arguments?.context || {};
 
-      if (!requirement) {
-        logger.error('Missing requirement parameter');
-        throw new Error('Requirement description is required for brutal timeline generation');
+      if (!input) {
+        logger.error('Missing input parameter');
+        throw new Error('Input description is required for brutal timeline generation');
       }
 
-      logger.info('Generating brutal timeline', { requirement, estimatedDays });
+      logger.info('Generating brutal timeline from natural language input', {
+        input,
+        estimatedDays,
+      });
 
       try {
         const planEngine = new BrutalPlanEngine();
+
+        // Extract structured requirements from natural language input
+        const extractedRequirements = planEngine.extractRequirements(input);
+
         const { filename, content } = await planEngine.generatePlan({
-          requirement,
-          estimatedDays,
-          context: context as any,
+          requirement: extractedRequirements.requirement,
+          estimatedDays: estimatedDays || extractedRequirements.estimatedDays,
+          context: {
+            ...context,
+            ...extractedRequirements.context,
+            originalInput: input,
+          } as any,
         });
 
         logger.info('Brutal timeline generated successfully', { filename });
@@ -1191,7 +1205,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           ],
         };
       } catch (error) {
-        logger.error('Failed to generate brutal timeline', { requirement }, error as Error);
+        logger.error('Failed to generate brutal timeline', { input }, error as Error);
         throw new Error(`Failed to generate brutal timeline: ${(error as Error).message}`);
       }
     }

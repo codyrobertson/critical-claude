@@ -20,6 +20,7 @@ interface BrutalPlanRequest {
     complexityFactors?: string[];
     efficiencyFactors?: string[];
     customMultiplier?: number; // Override base multiplier entirely
+    originalInput?: string; // Original natural language input
   };
 }
 
@@ -46,6 +47,179 @@ interface BrutalAnalysis {
 
 export class BrutalPlanEngine {
   private config: BrutalConfig | null = null;
+
+  /**
+   * Simple extraction - let the AI handle the complexity
+   */
+  extractRequirements(input: string): {
+    requirement: string;
+    estimatedDays: number;
+    context: Partial<BrutalPlanRequest['context']>;
+  } {
+    // Simple approach - just use the input as-is and let the plan generation handle the intelligence
+    return {
+      requirement: input,
+      estimatedDays: 10, // Default estimate
+      context: {
+        originalInput: input,
+      },
+    };
+  }
+
+  /**
+   * Process natural language input using AI-style prompting
+   * This simulates how an AI would understand and extract requirements
+   */
+  private processNaturalLanguageInput(request: BrutalPlanRequest): {
+    title: string;
+    featureType: string;
+    complexityFactors: string[];
+    efficiencyFactors: string[];
+  } {
+    const input = request.context?.originalInput || request.requirement;
+    const lower = input.toLowerCase();
+
+    // AI-style understanding of the request
+    const analysis = this.analyzeInputLikeAI(input);
+
+    // Extract a clean title from the input
+    let title = input;
+
+    // Handle different input patterns
+    if (lower.startsWith('i want to') || lower.startsWith('i need to')) {
+      title = input.replace(/^i (want|need) to /i, '').trim();
+      title = title.charAt(0).toUpperCase() + title.slice(1);
+    } else if (lower.startsWith('create') || lower.startsWith('build')) {
+      title = input.charAt(0).toUpperCase() + input.slice(1);
+    } else if (input.includes('\n')) {
+      // Multi-line input - likely a PRD or document
+      const lines = input.split('\n');
+      const firstMeaningfulLine = lines.find(
+        (line) => line.trim() && !line.startsWith('#') && line.length > 10
+      );
+      title = firstMeaningfulLine || 'Project Requirements Document';
+    }
+
+    // Truncate if too long
+    if (title.length > 100) {
+      title = title.substring(0, 97) + '...';
+    }
+
+    return {
+      title,
+      featureType: analysis.featureType,
+      complexityFactors: analysis.complexityFactors,
+      efficiencyFactors: analysis.efficiencyFactors,
+    };
+  }
+
+  /**
+   * Analyze input as an AI would - understanding context, implications, and hidden complexity
+   */
+  private analyzeInputLikeAI(input: string): {
+    featureType: string;
+    complexityFactors: string[];
+    efficiencyFactors: string[];
+  } {
+    const lower = input.toLowerCase();
+
+    // Determine feature type based on semantic understanding
+    let featureType = 'default';
+
+    // Authentication/Security features
+    if (lower.match(/\b(auth|login|sign\s*(up|in)|password|oauth|sso|2fa|security)\b/)) {
+      featureType = 'auth';
+    }
+    // Payment/Financial features
+    else if (lower.match(/\b(payment|billing|checkout|stripe|paypal|subscription|invoice)\b/)) {
+      featureType = 'payment';
+    }
+    // Search/Discovery features
+    else if (lower.match(/\b(search|filter|find|discover|query|elastic|algolia)\b/)) {
+      featureType = 'search';
+    }
+    // File/Media handling
+    else if (lower.match(/\b(upload|file|image|video|media|s3|cdn|attachment)\b/)) {
+      featureType = 'upload';
+    }
+    // API/Integration features
+    else if (lower.match(/\b(api|endpoint|rest|graphql|webhook|integration)\b/)) {
+      featureType = 'api';
+    }
+    // Analytics/Reporting
+    else if (lower.match(/\b(dashboard|analytics|report|metric|chart|visualization)\b/)) {
+      featureType = 'reporting';
+    }
+    // Mobile features
+    else if (lower.match(/\b(mobile|ios|android|app|native|flutter|react native)\b/)) {
+      featureType = 'mobile';
+    }
+    // Data processing
+    else if (lower.match(/\b(data|etl|pipeline|migration|import|export|batch)\b/)) {
+      featureType = 'data';
+    }
+    // UI/Frontend features
+    else if (lower.match(/\b(ui|interface|frontend|design|component|layout|responsive)\b/)) {
+      featureType = 'ui';
+    }
+
+    // Detect complexity factors from context
+    const complexityFactors: string[] = [];
+
+    // Compliance and regulations
+    if (lower.match(/\b(pci|payment card|compliance)\b/)) complexityFactors.push('pci_compliance');
+    if (lower.match(/\b(hipaa|healthcare|medical|patient)\b/))
+      complexityFactors.push('hipaa_compliance');
+    if (lower.match(/\b(gdpr|privacy|data protection)\b/))
+      complexityFactors.push('gdpr_compliance');
+
+    // Technical complexity
+    if (lower.match(/\b(legacy|old system|mainframe|cobol)\b/))
+      complexityFactors.push('legacy_integration');
+    if (lower.match(/\b(real\s*time|websocket|live|streaming)\b/))
+      complexityFactors.push('real_time_requirements');
+    if (lower.match(/\b(distributed|microservice|kubernetes|docker)\b/))
+      complexityFactors.push('distributed_system');
+    if (lower.match(/\b(scale|million|concurrent|high traffic)\b/))
+      complexityFactors.push('high_scale');
+
+    // Process complexity
+    if (lower.match(/\b(multiple|several|various|different)\s+(api|service|system)/))
+      complexityFactors.push('multiple_apis');
+    if (lower.match(/\b(first time|new to|never done|learning)\b/))
+      complexityFactors.push('first_time_tech');
+    if (lower.match(/\b(unclear|vague|tbd|figure out|not sure)\b/))
+      complexityFactors.push('vague_requirements');
+    if (lower.match(/\b(changing|evolving|fluid|agile)\s+(requirement|spec)/))
+      complexityFactors.push('changing_requirements');
+
+    // Detect efficiency factors
+    const efficiencyFactors: string[] = [];
+
+    // Team factors
+    if (lower.match(/\b(experienced|senior|expert|veteran)\s+(team|dev|engineer)/))
+      efficiencyFactors.push('experienced_team');
+    if (lower.match(/\b(existing|reuse|already have|built before)\b/))
+      efficiencyFactors.push('existing_codebase');
+    if (lower.match(/\b(prototype|poc|proof of concept|mvp)\b/))
+      efficiencyFactors.push('prototype_quality');
+    if (lower.match(/\b(proven|battle.?tested|production|stable)\s+(architecture|system)/))
+      efficiencyFactors.push('proven_architecture');
+    if (lower.match(/\b(well documented|good docs|documentation exists)\b/))
+      efficiencyFactors.push('good_documentation');
+    if (lower.match(/\b(internal|not public|staff only|employee)\b/))
+      efficiencyFactors.push('internal_only');
+    if (lower.match(/\b(simple|basic|minimal|straightforward)\s+(ui|interface|design)/))
+      efficiencyFactors.push('simple_ui');
+
+    // Note: Additional context factors are merged in analyzeRequirement method
+
+    return {
+      featureType,
+      complexityFactors: [...new Set(complexityFactors)], // Remove duplicates
+      efficiencyFactors: [...new Set(efficiencyFactors)],
+    };
+  }
 
   async generatePlan(request: BrutalPlanRequest): Promise<{ filename: string; content: string }> {
     logger.info('Generating brutal plan', { requirement: request.requirement });
@@ -76,10 +250,25 @@ export class BrutalPlanEngine {
   }
 
   private async analyzeRequirement(request: BrutalPlanRequest): Promise<BrutalAnalysis> {
-    const featureType = this.detectFeatureType(request.requirement);
+    // Process natural language input using AI-style analysis
+    const processedInput = this.processNaturalLanguageInput(request);
+    const featureType = processedInput.featureType;
+
+    // Merge extracted factors with any provided in context
+    const mergedContext = {
+      ...request.context,
+      complexityFactors: [
+        ...(request.context?.complexityFactors || []),
+        ...processedInput.complexityFactors,
+      ],
+      efficiencyFactors: [
+        ...(request.context?.efficiencyFactors || []),
+        ...processedInput.efficiencyFactors,
+      ],
+    };
 
     // Calculate the final multiplier with fine-tuning
-    const finalMultiplier = this.calculateFinalMultiplier(featureType, request.context);
+    const finalMultiplier = this.calculateFinalMultiplier(featureType, mergedContext);
 
     const userEstimate = request.estimatedDays || 10;
     const realDays = Math.ceil(userEstimate * finalMultiplier);
@@ -95,7 +284,7 @@ export class BrutalPlanEngine {
     }
 
     const id = `${featureType}_${Date.now()}`;
-    const title = this.extractTitle(request.requirement);
+    const title = processedInput.title;
 
     return {
       id,

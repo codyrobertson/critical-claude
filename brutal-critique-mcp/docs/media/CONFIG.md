@@ -24,6 +24,7 @@ The system searches for `config.toml` in these locations (in order):
 ### Configuration Priority
 
 Settings are loaded hierarchically:
+
 1. Built-in defaults (always present)
 2. User config file (if found)
 3. Project-specific config (if found)
