@@ -50,23 +50,82 @@ npm run build
 # Run in watch mode for development
 npm run watch
 
+# Run tests
+npm test
+
+# Run linting
+npm run lint
+
+# Run type checking
+npm run typecheck
+
+# Generate documentation
+npm run docs
+
 # Test with MCP Inspector
 npx @modelcontextprotocol/inspector build/index.js
 ```
 
+### Pre-commit Hooks
+
+The project uses Husky for pre-commit hooks that automatically run:
+
+- **TypeScript type checking** - Ensures type safety
+- **ESLint** - Code linting and style enforcement
+- **Prettier** - Automatic code formatting
+- **Jest tests** - Full test suite with ESM support
+- **TypeDoc** - Documentation generation
+
+Pre-commit hooks are automatically installed after `npm install`.
+
 ## ⚙️ Configuration
 
-The system uses a `config.toml` file to control multipliers, thresholds, and behavior. See [CONFIG.md](CONFIG.md) for detailed configuration options.
+The system uses a `config.toml` file to control multipliers, thresholds, and behavior. The configuration file is automatically searched in:
 
-Key configuration areas:
+1. Current working directory
+2. Parent directories (up to 5 levels)
+3. `~/.config/brutal-critique/config.toml`
+4. Falls back to built-in defaults
 
-- **Base Multipliers** - Reality factors for different feature types (auth: 3.5x, payment: 5x, etc.)
-- **Complexity Factors** - Increase estimates for compliance, legacy systems, etc.
-- **Efficiency Factors** - Decrease estimates for experienced teams, existing code, etc.
-- **Severity Thresholds** - Adjust critique strictness based on system type
-- **Architecture Patterns** - Configure what patterns to detect and warn about
+See [CONFIG.md](CONFIG.md) for detailed configuration options.
+
+### Key Configuration Areas:
+
+**Base Multipliers** - Reality factors for different feature types:
+
+- `auth`: 3.5x (authentication systems)
+- `payment`: 5.0x (payment processing)
+- `data`: 2.0x (data processing)
+- `integration`: 4.0x (third-party integrations)
+- `default`: 2.5x (general features)
+
+**Complexity Factors** - Increase estimates for:
+
+- `pci_compliance`: 1.5x
+- `legacy_integration`: 2.0x
+- `distributed_system`: 1.8x
+- `real_time_requirements`: 1.6x
+
+**Efficiency Factors** - Decrease estimates for:
+
+- `experienced_team`: 0.85x
+- `existing_codebase`: 0.9x
+- `proven_architecture`: 0.8x
+- `good_documentation`: 0.9x
+
+**Phases** - Time allocation:
+
+- Research: 25%
+- Implementation: 60%
+- Hardening: 15%
+
+**Critique Settings** - Severity thresholds and analysis parameters
 
 ## 🛠️ Available Tools
+
+### Modern Tools (Recommended)
+
+These tools provide focused, pragmatic analysis:
 
 ### `pragmatic_review`
 
@@ -89,13 +148,18 @@ Architecture review that matches patterns to problem size - avoids over-engineer
 
 ### `brutal_timeline`
 
-Generate reality-based project timelines with configurable multipliers.
+Generate reality-based project timelines with configurable multipliers based on enterprise experience.
 
 **Parameters:**
 
 - `requirement` (string, required) - The feature/project requirement
 - `estimatedDays` (number, optional) - User's optimistic estimate
-- `context` (object, optional) - Context including complexity/efficiency factors
+- `context` (object, optional) - Context including:
+  - `featureType` - Type of feature (auth, payment, data, etc.)
+  - `teamExperience` - Team experience level
+  - `hasExistingCode` - Whether building on existing code
+  - `complexityFactors` - Array of complexity factors (pci_compliance, legacy_integration, etc.)
+  - `customMultiplier` - Override multiplier for specific scenarios
 
 ### `explore_codebase`
 
@@ -105,7 +169,11 @@ Analyze entire project structure to provide architectural insights.
 
 - `root_path` (string, required) - Root directory to explore
 
-### `brutal_review_file` (Legacy)
+### Legacy Tools
+
+These tools provide the original brutal review experience:
+
+#### `brutal_review_file`
 
 Perform brutal code review on a single file with battle-hardened senior engineer perspective.
 
@@ -115,17 +183,7 @@ Perform brutal code review on a single file with battle-hardened senior engineer
 - `filename` (string, required) - Name of the file being analyzed
 - `brutality_level` (number, optional) - Brutality level from 1-10 (default: 8)
 
-**Example Usage:**
-
-```javascript
-// In Claude Code, this tool will analyze your code and provide:
-// - Specific security vulnerabilities with exploitation scenarios
-// - Performance bottlenecks with scaling impact
-// - Architectural issues with maintenance costs
-// - Complete working fixes for every problem
-```
-
-### `brutal_review_diff`
+#### `brutal_review_diff`
 
 Brutal code review of changes between two code versions.
 
@@ -135,6 +193,16 @@ Brutal code review of changes between two code versions.
 - `new_code` (string, required) - Modified code version
 - `filename` (string, required) - Name of the file being analyzed
 - `brutality_level` (number, optional) - Brutality level from 1-10 (default: 8)
+
+**Example Usage:**
+
+```javascript
+// In Claude Code, these tools will analyze your code and provide:
+// - Specific security vulnerabilities with exploitation scenarios
+// - Performance bottlenecks with scaling impact
+// - Architectural issues with maintenance costs
+// - Complete working fixes for every problem
+```
 
 ## 📚 Resources
 
@@ -175,6 +243,34 @@ The server provides comprehensive documentation:
 - Pattern-based vulnerability detection
 - Real-world risk assessment
 - Working code generation
+
+**BrutalPlanEngine**
+
+- Reality-based timeline estimation
+- Configurable multiplier system
+- Context-aware adjustments
+- Enterprise experience modeling
+
+**CodebaseExplorer**
+
+- Full project structure analysis
+- Language and framework detection
+- Architecture pattern identification
+- Comprehensive risk assessment
+
+**PathValidator**
+
+- Security-focused path validation
+- Traversal attack prevention
+- System directory protection
+- Safe file access controls
+
+**Configuration System**
+
+- TOML-based configuration
+- Hierarchical config search
+- Runtime parameter adjustment
+- Default fallback values
 
 **MCP Integration**
 
@@ -219,9 +315,18 @@ This system embodies a battle-hardened senior engineer who has:
 The server integrates seamlessly with Claude Code through the MCP protocol:
 
 1. **Automatic Discovery** - Claude Code detects and loads the server
-2. **Tool Access** - Use `brutal_review_file` and `brutal_review_diff` tools directly
+2. **Tool Access** - Use all available tools directly in conversations
 3. **Resource Access** - Access analysis guides and checklists as resources
 4. **Real-time Analysis** - Immediate feedback on code quality and security
+5. **Configuration-driven** - Customize analysis parameters via config.toml
+
+### Available in Claude Code:
+
+- `@brutal-critique pragmatic_review` - Focused code analysis
+- `@brutal-critique architecture_review` - Architecture assessment
+- `@brutal-critique brutal_timeline` - Reality-based estimation
+- `@brutal-critique explore_codebase` - Full project analysis
+- Access to critique guides and security checklists
 
 ## 📈 Severity Classification
 
@@ -302,6 +407,41 @@ The system evaluates code against enterprise production standards:
 - POOR - Significant refactoring required
 - DANGEROUS - Immediate fixes required
 - DEPLOYMENT BLOCKED - Catastrophic issues present
+
+## 🧪 Testing
+
+The project includes comprehensive tests with ESM support:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+**Test Coverage:**
+
+- Unit tests for all core components
+- Integration tests for file operations
+- Mock-based tests for external dependencies
+- ESM-compatible test setup with Jest
+
+## 📖 Documentation
+
+Comprehensive documentation is available:
+
+- **README.md** - This file, project overview
+- **CONFIG.md** - Detailed configuration guide
+- **PRE-COMMIT.md** - Development workflow guide
+- **docs/** - Auto-generated TypeDoc documentation
+
+Documentation is automatically generated and updated via pre-commit hooks.
+
+---
 
 Your Brutal Code Critique MCP Server is now ready to prevent the next production disaster. Use it to ship bulletproof code or don't ship at all.
 
