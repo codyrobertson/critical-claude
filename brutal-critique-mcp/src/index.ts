@@ -19,6 +19,7 @@ import { CodebaseExplorer, CodebaseStructure, ArchitecturalPlan } from "./codeba
 import { PathValidator } from "./path-validator.js";
 import { logger, LogLevel } from "./logger.js";
 import { Semaphore } from "./semaphore.js";
+import { BrutalPlanEngine } from "./brutal-plan-engine.js";
 import fs from 'fs/promises';
 
 /**
@@ -806,6 +807,43 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           },
           required: ["rootPath"]
         }
+      },
+      {
+        name: "brutal_timeline",
+        description: "Generate a brutal reality-check implementation plan with realistic timelines",
+        inputSchema: {
+          type: "object",
+          properties: {
+            requirement: {
+              type: "string",
+              description: "The feature or project requirement/description"
+            },
+            estimatedDays: {
+              type: "number",
+              description: "Your optimistic estimate in days (default: 10)"
+            },
+            context: {
+              type: "object",
+              description: "Project context",
+              properties: {
+                teamSize: {
+                  type: "number",
+                  description: "Number of developers"
+                },
+                hasDeadline: {
+                  type: "boolean",
+                  description: "Is there a hard deadline?"
+                },
+                techStack: {
+                  type: "array",
+                  items: { type: "string" },
+                  description: "Technology stack being used"
+                }
+              }
+            }
+          },
+          required: ["requirement"]
+        }
       }
     ]
   };
@@ -1056,6 +1094,44 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           text: output
         }]
       };
+    }
+
+    case "brutal_timeline": {
+      const requirement = String(request.params.arguments?.requirement || "");
+      const estimatedDays = Number(request.params.arguments?.estimatedDays || 10);
+      const context = request.params.arguments?.context || {};
+      
+      if (!requirement) {
+        logger.error("Missing requirement parameter");
+        throw new Error("Requirement description is required for brutal timeline generation");
+      }
+      
+      logger.info("Generating brutal timeline", { requirement, estimatedDays });
+      
+      try {
+        const planEngine = new BrutalPlanEngine();
+        const { filename, content } = await planEngine.generatePlan({
+          requirement,
+          estimatedDays,
+          context: context as any
+        });
+        
+        logger.info("Brutal timeline generated successfully", { filename });
+        
+        // Return first 2000 chars of the plan + info about where it's saved
+        const preview = content.substring(0, 2000);
+        const output = `🔥 BRUTAL TIMELINE GENERATED: ${filename}\n\n${preview}${content.length > 2000 ? '\n\n... (truncated - see full plan in file)' : ''}`;
+        
+        return {
+          content: [{
+            type: "text",
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error("Failed to generate brutal timeline", { requirement }, error as Error);
+        throw new Error(`Failed to generate brutal timeline: ${(error as Error).message}`);
+      }
     }
 
     default:
