@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "mcp__exa-search__web_search_exa",
+      "mcp__exa-search__github_search_exa",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(npx @modelcontextprotocol/create-server:*)",
+      "Bash(npm install)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run inspector:*)",
+      "Bash(npx @modelcontextprotocol/inspector build/index.js)",
+      "Bash(pkill:*)",
+      "Bash(DANGEROUSLY_OMIT_AUTH=true npx @modelcontextprotocol/inspector build/index.js)",
+      "Bash(chmod:*)",
+      "Bash(node:*)",
+      "Bash(ls:*)",
+      "Bash(./build/index.js --help 2 >& 1)",
+      "Bash(npm link:*)",
+      "mcp__brutal-critique__pragmatic_review",
+      "Bash(rm:*)",
+      "Bash(npm test)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}

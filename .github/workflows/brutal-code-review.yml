@@ -1,0 +1,319 @@
+name: Brutal Code Review
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main, develop]
+
+jobs:
+  brutal-code-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install Claude Code
+        run: |
+          npm install -g @anthropic/claude-code
+          echo "Claude Code installed successfully"
+      
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+        with:
+          files: |
+            **/*.ts
+            **/*.js
+            **/*.jsx
+            **/*.tsx
+            **/*.py
+            **/*.java
+            **/*.go
+            **/*.rs
+            **/*.php
+      
+      - name: Run Brutal Security Audit
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "🛡️ Running security audit on changed files..."
+          echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' > changed_files.txt
+          
+          # Create security audit prompt
+          cat > security_audit_prompt.md << 'EOF'
+          # GitHub Actions Security Audit
+          
+          Perform a brutal security audit focusing on OWASP Top 10 vulnerabilities.
+          
+          ## Critical Security Issues to Hunt:
+          - SQL injection vulnerabilities
+          - XSS attack vectors  
+          - Authentication bypass flaws
+          - Authorization logic errors
+          - Input validation failures
+          - Cryptographic implementation errors
+          - Sensitive data exposure
+          - Insecure dependencies
+          
+          ## Output Format:
+          ```json
+          {
+            "verdict": "BLOCK|APPROVE", 
+            "critical_issues": [
+              {
+                "file": "path/to/file.ts",
+                "line": 42,
+                "issue": "SQL injection vulnerability",
+                "severity": "CRITICAL",
+                "description": "User input directly concatenated into SQL query",
+                "fix": "Use parameterized queries"
+              }
+            ],
+            "summary": "Found X critical security issues that must be fixed"
+          }
+          ```
+          
+          Be brutal but accurate. Only flag real security vulnerabilities.
+          EOF
+          
+          # Run security audit
+          claude -p "$(cat security_audit_prompt.md)" \
+                 --add-files $(cat changed_files.txt | tr '\n' ' ') \
+                 --output-format json > security_audit.json
+          
+          # Check if critical issues found
+          if jq -e '.critical_issues[]' security_audit.json > /dev/null; then
+            echo "🚨 CRITICAL SECURITY ISSUES FOUND"
+            jq -r '.critical_issues[] | "❌ \(.file):\(.line) - \(.issue)"' security_audit.json
+            echo "verdict=BLOCK" >> $GITHUB_OUTPUT
+          else
+            echo "✅ No critical security issues found"
+            echo "verdict=APPROVE" >> $GITHUB_OUTPUT
+          fi
+        id: security-audit
+      
+      - name: Run Brutal Performance Analysis
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "⚡ Running performance analysis on changed files..."
+          
+          # Create performance analysis prompt
+          cat > performance_audit_prompt.md << 'EOF'
+          # GitHub Actions Performance Audit
+          
+          Hunt for performance disasters that will cause production issues.
+          
+          ## Critical Performance Issues:
+          - O(n²) or worse algorithmic complexity
+          - Database N+1 query patterns
+          - Memory leaks and resource management failures
+          - Blocking I/O operations
+          - Missing pagination on large datasets
+          - Inefficient database queries
+          - Synchronous operations that should be async
+          
+          ## Output Format:
+          ```json
+          {
+            "verdict": "BLOCK|WARN|APPROVE",
+            "performance_issues": [
+              {
+                "file": "path/to/file.ts", 
+                "line": 42,
+                "issue": "O(n²) nested loop complexity",
+                "severity": "HIGH",
+                "current_complexity": "O(n²)",
+                "recommended_complexity": "O(n)",
+                "impact": "Will slow down with large datasets"
+              }
+            ],
+            "summary": "Found X performance issues"
+          }
+          ```
+          EOF
+          
+          # Run performance audit
+          claude -p "$(cat performance_audit_prompt.md)" \
+                 --add-files $(cat changed_files.txt | tr '\n' ' ') \
+                 --output-format json > performance_audit.json
+          
+          # Check performance issues
+          perf_issues=$(jq '.performance_issues | length' performance_audit.json)
+          if [ "$perf_issues" -gt 0 ]; then
+            echo "⚠️ PERFORMANCE ISSUES FOUND: $perf_issues"
+            jq -r '.performance_issues[] | "⚠️ \(.file):\(.line) - \(.issue)"' performance_audit.json
+          else
+            echo "✅ No major performance issues found"
+          fi
+        id: performance-audit
+      
+      - name: Run Brutal Architecture Review
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "🏗️ Running architecture review on changed files..."
+          
+          # Create architecture review prompt
+          cat > architecture_audit_prompt.md << 'EOF'
+          # GitHub Actions Architecture Audit
+          
+          Review for architectural violations and technical debt.
+          
+          ## Architecture Issues to Find:
+          - SOLID principle violations
+          - Tight coupling and dependency issues
+          - Design pattern misuse
+          - Code duplication and DRY violations
+          - Missing error handling
+          - Inappropriate abstractions
+          
+          ## Output Format:
+          ```json
+          {
+            "verdict": "WARN|APPROVE",
+            "architecture_issues": [
+              {
+                "file": "path/to/file.ts",
+                "line": 42, 
+                "issue": "Single Responsibility Principle violation",
+                "severity": "MEDIUM",
+                "description": "Class has multiple responsibilities",
+                "refactor_effort": "Medium"
+              }
+            ],
+            "technical_debt_score": 7.5
+          }
+          ```
+          EOF
+          
+          # Run architecture audit
+          claude -p "$(cat architecture_audit_prompt.md)" \
+                 --add-files $(cat changed_files.txt | tr '\n' ' ') \
+                 --output-format json > architecture_audit.json
+          
+          # Report architecture issues
+          arch_issues=$(jq '.architecture_issues | length' architecture_audit.json)
+          debt_score=$(jq -r '.technical_debt_score // 0' architecture_audit.json)
+          
+          if [ "$arch_issues" -gt 0 ]; then
+            echo "📊 ARCHITECTURE ISSUES FOUND: $arch_issues"
+            echo "📈 TECHNICAL DEBT SCORE: $debt_score/10"
+            jq -r '.architecture_issues[] | "📋 \(.file):\(.line) - \(.issue)"' architecture_audit.json
+          else
+            echo "✅ Architecture review passed"
+          fi
+        id: architecture-audit
+      
+      - name: Generate Comprehensive Review Report
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "📋 Generating comprehensive review report..."
+          
+          # Combine all audit results
+          cat > review_report.md << 'EOF'
+          # 🔥 Brutal Code Review Results
+          
+          ## 📊 Overall Assessment
+          
+          EOF
+          
+          # Add security results
+          if [ -f security_audit.json ]; then
+            echo "### 🛡️ Security Audit" >> review_report.md
+            if jq -e '.critical_issues[]' security_audit.json > /dev/null; then
+              echo "**Status: ❌ CRITICAL ISSUES FOUND**" >> review_report.md
+              echo "" >> review_report.md
+              jq -r '.critical_issues[] | "- **\(.file):\(.line)** - \(.issue)\n  - Severity: \(.severity)\n  - Fix: \(.fix)\n"' security_audit.json >> review_report.md
+            else
+              echo "**Status: ✅ PASSED**" >> review_report.md
+            fi
+            echo "" >> review_report.md
+          fi
+          
+          # Add performance results  
+          if [ -f performance_audit.json ]; then
+            echo "### ⚡ Performance Audit" >> review_report.md
+            perf_count=$(jq '.performance_issues | length' performance_audit.json)
+            if [ "$perf_count" -gt 0 ]; then
+              echo "**Status: ⚠️ $perf_count ISSUES FOUND**" >> review_report.md
+              echo "" >> review_report.md
+              jq -r '.performance_issues[] | "- **\(.file):\(.line)** - \(.issue)\n  - Current: \(.current_complexity)\n  - Recommended: \(.recommended_complexity)\n"' performance_audit.json >> review_report.md
+            else
+              echo "**Status: ✅ PASSED**" >> review_report.md
+            fi
+            echo "" >> review_report.md
+          fi
+          
+          # Add architecture results
+          if [ -f architecture_audit.json ]; then
+            echo "### 🏗️ Architecture Review" >> review_report.md
+            arch_count=$(jq '.architecture_issues | length' architecture_audit.json)
+            debt_score=$(jq -r '.technical_debt_score // 0' architecture_audit.json)
+            
+            echo "**Technical Debt Score: $debt_score/10**" >> review_report.md
+            echo "" >> review_report.md
+            
+            if [ "$arch_count" -gt 0 ]; then
+              echo "**Issues Found: $arch_count**" >> review_report.md
+              echo "" >> review_report.md
+              jq -r '.architecture_issues[] | "- **\(.file):\(.line)** - \(.issue)\n  - Effort: \(.refactor_effort)\n"' architecture_audit.json >> review_report.md
+            else
+              echo "**Status: ✅ PASSED**" >> review_report.md
+            fi
+          fi
+          
+          echo "Review report generated successfully"
+        id: generate-report
+      
+      - name: Comment PR with Review Results
+        if: github.event_name == 'pull_request' && steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            
+            // Read the review report
+            let reviewReport = '';
+            try {
+              reviewReport = fs.readFileSync('review_report.md', 'utf8');
+            } catch (error) {
+              reviewReport = '# Review Report\n\nFailed to generate review report.';
+            }
+            
+            // Comment on the PR
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: reviewReport
+            });
+      
+      - name: Set Check Status
+        if: always()
+        run: |
+          # Determine overall status
+          if [ "${{ steps.security-audit.outputs.verdict }}" = "BLOCK" ]; then
+            echo "❌ Brutal code review FAILED - Critical security issues found"
+            exit 1
+          else
+            echo "✅ Brutal code review PASSED"
+            exit 0
+          fi
