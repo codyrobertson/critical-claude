@@ -1,0 +1,36 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Change to the brutal-critique-mcp directory
+cd brutal-critique-mcp || exit 1
+
+echo "🔍 Running pre-commit checks for brutal-critique-mcp..."
+
+# Run type checking
+echo "📝 Type checking..."
+npm run typecheck || {
+  echo "❌ Type checking failed"
+  exit 1
+}
+
+# Run linting and formatting via lint-staged
+echo "🎨 Running lint-staged (ESLint + Prettier)..."
+npx lint-staged || {
+  echo "❌ Linting/formatting failed"
+  exit 1
+}
+
+# Run tests
+echo "🧪 Running tests..."
+npm test -- --passWithNoTests || {
+  echo "❌ Tests failed"
+  exit 1
+}
+
+# Generate documentation
+echo "📚 Generating documentation..."
+npm run docs || {
+  echo "⚠️  Documentation generation failed (non-blocking)"
+}
+
+echo "✅ All pre-commit checks passed!"

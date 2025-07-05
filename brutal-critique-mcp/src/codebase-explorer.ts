@@ -55,24 +55,52 @@ export type ArchitecturalPlan = {
 
 export class CodebaseExplorer {
   private readonly IGNORED_DIRS = new Set([
-    'node_modules', '.git', 'dist', 'build', 'coverage', 
-    '.next', '.nuxt', 'vendor', '__pycache__', '.pytest_cache'
+    'node_modules',
+    '.git',
+    'dist',
+    'build',
+    'coverage',
+    '.next',
+    '.nuxt',
+    'vendor',
+    '__pycache__',
+    '.pytest_cache',
   ]);
 
   private readonly SOURCE_EXTENSIONS = new Set([
-    '.js', '.ts', '.jsx', '.tsx', '.py', '.java', '.go', 
-    '.rb', '.php', '.c', '.cpp', '.cs', '.swift', '.kt'
+    '.js',
+    '.ts',
+    '.jsx',
+    '.tsx',
+    '.py',
+    '.java',
+    '.go',
+    '.rb',
+    '.php',
+    '.c',
+    '.cpp',
+    '.cs',
+    '.swift',
+    '.kt',
   ]);
 
   private readonly CONFIG_FILES = new Set([
-    'package.json', 'tsconfig.json', 'webpack.config.js',
-    'requirements.txt', 'pom.xml', 'build.gradle', 'go.mod',
-    'Gemfile', 'composer.json', '.eslintrc', '.prettierrc'
+    'package.json',
+    'tsconfig.json',
+    'webpack.config.js',
+    'requirements.txt',
+    'pom.xml',
+    'build.gradle',
+    'go.mod',
+    'Gemfile',
+    'composer.json',
+    '.eslintrc',
+    '.prettierrc',
   ]);
 
   async exploreCodebase(rootPath: string): Promise<CodebaseStructure> {
     logger.info('Starting codebase exploration', { rootPath });
-    
+
     // Validate and normalize the path
     const validatedPath = await PathValidator.validateRootPath(rootPath);
     logger.info('Path validated successfully', { validatedPath });
@@ -85,7 +113,7 @@ export class CodebaseExplorer {
       directories: [],
       mainLanguages: [],
       frameworkIndicators: [],
-      architecturePatterns: []
+      architecturePatterns: [],
     };
 
     try {
@@ -97,7 +125,7 @@ export class CodebaseExplorer {
       logger.info('Codebase exploration completed', {
         totalFiles: structure.totalFiles,
         totalSize: structure.totalSize,
-        languages: structure.mainLanguages
+        languages: structure.mainLanguages,
       });
 
       return structure;
@@ -107,7 +135,11 @@ export class CodebaseExplorer {
     }
   }
 
-  private async walkDirectory(dirPath: string, structure: CodebaseStructure, depth = 0): Promise<void> {
+  private async walkDirectory(
+    dirPath: string,
+    structure: CodebaseStructure,
+    depth = 0
+  ): Promise<void> {
     // Prevent infinite recursion and symlink loops
     if (depth > 20) {
       logger.warn('Maximum directory depth reached', { dirPath, depth });
@@ -116,9 +148,9 @@ export class CodebaseExplorer {
 
     // Memory protection - stop if we've processed too many files
     if (structure.totalFiles > 50000) {
-      logger.warn('Maximum file limit reached, stopping exploration', { 
+      logger.warn('Maximum file limit reached, stopping exploration', {
         totalFiles: structure.totalFiles,
-        currentPath: dirPath 
+        currentPath: dirPath,
       });
       return;
     }
@@ -135,7 +167,7 @@ export class CodebaseExplorer {
         path: dirPath,
         fileCount: 0,
         totalSize: 0,
-        subdirectories: []
+        subdirectories: [],
       };
 
       // Process files and directories in parallel batches
@@ -153,9 +185,10 @@ export class CodebaseExplorer {
               }
             } else if (entry.isFile()) {
               const stats = await fs.stat(fullPath);
-              
+
               // Skip large files to prevent memory issues
-              if (stats.size > 10 * 1024 * 1024) { // 10MB limit
+              if (stats.size > 10 * 1024 * 1024) {
+                // 10MB limit
                 logger.debug('Skipping large file', { path: fullPath, size: stats.size });
                 return;
               }
@@ -164,7 +197,7 @@ export class CodebaseExplorer {
                 path: fullPath,
                 size: stats.size,
                 extension: path.extname(entry.name),
-                type: this.classifyFile(entry.name)
+                type: this.classifyFile(entry.name),
               };
 
               dirInfo.fileCount++;
@@ -174,7 +207,7 @@ export class CodebaseExplorer {
 
               const ext = fileInfo.extension || 'no-extension';
               const MAX_FILES_PER_TYPE = 1000; // Prevent memory exhaustion
-              
+
               const existingFiles = structure.filesByType.get(ext) || [];
               if (existingFiles.length < MAX_FILES_PER_TYPE) {
                 if (!structure.filesByType.has(ext)) {
@@ -182,17 +215,17 @@ export class CodebaseExplorer {
                 }
                 structure.filesByType.get(ext)!.push(fileInfo);
               } else {
-                logger.debug('File type limit reached, skipping file', { 
-                  extension: ext, 
+                logger.debug('File type limit reached, skipping file', {
+                  extension: ext,
                   limit: MAX_FILES_PER_TYPE,
-                  path: fullPath 
+                  path: fullPath,
                 });
               }
             }
           } catch (fileError) {
-            logger.debug('Failed to process file/directory', { 
-              path: fullPath, 
-              error: (fileError as Error).message 
+            logger.debug('Failed to process file/directory', {
+              path: fullPath,
+              error: (fileError as Error).message,
             });
             // Continue processing other files
           }
@@ -205,9 +238,9 @@ export class CodebaseExplorer {
         structure.directories.push(dirInfo);
       }
     } catch (error) {
-      logger.warn('Failed to read directory', { 
-        dirPath, 
-        error: (error as Error).message 
+      logger.warn('Failed to read directory', {
+        dirPath,
+        error: (error as Error).message,
       });
       // Don't throw - continue with other directories
     }
@@ -228,7 +261,7 @@ export class CodebaseExplorer {
 
   private detectLanguages(structure: CodebaseStructure): void {
     const languageCounts = new Map<string, number>();
-    
+
     // Use optimized iteration with caching for performance
     for (const [ext, files] of structure.filesByType) {
       let language = CodebaseExplorer.LANGUAGE_CACHE.get(ext);
@@ -236,7 +269,7 @@ export class CodebaseExplorer {
         language = this.extToLanguage(ext);
         CodebaseExplorer.LANGUAGE_CACHE.set(ext, language);
       }
-      
+
       if (language) {
         const currentCount = languageCounts.get(language) || 0;
         languageCounts.set(language, currentCount + files.length);
@@ -249,9 +282,9 @@ export class CodebaseExplorer {
       .slice(0, 3)
       .map(([lang]) => lang);
 
-    logger.debug('Detected languages', { 
+    logger.debug('Detected languages', {
       languages: Object.fromEntries(languageCounts),
-      cacheSize: CodebaseExplorer.LANGUAGE_CACHE.size
+      cacheSize: CodebaseExplorer.LANGUAGE_CACHE.size,
     });
   }
 
@@ -259,7 +292,9 @@ export class CodebaseExplorer {
     const indicators: string[] = [];
 
     // Check config files for framework indicators
-    const packageJson = structure.filesByType.get('.json')?.find(f => f.path.endsWith('package.json'));
+    const packageJson = structure.filesByType
+      .get('.json')
+      ?.find((f) => f.path.endsWith('package.json'));
     if (packageJson) {
       // This is simplified - in real implementation, you'd read and parse the file
       indicators.push('Node.js');
@@ -280,8 +315,8 @@ export class CodebaseExplorer {
     const patterns: string[] = [];
 
     // Check directory structure for patterns
-    const dirNames = structure.directories.map(d => path.basename(d.path));
-    
+    const dirNames = structure.directories.map((d) => path.basename(d.path));
+
     if (dirNames.includes('controllers') && dirNames.includes('models')) {
       patterns.push('MVC');
     }
@@ -312,7 +347,7 @@ export class CodebaseExplorer {
       '.cpp': 'C++',
       '.c': 'C',
       '.swift': 'Swift',
-      '.kt': 'Kotlin'
+      '.kt': 'Kotlin',
     };
     return mapping[ext] || null;
   }
@@ -323,19 +358,19 @@ export class CodebaseExplorer {
       currentState: {
         strengths: [],
         weaknesses: [],
-        risks: []
+        risks: [],
       },
       recommendations: {
         immediate: [],
         shortTerm: [],
-        longTerm: []
+        longTerm: [],
       },
       antiPatterns: [],
       estimatedEffort: {
         immediate: '1-2 days',
         shortTerm: '1-2 weeks',
-        longTerm: '1-3 months'
-      }
+        longTerm: '1-3 months',
+      },
     };
 
     // Analyze strengths
@@ -358,11 +393,13 @@ export class CodebaseExplorer {
     }
 
     // Generate recommendations based on issues
-    const criticalIssues = issues.filter(i => i.severity === 'CRITICAL');
-    const highIssues = issues.filter(i => i.severity === 'HIGH');
+    const criticalIssues = issues.filter((i) => i.severity === 'CRITICAL');
+    const highIssues = issues.filter((i) => i.severity === 'HIGH');
 
     if (criticalIssues.length > 0) {
-      plan.recommendations.immediate.push('Fix all CRITICAL security vulnerabilities before any other work');
+      plan.recommendations.immediate.push(
+        'Fix all CRITICAL security vulnerabilities before any other work'
+      );
       plan.estimatedEffort.immediate = `${criticalIssues.length * 2} hours`;
     }
 

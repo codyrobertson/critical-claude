@@ -6,7 +6,7 @@ export enum LogLevel {
   ERROR = 0,
   WARN = 1,
   INFO = 2,
-  DEBUG = 3
+  DEBUG = 3,
 }
 
 export interface LogEntry {
@@ -34,7 +34,12 @@ export class Logger {
     this.logLevel = level;
   }
 
-  private log(level: LogLevel, message: string, context?: Record<string, any>, error?: Error): void {
+  private log(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, any>,
+    error?: Error
+  ): void {
     if (level > this.logLevel) return;
 
     const entry: LogEntry = {
@@ -42,11 +47,11 @@ export class Logger {
       message,
       timestamp: new Date(),
       context,
-      error
+      error,
     };
 
     const formattedMessage = this.formatLogEntry(entry);
-    
+
     if (level === LogLevel.ERROR) {
       console.error(formattedMessage);
     } else if (level === LogLevel.WARN) {
@@ -60,18 +65,18 @@ export class Logger {
     const timestamp = entry.timestamp.toISOString();
     const level = LogLevel[entry.level];
     let message = `[${timestamp}] ${level}: ${entry.message}`;
-    
+
     if (entry.context) {
       message += ` | Context: ${JSON.stringify(entry.context)}`;
     }
-    
+
     if (entry.error) {
       message += ` | Error: ${entry.error.message}`;
       if (entry.error.stack) {
         message += `\nStack: ${entry.error.stack}`;
       }
     }
-    
+
     return message;
   }
 

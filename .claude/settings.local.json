@@ -22,7 +22,14 @@
       "Bash(rm:*)",
       "Bash(npm test)",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npx husky:*)",
+      "Bash(touch:*)",
+      "Bash(./setup-hooks.sh:*)",
+      "Bash(npm run:*)",
+      "Bash(NODE_OPTIONS=--experimental-vm-modules npm test -- --passWithNoTests)",
+      "Bash(grep:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }

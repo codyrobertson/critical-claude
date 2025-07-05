@@ -5,6 +5,7 @@ A battle-hardened senior engineer's brutal but constructive code review system i
 ## 🎯 Features
 
 ### Core Capabilities
+
 - **Brutal File Analysis** - Security, performance, and architecture checks with zero mercy
 - **Diff-based Reviews** - Ruthless analysis of code changes for pull requests
 - **Production Risk Assessment** - Real-world failure scenarios with business impact
@@ -12,6 +13,7 @@ A battle-hardened senior engineer's brutal but constructive code review system i
 - **Battle-tested Persona** - 15+ years of enterprise experience detecting disasters before they happen
 
 ### Analysis Framework
+
 - **Security Analysis (30%)** - SQL injection, XSS, authentication bypasses, data exposure
 - **Performance Analysis (25%)** - Algorithmic complexity, memory leaks, database optimization
 - **Architecture Analysis (20%)** - SOLID violations, coupling issues, maintainability
@@ -52,17 +54,69 @@ npm run watch
 npx @modelcontextprotocol/inspector build/index.js
 ```
 
+## ⚙️ Configuration
+
+The system uses a `config.toml` file to control multipliers, thresholds, and behavior. See [CONFIG.md](CONFIG.md) for detailed configuration options.
+
+Key configuration areas:
+
+- **Base Multipliers** - Reality factors for different feature types (auth: 3.5x, payment: 5x, etc.)
+- **Complexity Factors** - Increase estimates for compliance, legacy systems, etc.
+- **Efficiency Factors** - Decrease estimates for experienced teams, existing code, etc.
+- **Severity Thresholds** - Adjust critique strictness based on system type
+- **Architecture Patterns** - Configure what patterns to detect and warn about
+
 ## 🛠️ Available Tools
 
-### `brutal_review_file`
+### `pragmatic_review`
+
+Pragmatic code review that identifies REAL problems affecting users, not theoretical violations.
+
+**Parameters:**
+
+- `code` (string, required) - The source code to analyze
+- `filename` (string, required) - Name of the file being analyzed
+
+### `architecture_review`
+
+Architecture review that matches patterns to problem size - avoids over-engineering small apps.
+
+**Parameters:**
+
+- `code` (string, required) - The source code to analyze
+- `filename` (string, required) - Name of the file being analyzed
+- `context` (object, optional) - Additional system context
+
+### `brutal_timeline`
+
+Generate reality-based project timelines with configurable multipliers.
+
+**Parameters:**
+
+- `requirement` (string, required) - The feature/project requirement
+- `estimatedDays` (number, optional) - User's optimistic estimate
+- `context` (object, optional) - Context including complexity/efficiency factors
+
+### `explore_codebase`
+
+Analyze entire project structure to provide architectural insights.
+
+**Parameters:**
+
+- `root_path` (string, required) - Root directory to explore
+
+### `brutal_review_file` (Legacy)
+
 Perform brutal code review on a single file with battle-hardened senior engineer perspective.
 
 **Parameters:**
+
 - `code` (string, required) - The source code to analyze
 - `filename` (string, required) - Name of the file being analyzed
 - `brutality_level` (number, optional) - Brutality level from 1-10 (default: 8)
 
 **Example Usage:**
+
 ```javascript
 // In Claude Code, this tool will analyze your code and provide:
 // - Specific security vulnerabilities with exploitation scenarios
@@ -72,9 +126,11 @@ Perform brutal code review on a single file with battle-hardened senior engineer
 ```
 
 ### `brutal_review_diff`
+
 Brutal code review of changes between two code versions.
 
 **Parameters:**
+
 - `old_code` (string, required) - Original code version
 - `new_code` (string, required) - Modified code version
 - `filename` (string, required) - Name of the file being analyzed
@@ -114,12 +170,14 @@ The server provides comprehensive documentation:
 ### Core Components
 
 **BrutalCritiqueEngine**
+
 - Multi-dimensional analysis engine
 - Pattern-based vulnerability detection
 - Real-world risk assessment
 - Working code generation
 
 **MCP Integration**
+
 - Standard Model Context Protocol implementation
 - Seamless Claude Code integration
 - Resource-based documentation
@@ -131,7 +189,7 @@ The server provides comprehensive documentation:
 // SQL Injection Detection
 if (code.includes('query(') && code.includes('${') && !code.includes('parameterized'))
 
-// XSS Vulnerability Detection  
+// XSS Vulnerability Detection
 if (code.includes('innerHTML') && !code.includes('sanitize'))
 
 // Memory Leak Detection
@@ -141,6 +199,7 @@ if (code.includes('setInterval') && !code.includes('clearInterval'))
 ## 🎭 The Brutal Persona
 
 This system embodies a battle-hardened senior engineer who has:
+
 - Debugged critical production systems at 3 AM during outages affecting millions
 - Witnessed spectacular deployment disasters caused by "minor" code issues
 - Survived multiple startup death spirals caused by technical debt
@@ -148,6 +207,7 @@ This system embodies a battle-hardened senior engineer who has:
 - Led incident response for security breaches and data corruption events
 
 **Zero tolerance for:**
+
 - Code that "works on my machine" but will fail in production
 - Security vulnerabilities, no matter how "unlikely" the attack vector
 - Performance issues that will crash with scale
@@ -166,13 +226,14 @@ The server integrates seamlessly with Claude Code through the MCP protocol:
 ## 📈 Severity Classification
 
 - **🔴 CATASTROPHIC** - Blocks deployment immediately (security vulnerabilities, data corruption risks)
-- **🟠 SEVERE** - Must fix before merge (performance killers, memory leaks)  
+- **🟠 SEVERE** - Must fix before merge (performance killers, memory leaks)
 - **🟡 MAJOR** - Address within sprint (architectural violations, maintainability issues)
 - **🔵 MINOR** - Consider next refactor (style improvements, micro-optimizations)
 
 ## 🛡️ Security Focus
 
 Primary security vulnerability detection:
+
 - SQL injection through string concatenation
 - Cross-site scripting via unsafe DOM manipulation
 - Authentication bypass patterns
@@ -183,6 +244,7 @@ Primary security vulnerability detection:
 ## ⚡ Performance Analysis
 
 Critical performance patterns detected:
+
 - O(n²) algorithms with nested loops
 - Memory leaks from uncleaned resources
 - Database N+1 query problems
@@ -193,6 +255,7 @@ Critical performance patterns detected:
 ## 🏗️ Architecture Validation
 
 Architectural anti-patterns identified:
+
 - God functions exceeding 50 lines
 - Tight coupling between modules
 - Missing separation of concerns
@@ -203,6 +266,7 @@ Architectural anti-patterns identified:
 ## 🧪 Quality Assurance
 
 Code quality issues tracked:
+
 - Missing error handling with try/catch gaps
 - Poor naming conventions
 - Inadequate documentation
@@ -213,6 +277,7 @@ Code quality issues tracked:
 ## 🎯 Production Readiness
 
 The system evaluates code against enterprise production standards:
+
 - Scalability under load
 - Monitoring and observability
 - Error recovery mechanisms
@@ -223,19 +288,21 @@ The system evaluates code against enterprise production standards:
 ## 📊 Metrics and Scoring
 
 **Brutality Score Calculation:**
+
 - Catastrophic issues: 3 points each
-- Severe issues: 2 points each  
+- Severe issues: 2 points each
 - Major issues: 1 point each
 - Maximum score: 10/10 (deployment blocked)
 
 **Overall Verdicts:**
+
 - EXCELLENT - Production ready (0 critical issues)
 - ACCEPTABLE - Minor improvements needed
 - NEEDS IMPROVEMENT - Multiple issues found
-- POOR - Significant refactoring required  
+- POOR - Significant refactoring required
 - DANGEROUS - Immediate fixes required
 - DEPLOYMENT BLOCKED - Catastrophic issues present
 
 Your Brutal Code Critique MCP Server is now ready to prevent the next production disaster. Use it to ship bulletproof code or don't ship at all.
 
-*"The best code review is the one that finds the bug that would have taken down production on Black Friday."*
+_"The best code review is the one that finds the bug that would have taken down production on Black Friday."_

@@ -16,7 +16,7 @@ export class PathValidator {
     '/home/.ssh',
     '/var/log',
     '/proc',
-    '/sys'
+    '/sys',
   ]);
 
   /**
@@ -32,7 +32,7 @@ export class PathValidator {
 
     // Normalize and resolve the path
     const normalizedPath = path.resolve(rootPath);
-    
+
     // Check for blocked system paths
     for (const blocked of this.BLOCKED_PATHS) {
       if (normalizedPath.startsWith(blocked)) {
@@ -73,7 +73,7 @@ export class PathValidator {
   static isSafeToRead(filePath: string, rootPath: string): boolean {
     const resolvedFile = path.resolve(filePath);
     const resolvedRoot = path.resolve(rootPath);
-    
+
     // Ensure file is within the root directory
     return resolvedFile.startsWith(resolvedRoot);
   }
