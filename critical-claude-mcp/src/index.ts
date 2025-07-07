@@ -29,6 +29,7 @@ import { InputValidator } from './input-validator.js';
 import { ErrorHandler } from './error-handler.js';
 import { WebSearchTool } from './tools/web-search.js';
 import { InitWizard } from './tools/init-wizard.js';
+import { PromptManager } from './tools/prompt-manager.js';
 import { getConfig } from './config-loader.js';
 import fs from 'fs/promises';
 import path from 'path';
@@ -432,6 +433,56 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           },
         },
       },
+      {
+        name: 'cc_prompt_mgmt',
+        description: 'Manage developer prompt templates for code review and analysis',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            action: {
+              type: 'string',
+              enum: ['list', 'get', 'add', 'update', 'delete', 'render', 'search', 'export', 'import'],
+              description: 'Action to perform on prompt templates',
+            },
+            id: {
+              type: 'string',
+              description: 'Prompt template ID (for get, update, delete, render actions)',
+            },
+            category: {
+              type: 'string',
+              enum: ['security', 'performance', 'architecture', 'code-review', 'debugging', 'refactoring', 'testing', 'documentation', 'custom'],
+              description: 'Prompt category filter (for list, add actions)',
+            },
+            prompt: {
+              type: 'object',
+              description: 'Prompt template data (for add, update actions)',
+              properties: {
+                name: { type: 'string' },
+                description: { type: 'string' },
+                template: { type: 'string' },
+                tags: { type: 'array', items: { type: 'string' } },
+              },
+            },
+            variables: {
+              type: 'object',
+              description: 'Template variables for rendering (for render action)',
+            },
+            query: {
+              type: 'string',
+              description: 'Search query (for search action)',
+            },
+            filePath: {
+              type: 'string',
+              description: 'File path for export/import operations',
+            },
+            overwrite: {
+              type: 'boolean',
+              description: 'Overwrite existing prompts during import (default: false)',
+            },
+          },
+          required: ['action'],
+        },
+      },
     ],
   };
 });
@@ -792,6 +843,192 @@ Run 'cc crit explore' to analyze your codebase structure.`,
       } catch (error) {
         logger.error('Failed to initialize project', error as Error);
         throw new Error(`Failed to initialize project: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_prompt_mgmt': {
+      const action = String(request.params.arguments?.action || '');
+      const id = request.params.arguments?.id as string;
+      const category = request.params.arguments?.category as any;
+      const prompt = request.params.arguments?.prompt as any;
+      const variables = request.params.arguments?.variables as Record<string, string>;
+      const query = request.params.arguments?.query as string;
+      const filePath = request.params.arguments?.filePath as string;
+      const overwrite = Boolean(request.params.arguments?.overwrite);
+
+      if (!action) {
+        throw new Error('Action is required for prompt management');
+      }
+
+      try {
+        const promptManager = new PromptManager();
+        await promptManager.initialize();
+
+        switch (action) {
+          case 'list': {
+            const prompts = await promptManager.listPrompts(category);
+            let output = '📚 PROMPT LIBRARY\n';
+            output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            
+            if (category) {
+              output += `📂 Category: ${category}\n\n`;
+            }
+
+            if (prompts.length === 0) {
+              output += 'No prompts found.\n';
+            } else {
+              prompts.forEach(p => {
+                output += `🔹 ${p.id}\n`;
+                output += `   Name: ${p.name}\n`;
+                output += `   Category: ${p.category}\n`;
+                output += `   Description: ${p.description}\n`;
+                output += `   Tags: ${p.tags.join(', ')}\n`;
+                output += `   Variables: ${p.variables.join(', ')}\n\n`;
+              });
+            }
+
+            return {
+              content: [{ type: 'text', text: output }],
+            };
+          }
+
+          case 'get': {
+            if (!id) {
+              throw new Error('Prompt ID is required for get action');
+            }
+            
+            const prompt = await promptManager.getPrompt(id);
+            if (!prompt) {
+              throw new Error(`Prompt '${id}' not found`);
+            }
+
+            let output = `📄 PROMPT: ${prompt.id}\n`;
+            output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            output += `Name: ${prompt.name}\n`;
+            output += `Category: ${prompt.category}\n`;
+            output += `Description: ${prompt.description}\n`;
+            output += `Tags: ${prompt.tags.join(', ')}\n`;
+            output += `Variables: ${prompt.variables.join(', ')}\n`;
+            output += `Created: ${prompt.created_at}\n`;
+            output += `Updated: ${prompt.updated_at}\n\n`;
+            output += `Template:\n${prompt.template}`;
+
+            return {
+              content: [{ type: 'text', text: output }],
+            };
+          }
+
+          case 'add': {
+            if (!id || !prompt) {
+              throw new Error('Prompt ID and prompt data are required for add action');
+            }
+
+            await promptManager.addPrompt({
+              id,
+              category: category || 'custom',
+              ...prompt,
+            });
+
+            return {
+              content: [{ type: 'text', text: `✅ Added prompt: ${id}` }],
+            };
+          }
+
+          case 'update': {
+            if (!id || !prompt) {
+              throw new Error('Prompt ID and update data are required for update action');
+            }
+
+            await promptManager.updatePrompt(id, prompt);
+
+            return {
+              content: [{ type: 'text', text: `✅ Updated prompt: ${id}` }],
+            };
+          }
+
+          case 'delete': {
+            if (!id) {
+              throw new Error('Prompt ID is required for delete action');
+            }
+
+            await promptManager.deletePrompt(id);
+
+            return {
+              content: [{ type: 'text', text: `✅ Deleted prompt: ${id}` }],
+            };
+          }
+
+          case 'render': {
+            if (!id || !variables) {
+              throw new Error('Prompt ID and variables are required for render action');
+            }
+
+            const rendered = await promptManager.renderPrompt(id, variables);
+
+            let output = `🎯 RENDERED PROMPT: ${id}\n`;
+            output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            output += rendered;
+
+            return {
+              content: [{ type: 'text', text: output }],
+            };
+          }
+
+          case 'search': {
+            if (!query) {
+              throw new Error('Search query is required for search action');
+            }
+
+            const results = await promptManager.searchPrompts(query);
+
+            let output = `🔍 SEARCH RESULTS for "${query}"\n`;
+            output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+            if (results.length === 0) {
+              output += 'No prompts found matching your query.\n';
+            } else {
+              results.forEach(p => {
+                output += `🔹 ${p.id} - ${p.name}\n`;
+                output += `   Category: ${p.category}\n`;
+                output += `   Description: ${p.description}\n\n`;
+              });
+            }
+
+            return {
+              content: [{ type: 'text', text: output }],
+            };
+          }
+
+          case 'export': {
+            if (!filePath) {
+              throw new Error('File path is required for export action');
+            }
+
+            await promptManager.exportPrompts(filePath, category);
+
+            return {
+              content: [{ type: 'text', text: `✅ Exported prompts to: ${filePath}` }],
+            };
+          }
+
+          case 'import': {
+            if (!filePath) {
+              throw new Error('File path is required for import action');
+            }
+
+            const count = await promptManager.importPrompts(filePath, overwrite);
+
+            return {
+              content: [{ type: 'text', text: `✅ Imported ${count} prompts from: ${filePath}` }],
+            };
+          }
+
+          default:
+            throw new Error(`Unknown prompt management action: ${action}`);
+        }
+      } catch (error) {
+        logger.error('Prompt management failed', { action, id }, error as Error);
+        throw new Error(`Prompt management failed: ${(error as Error).message}`);
       }
     }
 
