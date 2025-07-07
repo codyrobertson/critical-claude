@@ -1,0 +1,49 @@
+# Critical Claude Configuration for Libraries
+# Optimized for reusable packages and shared code
+
+[project]
+name = "{{PROJECT_NAME}}"
+type = "library"
+language = "{{LANGUAGE}}"
+framework = "{{FRAMEWORK}}"
+team_size = {{TEAM_SIZE}}
+user_count = {{USER_COUNT}}  # Number of projects using this library
+initialized_at = "{{TIMESTAMP}}"
+
+[requirements]
+security_level = "high"  # Libraries need high security
+api_stability = "strict"
+backward_compatibility = true
+
+[critique]
+# Library specific thresholds
+[critique.severity_overrides]
+breaking_changes = "critical"
+api_design = "high"
+documentation = "high"
+test_coverage_minimum = 90
+
+[critique.focus_areas]
+api = ["consistency", "naming", "versioning", "deprecation"]
+documentation = ["examples", "api-docs", "changelog", "migration-guides"]
+quality = ["test-coverage", "error-handling", "input-validation", "type-safety"]
+
+[web_search]
+enabled = true
+search_depth = "comprehensive"
+fact_checking = true
+vulnerability_scanning = true  # Critical for libraries
+
+[library_specific]
+# Library-specific requirements
+min_test_coverage = 90
+require_changelog = true
+require_examples = true
+require_typescript_definitions = true
+zero_dependencies_preferred = true
+
+[versioning]
+# Semantic versioning enforcement
+enforce_semver = true
+breaking_change_detection = true
+deprecation_policy = "2_major_versions"

@@ -38,7 +38,10 @@
       "Bash(mv:*)",
       "Bash(rg:*)",
       "Bash(cp:*)",
-      "Bash(mkdir:*)"
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": []
   }
