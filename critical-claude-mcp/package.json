@@ -1,11 +1,11 @@
 {
-  "name": "brutal-critique-mcp",
-  "version": "0.1.0",
-  "description": "Battle-hardened senior engineer code critique system",
+  "name": "critical-claude-mcp",
+  "version": "1.0.0",
+  "description": "Critical Claude - Battle-hardened code review and planning system",
   "private": true,
   "type": "module",
   "bin": {
-    "brutal-critique-mcp": "./build/index.js"
+    "critical-claude-mcp": "./build/index.js"
   },
   "files": [
     "build"

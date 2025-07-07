@@ -29,7 +29,15 @@
       "Bash(npm run:*)",
       "Bash(NODE_OPTIONS=--experimental-vm-modules npm test -- --passWithNoTests)",
       "Bash(grep:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__brutal-critique__explore_codebase",
+      "mcp__brutal-critique__brutal_plan",
+      "Bash(sed:*)",
+      "Bash(xxd:*)",
+      "Bash(awk:*)",
+      "Bash(mv:*)",
+      "Bash(rg:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }

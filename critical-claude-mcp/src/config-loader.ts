@@ -1,5 +1,5 @@
 /**
- * Configuration loader for Brutal Critique MCP
+ * Configuration loader for Critical Claude MCP
  * Loads and validates configuration from config.toml
  */
 
@@ -83,7 +83,7 @@ class ConfigLoader {
     const possiblePaths = [
       path.join(process.cwd(), 'config.toml'),
       path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'config.toml'),
-      path.join(process.env.HOME || '', '.brutal-critique', 'config.toml'),
+      path.join(process.env.HOME || '', '.critical-claude', 'config.toml'),
     ];
 
     for (const p of possiblePaths) {

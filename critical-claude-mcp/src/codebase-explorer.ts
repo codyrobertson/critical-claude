@@ -352,7 +352,7 @@ export class CodebaseExplorer {
     return mapping[ext] || null;
   }
 
-  async createBrutalPlan(structure: CodebaseStructure, issues: any[]): Promise<ArchitecturalPlan> {
+  async createCriticalPlan(structure: CodebaseStructure, issues: any[]): Promise<ArchitecturalPlan> {
     const plan: ArchitecturalPlan = {
       title: `Brutal Architecture Plan for ${path.basename(structure.rootPath)}`,
       currentState: {
