@@ -6,7 +6,7 @@
 import { logger } from './logger.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { getConfig, BrutalConfig } from './config-loader.js';
+import { getConfig, CriticalClaudeConfig } from './config-loader.js';
 
 interface BrutalPlanRequest {
   requirement: string;
@@ -46,7 +46,7 @@ interface BrutalAnalysis {
 }
 
 export class BrutalPlanEngine {
-  private config: BrutalConfig | null = null;
+  private config: CriticalClaudeConfig | null = null;
 
   /**
    * Simple extraction - let the AI handle the complexity

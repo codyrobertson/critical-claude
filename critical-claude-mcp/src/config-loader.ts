@@ -8,7 +8,14 @@ import path from 'path';
 import toml from '@iarna/toml';
 import { logger } from './logger.js';
 
-export interface BrutalConfig {
+export interface CriticalClaudeConfig {
+  web_search?: {
+    enabled: boolean;
+    exa_api_key?: string;
+    search_depth: string;
+    fact_checking?: boolean;
+    vulnerability_scanning?: boolean;
+  };
   general: {
     log_level: string;
     max_files: number;
@@ -70,7 +77,7 @@ export interface BrutalConfig {
 
 class ConfigLoader {
   private static instance: ConfigLoader;
-  private config: BrutalConfig | null = null;
+  private config: CriticalClaudeConfig | null = null;
   private configPath: string;
 
   private constructor() {
@@ -104,7 +111,7 @@ class ConfigLoader {
     return ConfigLoader.instance;
   }
 
-  async loadConfig(): Promise<BrutalConfig> {
+  async loadConfig(): Promise<CriticalClaudeConfig> {
     if (this.config) {
       return this.config;
     }
@@ -119,7 +126,7 @@ class ConfigLoader {
       // Validate required sections exist
       this.validateConfig(parsed);
 
-      this.config = parsed as BrutalConfig;
+      this.config = parsed as CriticalClaudeConfig;
       logger.info('Configuration loaded successfully', { path: this.configPath });
 
       return this.config;
@@ -158,7 +165,7 @@ class ConfigLoader {
     }
   }
 
-  private getDefaultConfig(): BrutalConfig {
+  private getDefaultConfig(): CriticalClaudeConfig {
     return {
       general: {
         log_level: 'info',
@@ -288,11 +295,11 @@ class ConfigLoader {
     };
   }
 
-  getConfig(): BrutalConfig | null {
+  getConfig(): CriticalClaudeConfig | null {
     return this.config;
   }
 
-  async reloadConfig(): Promise<BrutalConfig> {
+  async reloadConfig(): Promise<CriticalClaudeConfig> {
     this.config = null;
     return this.loadConfig();
   }
@@ -302,6 +309,6 @@ class ConfigLoader {
 export const configLoader = ConfigLoader.getInstance();
 
 // Export convenience function
-export async function getConfig(): Promise<BrutalConfig> {
+export async function getConfig(): Promise<CriticalClaudeConfig> {
   return configLoader.loadConfig();
 }

@@ -27,6 +27,8 @@ import { PerformanceAnalyzer } from './performance-analyzer.js';
 import { ResourceManager } from './resource-manager.js';
 import { InputValidator } from './input-validator.js';
 import { ErrorHandler } from './error-handler.js';
+import { WebSearchTool } from './tools/web-search.js';
+import { getConfig } from './config-loader.js';
 import fs from 'fs/promises';
 
 /**
@@ -84,9 +86,39 @@ type CritiqueResult = {
 };
 
 // PragmaticCritiqueEngine has been extracted to pragmatic-critique-engine.ts
-// Global instance of the pragmatic critique engine
-const pragmaticEngine = new PragmaticCritiqueEngine();
+// Global instances - will be initialized after config is loaded
+let pragmaticEngine: PragmaticCritiqueEngine;
+let webSearchTool: WebSearchTool;
 const codebaseExplorer = new CodebaseExplorer();
+
+// Initialize tools with configuration
+async function initializeTools() {
+  try {
+    const config = await getConfig();
+    
+    // Initialize web search tool with config
+    webSearchTool = new WebSearchTool({
+      enabled: config.web_search?.enabled ?? false,
+      searchDepth: config.web_search?.search_depth ?? 'basic'
+    });
+    
+    // Initialize pragmatic engine with web search tool
+    pragmaticEngine = new PragmaticCritiqueEngine(webSearchTool);
+    
+    logger.info('Tools initialized with configuration', {
+      webSearchEnabled: config.web_search?.enabled ?? false
+    });
+  } catch (error) {
+    logger.warn('Failed to load config, using defaults', error as Error);
+    
+    // Initialize with defaults
+    webSearchTool = new WebSearchTool({ enabled: false });
+    pragmaticEngine = new PragmaticCritiqueEngine(webSearchTool);
+  }
+}
+
+// Initialize tools on startup
+await initializeTools();
 
 /**
  * Create an MCP server with critical code analysis and planning
@@ -409,9 +441,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const code = codeValidation.sanitized!;
       const filename = filenameValidation.sanitized!;
 
-      // Use error boundary - wrap sync function in async
+      // Use error boundary
       const analyzeWithErrorHandling = ErrorHandler.wrapAsync(
-        async (code: string, filename: string) => pragmaticEngine.analyzeCode(code, filename),
+        pragmaticEngine.analyzeCode.bind(pragmaticEngine),
         'cc_crit_code'
       );
 

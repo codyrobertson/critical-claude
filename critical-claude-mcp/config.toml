@@ -1,4 +1,4 @@
-# Brutal Critique MCP Configuration
+# Critical Claude MCP Configuration
 # Battle-tested multipliers and settings from real production experience
 
 [general]
@@ -16,6 +16,22 @@ max_files_per_type = 1000
 
 # Maximum directory depth for exploration
 max_directory_depth = 20
+
+[web_search]
+# Enable web search integration for fact-checking and vulnerability verification
+enabled = false
+
+# Exa API key (can also be set via EXA_API_KEY environment variable)
+# exa_api_key = "your-api-key-here"
+
+# Search depth: "basic" | "comprehensive"
+search_depth = "basic"
+
+# Enable fact-checking for recommendations
+fact_checking = true
+
+# Enable vulnerability scanning against CVE databases
+vulnerability_scanning = true
 
 [security]
 # Allowed root paths for file access (glob patterns)

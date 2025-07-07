@@ -4,8 +4,15 @@
  */
 
 import { CodeIssue } from './types.js';
+import { WebSearchTool, SecurityFinding } from './tools/web-search.js';
+import { logger } from './logger.js';
 
 export class SecurityAnalyzer {
+  private webSearchTool: WebSearchTool;
+  
+  constructor(webSearchTool?: WebSearchTool) {
+    this.webSearchTool = webSearchTool || new WebSearchTool({ enabled: false });
+  }
   /**
    * Check if a code snippet is within a comment or string literal
    */
@@ -261,7 +268,7 @@ setTimeout(() => executeAction(), delay);  // Use function, not string`,
   /**
    * Main analysis function
    */
-  analyze(code: string, filename: string): CodeIssue[] {
+  async analyze(code: string, filename: string): Promise<CodeIssue[]> {
     const issues: CodeIssue[] = [];
     
     // Skip analysis for test files and example files
@@ -274,6 +281,38 @@ setTimeout(() => executeAction(), delay);  // Use function, not string`,
     issues.push(...this.analyzeXSS(code, filename));
     issues.push(...this.analyzeCodeExecution(code, filename));
     
+    // Enhance with web search if enabled
+    if (this.webSearchTool) {
+      try {
+        const webFindings = await this.webSearchTool.searchForVulnerabilities(code, filename);
+        issues.push(...this.convertWebFindings(webFindings, filename));
+      } catch (error) {
+        logger.warn('Failed to enhance with web search', error as Error);
+      }
+    }
+    
     return issues;
+  }
+  
+  /**
+   * Convert web search findings to CodeIssue format
+   */
+  private convertWebFindings(findings: SecurityFinding[], filename: string): CodeIssue[] {
+    return findings.map(finding => ({
+      type: 'SECURITY' as const,
+      severity: finding.severity,
+      location: {
+        file: filename,
+        lines: [1] // Web findings don't have specific line numbers
+      },
+      brutal_feedback: `${finding.vulnerability} - ${finding.description}`,
+      actual_impact: `Verified vulnerability from ${finding.source}`,
+      fix: {
+        description: 'Review security best practices and apply recommended fixes',
+        working_code: '// See source for detailed remediation steps',
+        complexity: 'moderate' as const,
+        roi: 'high' as const
+      }
+    }));
   }
 }

@@ -6,7 +6,8 @@ A battle-hardened senior engineer's brutal but constructive code review system i
 
 ### Core Capabilities
 
-- **Brutal File Analysis** - Security, performance, and architecture checks with zero mercy
+- **Critical File Analysis** - Security, performance, and architecture checks with zero mercy
+- **Web Search Integration** - Real-time fact-checking and vulnerability verification via Exa
 - **Diff-based Reviews** - Ruthless analysis of code changes for pull requests
 - **Production Risk Assessment** - Real-world failure scenarios with business impact
 - **Working Code Fixes** - Complete, executable solutions for every issue found
@@ -120,6 +121,27 @@ See [CONFIG.md](CONFIG.md) for detailed configuration options.
 - Hardening: 15%
 
 **Critique Settings** - Severity thresholds and analysis parameters
+
+### Web Search Integration (NEW)
+
+Enhance critique accuracy with real-time web search:
+
+**Configuration in config.toml:**
+```toml
+[web_search]
+enabled = false  # Set to true to enable
+search_depth = "basic"  # or "comprehensive"
+fact_checking = true
+vulnerability_scanning = true
+```
+
+**Features:**
+- **Vulnerability Verification** - Cross-check security issues against CVE databases
+- **Best Practice Validation** - Verify recommendations against current industry standards
+- **Library Security Checks** - Identify known vulnerabilities in dependencies
+- **Fact-based Recommendations** - Ground suggestions in authoritative sources
+
+**Note:** Web search requires Exa API access. Set `EXA_API_KEY` environment variable or configure in config.toml.
 
 ## 🛠️ Available Tools
 

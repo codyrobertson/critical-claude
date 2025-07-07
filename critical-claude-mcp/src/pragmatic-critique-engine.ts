@@ -4,6 +4,7 @@
  */
 
 import { SecurityAnalyzer } from './security-analyzer.js';
+import { WebSearchTool } from './tools/web-search.js';
 import { logger } from './logger.js';
 
 // Import types (we'll need to update these imports once we extract them)
@@ -46,22 +47,24 @@ type CritiqueResult = {
 
 export class PragmaticCritiqueEngine {
   private securityAnalyzer: SecurityAnalyzer;
+  private webSearchTool: WebSearchTool;
 
-  constructor() {
-    this.securityAnalyzer = new SecurityAnalyzer();
+  constructor(webSearchTool?: WebSearchTool) {
+    this.webSearchTool = webSearchTool || new WebSearchTool({ enabled: false });
+    this.securityAnalyzer = new SecurityAnalyzer(this.webSearchTool);
   }
 
   /**
    * Analyze code with pragmatic context
    */
-  analyzeCode(code: string, filename: string, context?: any): CritiqueResult {
+  async analyzeCode(code: string, filename: string, context?: any): Promise<CritiqueResult> {
     logger.info('Starting pragmatic code analysis', { filename });
 
     const systemType = this.detectSystemType(code, filename);
     const issues: CodeIssue[] = [];
 
     // Run all analyses
-    this.analyzeSecurity(code, filename, systemType, issues);
+    await this.analyzeSecurity(code, filename, systemType, issues);
     this.analyzePerformance(code, filename, systemType, issues);
     this.analyzeArchitecture(code, filename, systemType, issues);
     this.analyzeQuality(code, filename, systemType, issues);
@@ -71,6 +74,11 @@ export class PragmaticCritiqueEngine {
 
     // Identify good decisions
     const goodDecisions = this.identifyGoodDecisions(code, filename);
+    
+    // Enhance with fact-checking if enabled
+    if (this.webSearchTool && context?.enableFactChecking !== false) {
+      await this.enhanceWithFactChecking(issues, code, filename);
+    }
 
     // Generate verdict
     const criticalCount = issues.filter((i) => i.severity === 'CRITICAL').length;
@@ -139,14 +147,14 @@ export class PragmaticCritiqueEngine {
     return 'unknown';
   }
 
-  private analyzeSecurity(
+  private async analyzeSecurity(
     code: string,
     filename: string,
     systemType: SystemType,
     issues: CodeIssue[]
-  ): void {
+  ): Promise<void> {
     // Use the smart security analyzer to avoid false positives
-    const securityIssues = this.securityAnalyzer.analyze(code, filename);
+    const securityIssues = await this.securityAnalyzer.analyze(code, filename);
     
     // Convert security issues to match the expected format
     for (const issue of securityIssues) {
@@ -452,6 +460,127 @@ logger.info('User action', { userId, action });`,
     const index = code.indexOf(search);
     if (index === -1) return 1;
     return code.substring(0, index).split('\n').length;
+  }
+  
+  /**
+   * Enhance critique results with fact-checking via web search
+   */
+  private async enhanceWithFactChecking(
+    issues: CodeIssue[], 
+    code: string, 
+    filename: string
+  ): Promise<void> {
+    try {
+      logger.info('Enhancing critique with fact-checking', { filename });
+      
+      // Extract language from filename
+      const language = this.detectLanguage(filename);
+      
+      // Fact-check performance recommendations
+      for (const issue of issues) {
+        if (issue.type === 'PERFORMANCE' && issue.fix) {
+          const bestPractices = await this.webSearchTool.verifyBestPractices(
+            issue.fix.description,
+            language
+          );
+          
+          if (bestPractices.length > 0) {
+            // Enhance the fix with verified best practices
+            issue.fix.description += `\n\nVerified best practices:\n${
+              bestPractices.map(bp => `- ${bp.practice}: ${bp.description}`).join('\n')
+            }`;
+          }
+        }
+      }
+      
+      // Check for library vulnerabilities
+      const dependencies = this.extractDependencies(code, filename);
+      if (dependencies.length > 0) {
+        const libraryIssues = await this.webSearchTool.checkLibraryIssues(dependencies);
+        
+        // Add library vulnerability issues
+        for (const libIssue of libraryIssues) {
+          issues.push({
+            type: 'SECURITY',
+            severity: 'HIGH',
+            location: {
+              file: filename,
+              lines: [1] // Dependencies are usually at the top
+            },
+            brutal_feedback: `Library ${libIssue.library} has known vulnerabilities`,
+            actual_impact: libIssue.issues.join('; '),
+            fix: {
+              description: `Update ${libIssue.library} or switch to alternatives: ${libIssue.alternatives?.join(', ') || 'research alternatives'}`,
+              working_code: `// Update package.json or requirements file`,
+              complexity: 'simple',
+              roi: 'high'
+            }
+          });
+        }
+      }
+      
+      logger.info('Fact-checking complete', { 
+        enhancedIssues: issues.filter(i => i.fix?.description.includes('Verified')).length 
+      });
+    } catch (error) {
+      logger.warn('Fact-checking failed, continuing without enhancements', error as Error);
+    }
+  }
+  
+  /**
+   * Detect programming language from filename
+   */
+  private detectLanguage(filename: string): string {
+    const ext = filename.split('.').pop()?.toLowerCase() || '';
+    const languageMap: Record<string, string> = {
+      'js': 'JavaScript',
+      'ts': 'TypeScript', 
+      'py': 'Python',
+      'java': 'Java',
+      'go': 'Go',
+      'rs': 'Rust',
+      'rb': 'Ruby',
+      'php': 'PHP'
+    };
+    
+    return languageMap[ext] || 'Unknown';
+  }
+  
+  /**
+   * Extract dependencies from code
+   */
+  private extractDependencies(code: string, filename: string): string[] {
+    const dependencies: string[] = [];
+    
+    // JavaScript/TypeScript imports
+    if (filename.endsWith('.js') || filename.endsWith('.ts')) {
+      const importMatches = code.matchAll(/import\s+.*from\s+['"]([^'"]+)['"]/g);
+      for (const match of importMatches) {
+        if (!match[1].startsWith('.') && !match[1].startsWith('/')) {
+          dependencies.push(match[1]);
+        }
+      }
+      
+      const requireMatches = code.matchAll(/require\(['"]([^'"]+)['"]\)/g);
+      for (const match of requireMatches) {
+        if (!match[1].startsWith('.') && !match[1].startsWith('/')) {
+          dependencies.push(match[1]);
+        }
+      }
+    }
+    
+    // Python imports
+    if (filename.endsWith('.py')) {
+      const importMatches = code.matchAll(/(?:from|import)\s+(\S+)/g);
+      for (const match of importMatches) {
+        const lib = match[1].split('.')[0];
+        if (!lib.startsWith('_') && lib !== 'from') {
+          dependencies.push(lib);
+        }
+      }
+    }
+    
+    return [...new Set(dependencies)]; // Remove duplicates
   }
 
   /**
