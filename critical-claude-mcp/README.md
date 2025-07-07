@@ -1,6 +1,6 @@
-# 🔥 Brutal Code Critique MCP Server
+# 🔥 Critical Claude MCP Server
 
-A battle-hardened senior engineer's brutal but constructive code review system implemented as a Model Context Protocol (MCP) server for Claude Code.
+A battle-hardened senior engineer's critical but constructive code review system implemented as a Model Context Protocol (MCP) server for Claude Code.
 
 ## 🎯 Features
 
@@ -8,6 +8,7 @@ A battle-hardened senior engineer's brutal but constructive code review system i
 
 - **Critical File Analysis** - Security, performance, and architecture checks with zero mercy
 - **Web Search Integration** - Real-time fact-checking and vulnerability verification via Exa
+- **Project Initialization** - Smart project detection with tailored configuration and commands
 - **Diff-based Reviews** - Ruthless analysis of code changes for pull requests
 - **Production Risk Assessment** - Real-world failure scenarios with business impact
 - **Working Code Fixes** - Complete, executable solutions for every issue found
@@ -23,6 +24,29 @@ A battle-hardened senior engineer's brutal but constructive code review system i
 
 ## 🚀 Quick Start
 
+### Initialize Your Project
+
+After installing Critical Claude, initialize your project for tailored analysis:
+
+```bash
+# Initialize with auto-detected project name
+cc init
+
+# Or specify a project name
+cc init my-awesome-app
+```
+
+This will:
+- Detect your project type (web app, CLI tool, library, etc.)
+- Identify programming language and framework
+- Generate optimized configuration in `.critical-claude/config.toml`
+- Create custom Claude commands in `.claude/commands/`
+- Set up project-specific instructions in `.claude/CLAUDE.md`
+
+After initialization, use these commands:
+- `/project:critique` - Run comprehensive code critique on changes
+- `/project:plan-feature <description>` - Plan new features with realistic timelines
+
 ### Installation
 
 The server is already configured for Claude Desktop. If you need to set it up manually:
@@ -30,10 +54,10 @@ The server is already configured for Claude Desktop. If you need to set it up ma
 ```json
 {
   "mcpServers": {
-    "brutal-critique": {
+    "critical-claude": {
       "command": "node",
       "args": ["./build/index.js"],
-      "cwd": "/Users/Cody/code_projects/critical_claude/brutal-critique-mcp"
+      "cwd": "/Users/Cody/code_projects/critical_claude/critical-claude-mcp"
     }
   }
 }
@@ -85,7 +109,7 @@ The system uses a `config.toml` file to control multipliers, thresholds, and beh
 
 1. Current working directory
 2. Parent directories (up to 5 levels)
-3. `~/.config/brutal-critique/config.toml`
+3. `~/.config/critical-claude/config.toml`
 4. Falls back to built-in defaults
 
 See [CONFIG.md](CONFIG.md) for detailed configuration options.
@@ -191,6 +215,14 @@ Analyze entire project structure to provide architectural insights.
 
 - `root_path` (string, required) - Root directory to explore
 
+### `cc_init_project`
+
+Initialize Critical Claude for your project with tailored configuration and commands.
+
+**Parameters:**
+
+- `projectName` (string, optional) - Project name (defaults to directory name)
+
 ### Legacy Tools
 
 These tools provide the original brutal review experience:
@@ -259,7 +291,7 @@ The server provides comprehensive documentation:
 
 ### Core Components
 
-**BrutalCritiqueEngine**
+**PragmaticCritiqueEngine**
 
 - Multi-dimensional analysis engine
 - Pattern-based vulnerability detection
@@ -314,7 +346,7 @@ if (code.includes('innerHTML') && !code.includes('sanitize'))
 if (code.includes('setInterval') && !code.includes('clearInterval'))
 ```
 
-## 🎭 The Brutal Persona
+## 🎭 The Critical Persona
 
 This system embodies a battle-hardened senior engineer who has:
 
@@ -344,10 +376,10 @@ The server integrates seamlessly with Claude Code through the MCP protocol:
 
 ### Available in Claude Code:
 
-- `@brutal-critique pragmatic_review` - Focused code analysis
-- `@brutal-critique architecture_review` - Architecture assessment
-- `@brutal-critique brutal_timeline` - Reality-based estimation
-- `@brutal-critique explore_codebase` - Full project analysis
+- `@critical-claude cc_crit_code` - Focused code analysis
+- `@critical-claude cc_crit_arch` - Architecture assessment
+- `@critical-claude cc_plan_timeline` - Reality-based estimation
+- `@critical-claude cc_crit_explore` - Full project analysis
 - Access to critique guides and security checklists
 
 ## 📈 Severity Classification
@@ -465,6 +497,6 @@ Documentation is automatically generated and updated via pre-commit hooks.
 
 ---
 
-Your Brutal Code Critique MCP Server is now ready to prevent the next production disaster. Use it to ship bulletproof code or don't ship at all.
+Your Critical Claude MCP Server is now ready to prevent the next production disaster. Use it to ship bulletproof code or don't ship at all.
 
 _"The best code review is the one that finds the bug that would have taken down production on Black Friday."_

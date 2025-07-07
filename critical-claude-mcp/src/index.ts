@@ -28,8 +28,10 @@ import { ResourceManager } from './resource-manager.js';
 import { InputValidator } from './input-validator.js';
 import { ErrorHandler } from './error-handler.js';
 import { WebSearchTool } from './tools/web-search.js';
+import { InitWizard } from './tools/init-wizard.js';
 import { getConfig } from './config-loader.js';
 import fs from 'fs/promises';
+import path from 'path';
 
 /**
  * System context types
@@ -417,6 +419,19 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['input'],
         },
       },
+      {
+        name: 'cc_init_project',
+        description: 'Initialize Critical Claude for a project with tailored configuration and commands',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            projectName: {
+              type: 'string',
+              description: 'Project name (optional, defaults to directory name)',
+            },
+          },
+        },
+      },
     ],
   };
 });
@@ -743,6 +758,40 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       } catch (error) {
         logger.error('Failed to generate timeline', { input }, error as Error);
         throw new Error(`Failed to generate timeline: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_init_project': {
+      const projectName = request.params.arguments?.projectName as string | undefined;
+      
+      logger.info('Initializing project', { projectName });
+      
+      try {
+        const wizard = new InitWizard();
+        await wizard.run({ projectName });
+        
+        const finalName = projectName || path.basename(process.cwd());
+        
+        return {
+          content: [{
+            type: 'text',
+            text: `✅ Critical Claude initialized for project: ${finalName}
+      
+Configuration saved to:
+- .critical-claude/config.toml - Project configuration
+- .claude/CLAUDE.md - Project-specific instructions
+- .claude/commands/ - Custom commands
+
+Available commands:
+- /project:critique - Run comprehensive code critique
+- /project:plan-feature - Plan new feature with timeline
+
+Run 'cc crit explore' to analyze your codebase structure.`,
+          }],
+        };
+      } catch (error) {
+        logger.error('Failed to initialize project', error as Error);
+        throw new Error(`Failed to initialize project: ${(error as Error).message}`);
       }
     }
 

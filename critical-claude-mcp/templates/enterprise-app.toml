@@ -1,0 +1,64 @@
+# Critical Claude Configuration for Enterprise Applications
+# Optimized for large-scale, mission-critical systems
+
+[project]
+name = "{{PROJECT_NAME}}"
+type = "enterprise-app"
+language = "{{LANGUAGE}}"
+framework = "{{FRAMEWORK}}"
+team_size = {{TEAM_SIZE}}
+user_count = {{USER_COUNT}}
+initialized_at = "{{TIMESTAMP}}"
+
+[requirements]
+security_level = "critical"
+performance_target = "500ms"
+concurrent_users = 10000
+uptime_sla = 99.99
+compliance = ["SOC2", "GDPR", "HIPAA"]
+
+[critique]
+# Enterprise specific thresholds
+[critique.severity_overrides]
+security_threshold = "critical"
+performance_threshold = "high"
+audit_logging = "critical"
+data_privacy = "critical"
+scalability = "high"
+
+[critique.focus_areas]
+security = ["rbac", "audit-trails", "encryption", "compliance"]
+architecture = ["scalability", "fault-tolerance", "disaster-recovery", "monitoring"]
+operations = ["deployment", "rollback", "monitoring", "alerting"]
+governance = ["code-review", "documentation", "change-management"]
+
+[web_search]
+enabled = true
+search_depth = "comprehensive"
+fact_checking = true
+vulnerability_scanning = true
+compliance_checking = true
+
+[enterprise_specific]
+# Enterprise requirements
+require_audit_logging = true
+require_encryption_at_rest = true
+require_encryption_in_transit = true
+require_multi_factor_auth = true
+require_disaster_recovery = true
+require_data_retention_policy = true
+
+[monitoring]
+# Monitoring and observability
+require_metrics = true
+require_tracing = true
+require_structured_logging = true
+alert_response_time = "5m"
+
+[compliance]
+# Compliance requirements
+data_classification = true
+pii_handling = "strict"
+audit_retention = "7_years"
+gdpr_compliance = true
+hipaa_compliance = true
