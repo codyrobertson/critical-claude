@@ -44,7 +44,13 @@
       "Bash(npx tsx:*)",
       "Bash(git reset:*)",
       "WebFetch(domain:scottspence.com)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "mcp__critical-claude__cc_plan_timeline",
+      "mcp__critical-claude__cc_crit_explore",
+      "mcp__critical-claude__cc_mvp_plan",
+      "mcp__critical-claude__cc_system_design_analyze",
+      "mcp__critical-claude__cc_data_flow_diagram",
+      "mcp__critical-claude__cc_crit_code"
     ],
     "deny": []
   }

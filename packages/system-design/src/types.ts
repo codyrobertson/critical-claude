@@ -9,15 +9,19 @@ export interface SystemComponent {
 }
 
 export interface MVPPlan {
+  projectName?: string;
   title: string;
   description: string;
   targetUsers: string;
+  features?: Feature[]; // Alias for coreFeatures
   coreFeatures: Feature[];
+  techStack?: Record<string, string>; // Simple format for output
   technicalStack: TechStackChoice[];
   architecture: ArchitectureDecision[];
   phases: Phase[];
   risks: Risk[];
   timeline: Timeline;
+  estimatedBudget?: number;
 }
 
 export interface Feature {

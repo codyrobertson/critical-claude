@@ -27,9 +27,9 @@ export class SystemDesignAnalyzer {
         name: 'Frontend Application',
         type: 'frontend',
         description: 'User interface layer',
-        technologies: patterns.frontend,
+        technologies: patterns.frontend || [],
         dependencies: ['API Gateway'],
-        complexity: this.assessComplexity(patterns.frontend),
+        complexity: this.assessComplexity(patterns.frontend || []),
         mvpPriority: 'must-have'
       });
     }
@@ -39,9 +39,9 @@ export class SystemDesignAnalyzer {
         name: 'Backend API',
         type: 'backend',
         description: 'Business logic and API endpoints',
-        technologies: patterns.backend,
+        technologies: patterns.backend || [],
         dependencies: structure.hasDatabase ? ['Database'] : [],
-        complexity: this.assessComplexity(patterns.backend),
+        complexity: this.assessComplexity(patterns.backend || []),
         mvpPriority: 'must-have'
       });
     }
@@ -51,7 +51,7 @@ export class SystemDesignAnalyzer {
         name: 'Database',
         type: 'database',
         description: 'Data persistence layer',
-        technologies: patterns.database,
+        technologies: patterns.database || [],
         dependencies: [],
         complexity: 'simple',
         mvpPriority: 'must-have'
@@ -138,7 +138,7 @@ export class SystemDesignAnalyzer {
   }
   
   private assessComplexity(technologies: string[]): 'simple' | 'moderate' | 'complex' {
-    if (technologies.length <= 2) return 'simple';
+    if (!technologies || technologies.length <= 2) return 'simple';
     if (technologies.length <= 5) return 'moderate';
     return 'complex';
   }

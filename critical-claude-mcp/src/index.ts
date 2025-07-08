@@ -310,14 +310,21 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             code: {
               type: 'string',
-              description: 'The source code to analyze',
+              description: 'The source code to analyze (required if filePath not provided)',
             },
             filename: {
               type: 'string',
               description: 'Name of the file being analyzed (helps determine context)',
             },
+            filePath: {
+              type: 'string',
+              description: 'Path to the file to analyze (alternative to providing code directly)',
+            },
           },
-          required: ['code', 'filename'],
+          anyOf: [
+            { required: ['code', 'filename'] },
+            { required: ['filePath'] }
+          ],
         },
       },
       {
@@ -328,11 +335,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             code: {
               type: 'string',
-              description: 'The source code to analyze',
+              description: 'The source code to analyze (required if filePath not provided)',
             },
             filename: {
               type: 'string',
               description: 'Name of the file being analyzed',
+            },
+            filePath: {
+              type: 'string',
+              description: 'Path to the file to analyze (alternative to providing code directly)',
             },
             context: {
               type: 'object',
@@ -354,7 +365,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               },
             },
           },
-          required: ['code', 'filename'],
+          anyOf: [
+            { required: ['code', 'filename'] },
+            { required: ['filePath'] }
+          ],
         },
       },
       {
@@ -508,19 +522,39 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   switch (request.params.name) {
     case 'cc_crit_code': {
-      // Validate inputs
-      const codeValidation = InputValidator.validateCode(request.params.arguments?.code);
-      const filenameValidation = InputValidator.validateFilename(request.params.arguments?.filename || 'unknown.js');
+      let code: string;
+      let filename: string;
+      
+      // Check if filePath is provided
+      if (request.params.arguments?.filePath) {
+        const filePath = String(request.params.arguments.filePath);
+        
+        // Validate file path
+        if (!PathValidator.isSafeToRead(filePath, process.cwd())) {
+          throw new Error('File path is not safe to read');
+        }
+        
+        try {
+          code = await fs.readFile(filePath, 'utf8');
+          filename = path.basename(filePath);
+        } catch (error) {
+          throw new Error(`Failed to read file: ${(error as Error).message}`);
+        }
+      } else {
+        // Use provided code and filename
+        const codeValidation = InputValidator.validateCode(request.params.arguments?.code);
+        const filenameValidation = InputValidator.validateFilename(request.params.arguments?.filename || 'unknown.js');
 
-      if (!codeValidation.valid) {
-        throw new Error(`Invalid code: ${codeValidation.errors.join(', ')}`);
-      }
-      if (!filenameValidation.valid) {
-        throw new Error(`Invalid filename: ${filenameValidation.errors.join(', ')}`);
-      }
+        if (!codeValidation.valid) {
+          throw new Error(`Invalid code: ${codeValidation.errors.join(', ')}`);
+        }
+        if (!filenameValidation.valid) {
+          throw new Error(`Invalid filename: ${filenameValidation.errors.join(', ')}`);
+        }
 
-      const code = codeValidation.sanitized!;
-      const filename = filenameValidation.sanitized!;
+        code = codeValidation.sanitized!;
+        filename = filenameValidation.sanitized!;
+      }
 
       // Use error boundary
       const analyzeWithErrorHandling = ErrorHandler.wrapAsync(
@@ -542,12 +576,33 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     case 'cc_crit_arch': {
-      const code = String(request.params.arguments?.code || '');
-      const filename = String(request.params.arguments?.filename || 'unknown.js');
+      let code: string;
+      let filename: string;
       const context = (request.params.arguments?.context as any) || {};
+      
+      // Check if filePath is provided
+      if (request.params.arguments?.filePath) {
+        const filePath = String(request.params.arguments.filePath);
+        
+        // Validate file path
+        if (!PathValidator.isSafeToRead(filePath, process.cwd())) {
+          throw new Error('File path is not safe to read');
+        }
+        
+        try {
+          code = await fs.readFile(filePath, 'utf8');
+          filename = path.basename(filePath);
+        } catch (error) {
+          throw new Error(`Failed to read file: ${(error as Error).message}`);
+        }
+      } else {
+        // Use provided code and filename
+        code = String(request.params.arguments?.code || '');
+        filename = String(request.params.arguments?.filename || 'unknown.js');
 
-      if (!code) {
-        throw new Error('Code is required for architecture review');
+        if (!code) {
+          throw new Error('Code or filePath is required for architecture review');
+        }
       }
 
       // Use the same engine but focus on architecture

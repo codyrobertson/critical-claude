@@ -150,7 +150,8 @@ export class SystemDesignServer {
         }
     }
     formatMVPPlan(plan) {
-        let report = `🚀 MVP PLAN: ${plan.projectName.toUpperCase()}\n`;
+        const projectName = plan.projectName || plan.title || 'UNKNOWN PROJECT';
+        let report = `🚀 MVP PLAN: ${projectName.toUpperCase()}\n`;
         report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
         report += `📝 PROJECT OVERVIEW\n`;
         report += `Target Users: ${plan.targetUsers}\n`;
@@ -158,29 +159,29 @@ export class SystemDesignServer {
         report += `Budget Range: $${plan.estimatedBudget.toLocaleString()}\n\n`;
         report += `🎯 CORE FEATURES (MVP)\n`;
         report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-        plan.features.forEach((feature, index) => {
+        (plan.features || plan.coreFeatures || []).forEach((feature, index) => {
             const icon = feature.priority === 'high' ? '🔴' : feature.priority === 'medium' ? '🟡' : '🔵';
             report += `${icon} ${feature.name}\n`;
             report += `   ${feature.description}\n`;
-            report += `   Effort: ${feature.effort}\n`;
-            report += `   Dependencies: ${feature.dependencies.join(', ') || 'None'}\n\n`;
+            report += `   Effort: ${feature.effort || 'Unknown'}\n`;
+            report += `   Dependencies: ${feature.dependencies?.join(', ') || 'None'}\n\n`;
         });
         report += `🛠️ RECOMMENDED TECH STACK\n`;
         report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-        Object.entries(plan.techStack).forEach(([category, tech]) => {
+        Object.entries(plan.techStack || plan.technicalStack || {}).forEach(([category, tech]) => {
             report += `• ${category}: ${tech}\n`;
         });
         report += `\n📅 DEVELOPMENT PHASES\n`;
         report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-        plan.phases.forEach((phase, index) => {
+        (plan.phases || []).forEach((phase, index) => {
             report += `🔢 Phase ${index + 1}: ${phase.name}\n`;
             report += `   Duration: ${phase.duration}\n`;
-            report += `   Deliverables: ${phase.deliverables.join(', ')}\n`;
-            report += `   Team Size: ${phase.teamSize} developers\n\n`;
+            report += `   Deliverables: ${phase.deliverables?.join(', ') || 'TBD'}\n`;
+            report += `   Team Size: ${phase.teamSize || 'TBD'} developers\n\n`;
         });
         report += `⚠️ RISKS & MITIGATION\n`;
         report += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
-        plan.risks.forEach((risk) => {
+        (plan.risks || []).forEach((risk) => {
             report += `• ${risk.description}\n`;
             report += `   Impact: ${risk.impact}\n`;
             report += `   Mitigation: ${risk.mitigation}\n\n`;

@@ -8,15 +8,19 @@ export class MVPPlanner {
         const risks = this.identifyRisks(input, techStack);
         const timeline = this.createTimeline(phases, input.constraints?.timeline);
         return {
+            projectName: input.projectName,
             title: `MVP Plan: ${input.projectName}`,
             description: input.description,
             targetUsers: input.targetUsers,
+            features: coreFeatures, // Also add as 'features' for backward compatibility
             coreFeatures,
+            techStack: this.convertTechStackForOutput(techStack), // Add techStack format
             technicalStack: techStack,
             architecture: this.generateArchitectureDecisions(techStack, coreFeatures),
             phases,
             risks,
-            timeline
+            timeline,
+            estimatedBudget: this.calculateBudget(phases, input.constraints?.budget)
         };
     }
     identifyCoreFeatures(description) {
@@ -301,6 +305,25 @@ export class MVPPlanner {
         output += `3. Begin Phase 1: Foundation\n`;
         output += `4. Schedule weekly progress reviews\n`;
         return output;
+    }
+    convertTechStackForOutput(techStack) {
+        const output = {};
+        techStack.forEach(choice => {
+            output[choice.category] = choice.technology;
+        });
+        return output;
+    }
+    calculateBudget(phases, suggestedBudget) {
+        if (suggestedBudget)
+            return suggestedBudget;
+        // Simple budget calculation based on phases
+        const totalWeeks = phases.reduce((total, phase) => {
+            // Extract number from duration string like "4 weeks"
+            const weeks = parseInt(phase.duration.match(/\d+/)?.[0] || '2');
+            return total + weeks;
+        }, 0);
+        // Assume $5000 per week for a 2-person team
+        return totalWeeks * 5000;
     }
 }
 //# sourceMappingURL=mvp-planner.js.map

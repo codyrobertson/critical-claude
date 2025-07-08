@@ -8,15 +8,19 @@ export interface SystemComponent {
     mvpPriority: 'must-have' | 'nice-to-have' | 'future';
 }
 export interface MVPPlan {
+    projectName?: string;
     title: string;
     description: string;
     targetUsers: string;
+    features?: Feature[];
     coreFeatures: Feature[];
+    techStack?: Record<string, string>;
     technicalStack: TechStackChoice[];
     architecture: ArchitectureDecision[];
     phases: Phase[];
     risks: Risk[];
     timeline: Timeline;
+    estimatedBudget?: number;
 }
 export interface Feature {
     name: string;

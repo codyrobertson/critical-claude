@@ -17,5 +17,7 @@ export declare class MVPPlanner {
     private createTimeline;
     private generateArchitectureDecisions;
     formatMVPPlan(plan: MVPPlan): string;
+    private convertTechStackForOutput;
+    private calculateBudget;
 }
 //# sourceMappingURL=mvp-planner.d.ts.map
