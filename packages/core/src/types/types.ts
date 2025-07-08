@@ -70,3 +70,14 @@ export interface AnalysisConfig {
   };
   skipPatterns: string[];
 }
+
+// MCP Tool Definition
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: {
+    type: string;
+    properties: Record<string, any>;
+    required?: string[];
+  };
+}
