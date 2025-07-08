@@ -1,4 +1,4 @@
 #!/bin/bash
-# Simple launcher for Brutal Code Critique MCP Server
+# Simple launcher for Critical Claude MCP Server
 cd "$(dirname "$0")"
 exec node build/index.js

@@ -42,7 +42,9 @@
       "Bash(find:*)",
       "Bash(npx tsc:*)",
       "Bash(npx tsx:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "WebFetch(domain:scottspence.com)",
+      "Bash(timeout:*)"
     ],
     "deny": []
   }

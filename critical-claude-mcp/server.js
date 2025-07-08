@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Brutal Code Critique MCP Server Runner
+ * Critical Claude MCP Server Runner
  * This runs the actual MCP server that can be connected to by Claude or other MCP clients
  */
 
@@ -12,7 +12,7 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-console.log('🔥 Starting Brutal Code Critique MCP Server...\n');
+console.log('🔥 Starting Critical Claude MCP Server...\n');
 
 // Path to the built server
 const serverPath = join(__dirname, 'build', 'index.js');
