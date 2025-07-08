@@ -31,6 +31,8 @@
     "pre-commit:all": "npm run typecheck && npm run lint && npm run format:check && npm test -- --passWithNoTests"
   },
   "dependencies": {
+    "@critical-claude/data-flow": "file:../packages/data-flow",
+    "@critical-claude/system-design": "file:../packages/system-design",
     "@iarna/toml": "^2.2.5",
     "@modelcontextprotocol/sdk": "0.6.0"
   },

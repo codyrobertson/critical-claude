@@ -34,6 +34,10 @@ import { getConfig } from './config-loader.js';
 import fs from 'fs/promises';
 import path from 'path';
 
+// Import new service packages
+import { SystemDesignServer } from '@critical-claude/system-design';
+import { DataFlowServer } from '@critical-claude/data-flow';
+
 /**
  * System context types
  */
@@ -93,6 +97,10 @@ type CritiqueResult = {
 let pragmaticEngine: PragmaticCritiqueEngine;
 let webSearchTool: WebSearchTool;
 const codebaseExplorer = new CodebaseExplorer();
+
+// Initialize new service packages
+const systemDesignServer = new SystemDesignServer();
+const dataFlowServer = new DataFlowServer();
 
 // Initialize tools with configuration
 async function initializeTools() {
@@ -288,6 +296,10 @@ Remember: YAGNI - You Aren't Gonna Need It`;
  * Handler that lists available tools.
  */
 server.setRequestHandler(ListToolsRequestSchema, async () => {
+  // Get tools from new service packages
+  const systemDesignTools = systemDesignServer.getTools();
+  const dataFlowTools = dataFlowServer.getTools();
+  
   return {
     tools: [
       {
@@ -483,6 +495,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['action'],
         },
       },
+      // Add tools from new service packages
+      ...systemDesignTools,
+      ...dataFlowTools,
     ],
   };
 });
@@ -1031,6 +1046,18 @@ Run 'cc crit explore' to analyze your codebase structure.`,
         throw new Error(`Prompt management failed: ${(error as Error).message}`);
       }
     }
+
+    // Handle system design tools
+    case 'cc_mvp_plan':
+    case 'cc_system_design_analyze':
+    case 'cc_tech_stack_recommend':
+      return await systemDesignServer.handleToolCall(request.params.name, request.params.arguments);
+
+    // Handle data flow tools
+    case 'cc_data_flow_analyze':
+    case 'cc_data_flow_trace':
+    case 'cc_data_flow_diagram':
+      return await dataFlowServer.handleToolCall(request.params.name, request.params.arguments);
 
     default:
       throw new Error(`Unknown tool: ${request.params.name}`);
