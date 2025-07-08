@@ -196,10 +196,28 @@ export class WebSearchTool {
     query: string, 
     category: 'security' | 'technical'
   ): Promise<ExaSearchResult[]> {
-    // This is a simulation - in real implementation, this would call Exa MCP
-    logger.debug('Simulating Exa search', { query, category });
+    // Input validation and sanitization
+    const sanitizedQuery = this.sanitizeSearchQuery(query);
     
-    if (category === 'security' && query.includes('SQL injection')) {
+    if (!sanitizedQuery) {
+      logger.error('Malicious search query blocked', { 
+        originalQuery: query,
+        category 
+      });
+      return [];
+    }
+    
+    // Log for security monitoring
+    logger.info('Search query sanitized', { 
+      original: query.length,
+      sanitized: sanitizedQuery.length,
+      removed: query.length - sanitizedQuery.length
+    });
+    
+    // This is a simulation - in real implementation, this would call Exa MCP
+    logger.debug('Simulating Exa search', { query: sanitizedQuery, category });
+    
+    if (category === 'security' && sanitizedQuery.includes('SQL injection')) {
       return [{
         title: 'SQL Injection Prevention - OWASP',
         url: 'https://owasp.org/www-community/attacks/SQL_Injection',
@@ -208,7 +226,7 @@ export class WebSearchTool {
       }];
     }
     
-    if (category === 'security' && query.includes('XSS')) {
+    if (category === 'security' && sanitizedQuery.includes('XSS')) {
       return [{
         title: 'Cross-Site Scripting (XSS) - OWASP',
         url: 'https://owasp.org/www-community/attacks/xss/',
@@ -296,5 +314,34 @@ export class WebSearchTool {
     };
     
     return alternatives[library] || [];
+  }
+  
+  private sanitizeSearchQuery(query: string): string | null {
+    // Length validation
+    if (query.length > 500) {
+      return null;
+    }
+    
+    // Remove all potentially dangerous characters
+    const dangerousChars = /[;&|`$(){}[\]<>\\'\"]/g;
+    const sanitized = query.replace(dangerousChars, '');
+    
+    // Remove any remaining non-alphanumeric except basic punctuation
+    const safePattern = /[^a-zA-Z0-9\s\-_.,:]/g;
+    const doubleSanitized = sanitized.replace(safePattern, '');
+    
+    // Check for injection patterns even after sanitization
+    const injectionPatterns = [
+      /\b(exec|eval|spawn|require|import)\b/i,
+      /\b(curl|wget|nc|bash|sh|cmd)\b/i,
+      /\.(sh|exe|bat|cmd|ps1)$/i
+    ];
+    
+    if (injectionPatterns.some(pattern => pattern.test(doubleSanitized))) {
+      logger.warn('Injection pattern detected after sanitization', { query });
+      return null;
+    }
+    
+    return doubleSanitized.trim();
   }
 }

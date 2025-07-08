@@ -249,29 +249,47 @@ export class InitWizard {
      * Generate project-specific configuration
      */
     async generateConfig(config) {
-        const configPath = path.join(this.projectRoot, '.critical-claude', 'config.toml');
+        // Validate project root is safe
+        const safeRoot = await this.validateProjectRoot(this.projectRoot);
+        // Create config directory with restricted permissions
+        const configDir = path.join(safeRoot, '.critical-claude');
+        await fs.mkdir(configDir, {
+            recursive: true,
+            mode: 0o750 // rwxr-x---
+        });
+        // Validate the final config path
+        const configPath = path.join(configDir, 'config.toml');
+        if (!this.isPathWithinProject(configPath, safeRoot)) {
+            throw new Error('Config path escapes project directory');
+        }
+        // Sanitize config content
+        const safeConfig = this.sanitizeConfig(config);
         const tomlConfig = {
             project: {
-                name: config.name,
-                type: config.type,
-                language: config.language,
-                framework: config.framework,
-                team_size: config.teamSize,
-                user_count: config.userCount,
+                name: safeConfig.name,
+                type: safeConfig.type,
+                language: safeConfig.language,
+                framework: safeConfig.framework,
+                team_size: safeConfig.teamSize,
+                user_count: safeConfig.userCount,
                 initialized_at: new Date().toISOString()
             },
             requirements: {
-                security_level: config.securityRequirements?.level,
-                performance_target: config.performanceRequirements?.responseTime,
-                concurrent_users: config.performanceRequirements?.concurrentUsers
+                security_level: safeConfig.securityRequirements?.level,
+                performance_target: safeConfig.performanceRequirements?.responseTime,
+                concurrent_users: safeConfig.performanceRequirements?.concurrentUsers
             },
             critique: {
                 // Adjust thresholds based on project type
-                severity_overrides: this.getSeverityOverrides(config.type)
+                severity_overrides: this.getSeverityOverrides(safeConfig.type)
             }
         };
         const tomlString = toml.stringify(tomlConfig);
-        await fs.writeFile(configPath, tomlString, 'utf-8');
+        // Write with secure permissions
+        await fs.writeFile(configPath, tomlString, {
+            mode: 0o640, // rw-r-----
+            flag: 'w' // Overwrite only, don't append
+        });
         logger.info('Generated project configuration', { path: configPath });
     }
     /**
@@ -476,6 +494,54 @@ ${this.getArchitecturePatterns(config.type)}
             'unknown': '- Layered architecture\n- Dependency injection\n- Error handling\n- Logging strategy'
         };
         return patterns[projectType];
+    }
+    async validateProjectRoot(projectRoot) {
+        const resolved = path.resolve(projectRoot);
+        // Must be absolute path
+        if (!path.isAbsolute(resolved)) {
+            throw new Error('Project root must be absolute path');
+        }
+        // Check for path traversal attempts
+        if (resolved.includes('..')) {
+            throw new Error('Path traversal detected in project root');
+        }
+        // Ensure we're not in system directories
+        const systemDirs = ['/etc', '/usr', '/bin', '/sbin', '/var', '/root', '/sys', '/proc'];
+        if (systemDirs.some(dir => resolved.startsWith(dir))) {
+            throw new Error('Cannot create project in system directory');
+        }
+        // Verify directory exists and we have write permissions
+        try {
+            await fs.access(resolved, fs.constants.W_OK);
+        }
+        catch {
+            throw new Error('No write access to project directory');
+        }
+        return resolved;
+    }
+    isPathWithinProject(targetPath, projectRoot) {
+        const resolvedTarget = path.resolve(targetPath);
+        const resolvedRoot = path.resolve(projectRoot);
+        return resolvedTarget.startsWith(resolvedRoot);
+    }
+    sanitizeConfig(config) {
+        // Create a sanitized copy
+        return {
+            name: this.sanitizeString(config.name),
+            type: config.type, // enum, already safe
+            language: this.sanitizeString(config.language),
+            framework: config.framework ? this.sanitizeString(config.framework) : undefined,
+            teamSize: Math.min(Math.max(1, config.teamSize || 1), 1000),
+            userCount: Math.min(Math.max(1, config.userCount || 1), 10000000),
+            performanceRequirements: config.performanceRequirements,
+            securityRequirements: config.securityRequirements
+        };
+    }
+    sanitizeString(input) {
+        return input
+            .replace(/[^a-zA-Z0-9\s\-_.]/g, '')
+            .substring(0, 100)
+            .trim() || 'unnamed';
     }
 }
 //# sourceMappingURL=init-wizard.js.map

@@ -77,6 +77,8 @@ declare class ConfigLoader {
     private getDefaultConfig;
     getConfig(): CriticalClaudeConfig | null;
     reloadConfig(): Promise<CriticalClaudeConfig>;
+    private isValidHomeDirectory;
+    private isValidConfigPath;
 }
 export declare const configLoader: ConfigLoader;
 export declare function getConfig(): Promise<CriticalClaudeConfig>;

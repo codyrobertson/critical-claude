@@ -86,17 +86,28 @@ class ConfigLoader {
   }
 
   private async findConfigPath(): Promise<void> {
-    // Look for config in multiple locations
+    // Look for config in multiple locations with security validation
     const possiblePaths = [
-      path.join(process.cwd(), 'config.toml'),
-      path.join(path.dirname(new URL(import.meta.url).pathname), '..', 'config.toml'),
-      path.join(process.env.HOME || '', '.critical-claude', 'config.toml'),
+      path.resolve(process.cwd(), 'config.toml'),
+      path.resolve(path.dirname(new URL(import.meta.url).pathname), '..', 'config.toml'),
     ];
 
-    for (const p of possiblePaths) {
+    // Only include home directory if it's safe
+    const homeDir = process.env.HOME || process.env.USERPROFILE;
+    if (homeDir && this.isValidHomeDirectory(homeDir)) {
+      possiblePaths.push(path.resolve(homeDir, '.critical-claude', 'config.toml'));
+    }
+
+    for (const configPath of possiblePaths) {
       try {
-        await fs.access(p);
-        this.configPath = p;
+        // Validate path is safe before accessing
+        if (!this.isValidConfigPath(configPath)) {
+          logger.warn('Invalid config path rejected', { path: configPath });
+          continue;
+        }
+        
+        await fs.access(configPath, fs.constants.R_OK);
+        this.configPath = configPath;
         break;
       } catch {
         // Continue to next path
@@ -302,6 +313,42 @@ class ConfigLoader {
   async reloadConfig(): Promise<CriticalClaudeConfig> {
     this.config = null;
     return this.loadConfig();
+  }
+
+  private isValidHomeDirectory(homeDir: string): boolean {
+    // Ensure home directory is absolute and exists
+    if (!path.isAbsolute(homeDir)) return false;
+    
+    // Check against common injection patterns
+    const suspicious = ['..', '/etc', '/root', '/var', '/usr', '/bin', '/sbin'];
+    if (suspicious.some(pattern => homeDir.includes(pattern))) {
+      logger.warn('Suspicious home directory blocked', { homeDir });
+      return false;
+    }
+    
+    return true;
+  }
+
+  private isValidConfigPath(configPath: string): boolean {
+    const normalizedPath = path.normalize(configPath);
+    
+    // Must be absolute path
+    if (!path.isAbsolute(normalizedPath)) return false;
+    
+    // Must end with config.toml
+    if (!normalizedPath.endsWith('config.toml')) return false;
+    
+    // Must not contain path traversal
+    if (normalizedPath.includes('..')) return false;
+    
+    // Must be in allowed directories
+    const allowedParents = [
+      path.resolve(process.cwd()),
+      path.resolve(path.dirname(new URL(import.meta.url).pathname), '..'),
+      process.env.HOME ? path.resolve(process.env.HOME, '.critical-claude') : null
+    ].filter(Boolean);
+    
+    return allowedParents.some(parent => normalizedPath.startsWith(parent!));
   }
 }
 

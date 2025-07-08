@@ -86,5 +86,9 @@ export declare class InitWizard {
      * Get architecture patterns based on project type
      */
     private getArchitecturePatterns;
+    private validateProjectRoot;
+    private isPathWithinProject;
+    private sanitizeConfig;
+    private sanitizeString;
 }
 //# sourceMappingURL=init-wizard.d.ts.map

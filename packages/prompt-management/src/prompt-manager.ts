@@ -368,30 +368,55 @@ Identify deployment blockers and provide complete fixes.`,
    */
   async importPrompts(filePath: string, overwrite = false): Promise<number> {
     try {
-      const content = await fs.readFile(filePath, 'utf8');
-      const importData = JSON.parse(content);
+      // Path validation
+      const safePath = await this.validateImportPath(filePath);
       
-      if (!importData.prompts || !Array.isArray(importData.prompts)) {
-        throw new Error('Invalid import file format');
+      // Size limit to prevent DoS
+      const stats = await fs.stat(safePath);
+      if (stats.size > 5 * 1024 * 1024) { // 5MB limit
+        throw new Error('Import file too large');
+      }
+      
+      const content = await fs.readFile(safePath, 'utf8');
+      
+      // Safe JSON parsing with prototype pollution prevention
+      const importData = this.safeJsonParse(content);
+      
+      // Validate structure
+      if (!this.isValidImportStructure(importData)) {
+        throw new Error('Invalid import file structure');
       }
 
       const library = await this.loadLibrary();
       let importedCount = 0;
 
       for (const prompt of importData.prompts) {
-        const existingIndex = library.prompts.findIndex(p => p.id === prompt.id);
+        // Deep sanitization of each prompt
+        const sanitized = this.deepSanitizePrompt(prompt);
+        if (!sanitized) {
+          logger.warn('Skipped invalid prompt during import', { promptId: prompt.id });
+          continue;
+        }
+        
+        // Additional security checks
+        if (this.containsMaliciousPatterns(sanitized)) {
+          logger.warn('Malicious prompt blocked', { promptId: prompt.id });
+          continue;
+        }
+        
+        const existingIndex = library.prompts.findIndex(p => p.id === sanitized.id);
         
         if (existingIndex !== -1) {
           if (overwrite) {
             library.prompts[existingIndex] = {
-              ...prompt,
+              ...sanitized,
               updated_at: new Date().toISOString()
             };
             importedCount++;
           }
         } else {
           library.prompts.push({
-            ...prompt,
+            ...sanitized,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString()
           });
@@ -400,12 +425,145 @@ Identify deployment blockers and provide complete fixes.`,
       }
 
       await this.saveLibrary(library);
-      logger.info('Imported prompts', { filePath, importedCount, overwrite });
+      logger.info('Imported prompts', { filePath: safePath, importedCount, overwrite });
       
       return importedCount;
     } catch (error) {
       logger.error('Failed to import prompts', { filePath }, error as Error);
       throw error;
     }
+  }
+  
+  private async validateImportPath(filePath: string): Promise<string> {
+    const resolved = path.resolve(filePath);
+    const promptsDir = path.resolve(this.promptsDir);
+    
+    // Must be within prompts directory or current directory
+    const allowedDirs = [promptsDir, process.cwd()];
+    const isInAllowedDir = allowedDirs.some(dir => resolved.startsWith(dir));
+    
+    if (!isInAllowedDir || !resolved.endsWith('.json')) {
+      throw new Error('Invalid import file path');
+    }
+    
+    return resolved;
+  }
+  
+  private safeJsonParse(content: string): any {
+    // Parse with reviver to block dangerous keys
+    return JSON.parse(content, (key, value) => {
+      // Block prototype pollution
+      const dangerousKeys = ['__proto__', 'constructor', 'prototype'];
+      if (dangerousKeys.includes(key)) {
+        logger.warn('Prototype pollution attempt blocked', { key });
+        return undefined;
+      }
+      
+      // Block function serialization attempts
+      if (typeof value === 'string' && value.includes('function')) {
+        if (/function\s*\(|=>\s*{/.test(value)) {
+          logger.warn('Function injection attempt blocked');
+          return undefined;
+        }
+      }
+      
+      return value;
+    });
+  }
+  
+  private isValidImportStructure(data: any): boolean {
+    return data && 
+           typeof data === 'object' && 
+           Array.isArray(data.prompts) &&
+           data.prompts.every((p: any) => 
+             p && typeof p === 'object' && 
+             typeof p.id === 'string' &&
+             typeof p.name === 'string'
+           );
+  }
+  
+  private deepSanitizePrompt(prompt: any): PromptTemplate | null {
+    if (!prompt || typeof prompt !== 'object') return null;
+    
+    // Create new object to avoid reference pollution
+    const sanitized: any = {};
+    
+    // Whitelist allowed fields only
+    const allowedFields = ['id', 'name', 'description', 'category', 'template', 'variables', 'tags'];
+    
+    for (const field of allowedFields) {
+      if (field in prompt) {
+        switch (field) {
+          case 'id':
+          case 'name':
+          case 'description':
+          case 'template':
+            sanitized[field] = this.sanitizePromptString(String(prompt[field]));
+            break;
+          case 'category':
+            sanitized[field] = this.validatePromptCategory(prompt[field]);
+            break;
+          case 'variables':
+          case 'tags':
+            if (Array.isArray(prompt[field])) {
+              sanitized[field] = prompt[field]
+                .filter((v: any) => typeof v === 'string')
+                .map((v: string) => this.sanitizePromptString(v))
+                .slice(0, 20);
+            } else {
+              sanitized[field] = [];
+            }
+            break;
+        }
+      }
+    }
+    
+    // Ensure required fields
+    if (!sanitized.id || !sanitized.name || !sanitized.template) {
+      return null;
+    }
+    
+    // Add defaults for missing fields
+    sanitized.description = sanitized.description || '';
+    sanitized.category = sanitized.category || 'custom';
+    sanitized.variables = sanitized.variables || [];
+    sanitized.tags = sanitized.tags || [];
+    
+    return sanitized as PromptTemplate;
+  }
+  
+  private containsMaliciousPatterns(prompt: PromptTemplate): boolean {
+    const patterns = [
+      /require\s*\(/,
+      /import\s+/,
+      /eval\s*\(/,
+      /Function\s*\(/,
+      /\bexec\s*\(/,
+      /<script/i,
+      /javascript:/i
+    ];
+    
+    const allText = JSON.stringify(prompt);
+    return patterns.some(pattern => pattern.test(allText));
+  }
+  
+  private sanitizePromptString(input: string): string {
+    return input
+      .substring(0, 10000) // Max length
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // Remove control characters
+      .trim();
+  }
+  
+  private validatePromptCategory(category: any): PromptCategory {
+    const validCategories: PromptCategory[] = [
+      'security', 'performance', 'architecture', 'code-review',
+      'debugging', 'refactoring', 'testing', 'documentation', 'custom'
+    ];
+    
+    if (validCategories.includes(category as PromptCategory)) {
+      return category as PromptCategory;
+    }
+    
+    return 'custom';
   }
 }

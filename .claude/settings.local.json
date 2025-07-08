@@ -41,7 +41,8 @@
       "Bash(mkdir:*)",
       "Bash(find:*)",
       "Bash(npx tsc:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(git reset:*)"
     ],
     "deny": []
   }

@@ -70,5 +70,6 @@ export declare class WebSearchTool {
      * Suggest alternative libraries
      */
     private suggestAlternatives;
+    private sanitizeSearchQuery;
 }
 //# sourceMappingURL=web-search.d.ts.map

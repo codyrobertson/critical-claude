@@ -75,5 +75,12 @@ export declare class PromptManager {
      * Import prompts from a file
      */
     importPrompts(filePath: string, overwrite?: boolean): Promise<number>;
+    private validateImportPath;
+    private safeJsonParse;
+    private isValidImportStructure;
+    private deepSanitizePrompt;
+    private containsMaliciousPatterns;
+    private sanitizePromptString;
+    private validatePromptCategory;
 }
 //# sourceMappingURL=prompt-manager.d.ts.map
