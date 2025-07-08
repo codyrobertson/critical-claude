@@ -50,7 +50,8 @@
       "mcp__critical-claude__cc_mvp_plan",
       "mcp__critical-claude__cc_system_design_analyze",
       "mcp__critical-claude__cc_data_flow_diagram",
-      "mcp__critical-claude__cc_crit_code"
+      "mcp__critical-claude__cc_crit_code",
+      "WebFetch(domain:github.com)"
     ],
     "deny": []
   }

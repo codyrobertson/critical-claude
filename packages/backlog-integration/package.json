@@ -1,0 +1,49 @@
+{
+  "name": "@critical-claude/backlog-integration",
+  "version": "1.0.0",
+  "description": "Critical Claude integration for enhanced Backlog.md with AI-powered AGILE task management",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@critical-claude/core": "workspace:^",
+    "@critical-claude/system-design": "workspace:^",
+    "@critical-claude/data-flow": "workspace:^",
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "date-fns": "^2.30.0",
+    "uuid": "^9.0.1",
+    "yaml": "^2.3.4",
+    "glob": "^10.3.10",
+    "chokidar": "^3.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/uuid": "^9.0.7",
+    "@types/inquirer": "^9.0.7",
+    "typescript": "^5.7.3",
+    "jest": "^30.0.0-alpha.6",
+    "@types/jest": "^29.5.12",
+    "eslint": "^8.57.0"
+  },
+  "keywords": [
+    "backlog",
+    "agile",
+    "task-management",
+    "ai",
+    "critical-claude",
+    "cli",
+    "development-tools"
+  ],
+  "author": "Critical Claude Team",
+  "license": "MIT"
+}
