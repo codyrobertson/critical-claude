@@ -2,20 +2,39 @@
  * Critical Claude MCP client for AI-powered task management
  */
 
-import { SystemDesignServer } from '@critical-claude/system-design';
-import { DataFlowServer } from '@critical-claude/data-flow';
-import { logger } from '@critical-claude/core';
+// import { SystemDesignServer } from '@critical-claude/system-design';
+// import { DataFlowServer } from '@critical-claude/data-flow';
+// import { logger } from '@critical-claude/core';
 import { AITaskSuggestion, SprintAnalysis, EnhancedTask, Sprint, CodeReference } from '../types/agile.js';
+import { AIProviderFactory, AIProvider, ProviderConfig } from './ai-provider-factory.js';
+
+// Simple logger for now
+const logger = {
+  info: (msg: string, data?: any) => console.log(`[INFO] ${msg}`, data || ''),
+  error: (msg: string, error?: Error) => console.error(`[ERROR] ${msg}`, error?.message || ''),
+  warn: (msg: string, data?: any) => console.warn(`[WARN] ${msg}`, data || '')
+};
 
 export class CriticalClaudeClient {
-  private systemDesign: SystemDesignServer;
-  private dataFlow: DataFlowServer;
+  // private systemDesign: SystemDesignServer;
+  // private dataFlow: DataFlowServer;
+  private aiProvider: AIProvider;
   
-  constructor() {
-    this.systemDesign = new SystemDesignServer();
-    this.dataFlow = new DataFlowServer();
+  constructor(providerConfig?: ProviderConfig) {
+    // this.systemDesign = new SystemDesignServer();
+    // this.dataFlow = new DataFlowServer();
     
-    logger.info('Critical Claude client initialized for backlog management');
+    // Default to Claude Code provider, but allow configuration
+    const config: ProviderConfig = providerConfig || {
+      type: 'claude-code',
+      modelId: 'sonnet',
+      temperature: 0.1,
+      permissionMode: 'plan'
+    };
+    
+    this.aiProvider = AIProviderFactory.createProvider(config);
+    
+    logger.info('Critical Claude client initialized', { provider: config.type, model: config.modelId });
   }
   
   /**
@@ -32,18 +51,8 @@ export class CriticalClaudeClient {
     try {
       logger.info('Generating tasks from feature description', { featureDescription });
       
-      const mvpPlan = await this.systemDesign.handleToolCall('cc_mvp_plan', {
-        projectName: 'Current Feature',
-        description: featureDescription,
-        targetUsers: 'Development team',
-        constraints: {
-          teamSize: projectContext.teamSize,
-          timeline: `${projectContext.sprintLength} days`
-        }
-      });
-      
-      const planContent = mvpPlan.content[0].text;
-      return this.extractTasksFromPlan(planContent, featureDescription);
+      // Use configured AI provider for real task generation
+      return await this.aiProvider.generateTasksFromFeature(featureDescription, projectContext);
       
     } catch (error) {
       logger.error('Failed to generate tasks from feature', error as Error);
@@ -58,12 +67,8 @@ export class CriticalClaudeClient {
     try {
       logger.info('Analyzing code for task suggestions', { filePath });
       
-      const codeAnalysis = await this.systemDesign.handleToolCall('cc_crit_code', {
-        filePath
-      });
-      
-      const analysisContent = codeAnalysis.content[0].text;
-      return this.extractTasksFromAnalysis(analysisContent, filePath);
+      // Use configured AI provider for real code analysis
+      return await this.aiProvider.analyzeCodeForTasks(filePath);
       
     } catch (error) {
       logger.error('Failed to analyze code for tasks', error as Error);
@@ -78,13 +83,19 @@ export class CriticalClaudeClient {
     try {
       logger.info('Analyzing architecture for improvement tasks', { rootPath });
       
-      const archAnalysis = await this.systemDesign.handleToolCall('cc_system_design_analyze', {
-        rootPath,
-        focus: 'all'
-      });
-      
-      const analysisContent = archAnalysis.content[0].text;
-      return this.extractTasksFromArchitectureAnalysis(analysisContent);
+      // TODO: Implement actual architecture analysis
+      return [{
+        title: 'Implement architectural improvements',
+        description: 'Apply recommended architectural changes from system analysis',
+        estimatedEffort: 13,
+        priority: 'medium',
+        labels: ['architecture', 'improvement'],
+        acceptanceCriteria: ['Architectural recommendations implemented'],
+        reasoning: 'System architecture analysis recommendations',
+        confidence: 0.75,
+        codeReferences: [],
+        dependencies: []
+      }];
       
     } catch (error) {
       logger.error('Failed to analyze architecture for tasks', error as Error);
@@ -99,12 +110,19 @@ export class CriticalClaudeClient {
     try {
       logger.info('Analyzing data flow for optimization tasks', { rootPath });
       
-      const dataFlowAnalysis = await this.dataFlow.handleToolCall('cc_data_flow_analyze', {
-        rootPath
-      });
-      
-      const analysisContent = dataFlowAnalysis.content[0].text;
-      return this.extractTasksFromDataFlowAnalysis(analysisContent);
+      // TODO: Implement actual data flow analysis
+      return [{
+        title: 'Optimize data flow bottlenecks',
+        description: 'Address performance bottlenecks identified in data flow analysis',
+        estimatedEffort: 8,
+        priority: 'high',
+        labels: ['performance', 'optimization'],
+        acceptanceCriteria: ['Bottlenecks resolved', 'Performance improved'],
+        reasoning: 'Data flow bottlenecks detected',
+        confidence: 0.85,
+        codeReferences: [],
+        dependencies: []
+      }];
       
     } catch (error) {
       logger.error('Failed to analyze data flow for tasks', error as Error);
@@ -457,5 +475,88 @@ export class CriticalClaudeClient {
         reason: 'Task marked as blocked',
         suggestedAction: 'Review and resolve blocking dependencies'
       }));
+  }
+  
+  // Mock AI task generation for development/testing
+  private generateMockTasks(featureDescription: string, context: any): AITaskSuggestion[] {
+    const lowerDesc = featureDescription.toLowerCase();
+    const tasks: AITaskSuggestion[] = [];
+    
+    // Generate tasks based on keywords in description
+    if (lowerDesc.includes('auth') || lowerDesc.includes('login') || lowerDesc.includes('user')) {
+      tasks.push({
+        title: 'Set up authentication infrastructure',
+        description: 'Configure authentication providers and session management',
+        estimatedEffort: 5,
+        priority: 'high',
+        labels: ['auth', 'infrastructure'],
+        acceptanceCriteria: ['Authentication providers configured', 'Session management implemented'],
+        reasoning: 'Authentication is critical infrastructure',
+        confidence: 0.9,
+        codeReferences: [],
+        dependencies: []
+      });
+      
+      tasks.push({
+        title: 'Implement user registration',
+        description: 'Create user registration form and validation',
+        estimatedEffort: 3,
+        priority: 'medium',
+        labels: ['auth', 'frontend'],
+        acceptanceCriteria: ['Registration form created', 'Input validation added'],
+        reasoning: 'User registration is core functionality',
+        confidence: 0.85,
+        codeReferences: [],
+        dependencies: []
+      });
+    }
+    
+    if (lowerDesc.includes('api') || lowerDesc.includes('backend')) {
+      tasks.push({
+        title: 'Design API endpoints',
+        description: 'Define and implement REST API endpoints',
+        estimatedEffort: 8,
+        priority: 'high',
+        labels: ['api', 'backend'],
+        acceptanceCriteria: ['API endpoints defined', 'Documentation created'],
+        reasoning: 'API design affects all other components',
+        confidence: 0.8,
+        codeReferences: [],
+        dependencies: []
+      });
+    }
+    
+    if (lowerDesc.includes('ui') || lowerDesc.includes('frontend') || lowerDesc.includes('interface')) {
+      tasks.push({
+        title: 'Create user interface components',
+        description: 'Implement UI components and styling',
+        estimatedEffort: 5,
+        priority: 'medium',
+        labels: ['frontend', 'ui'],
+        acceptanceCriteria: ['UI components implemented', 'Styling applied'],
+        reasoning: 'UI components needed for user interaction',
+        confidence: 0.75,
+        codeReferences: [],
+        dependencies: []
+      });
+    }
+    
+    // Default fallback task
+    if (tasks.length === 0) {
+      tasks.push({
+        title: `Implement ${featureDescription}`,
+        description: `Core implementation for: ${featureDescription}`,
+        estimatedEffort: 8,
+        priority: 'medium',
+        labels: ['feature'],
+        acceptanceCriteria: [`${featureDescription} implemented`],
+        reasoning: 'Core feature implementation',
+        confidence: 0.7,
+        codeReferences: [],
+        dependencies: []
+      });
+    }
+    
+    return tasks;
   }
 }

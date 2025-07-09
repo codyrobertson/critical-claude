@@ -10,7 +10,7 @@ export interface Phase {
   startDate: Date;
   endDate: Date;
   status: 'planning' | 'active' | 'completed' | 'cancelled';
-  epics: Epic[];
+  epics: string[]; // Epic IDs
   goals: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -23,7 +23,7 @@ export interface Epic {
   description: string;
   businessValue: string;
   acceptanceCriteria: string[];
-  sprints: Sprint[];
+  sprints: string[]; // Sprint IDs
   estimatedEffort: number; // story points
   actualEffort?: number;
   priority: 'critical' | 'high' | 'medium' | 'low';
@@ -45,7 +45,7 @@ export interface Sprint {
   tasks: EnhancedTask[];
   status: 'planning' | 'active' | 'review' | 'completed';
   velocity?: number; // actual story points completed
-  burndownData: BurndownPoint[];
+  burndownData?: BurndownPoint[];
   retrospective?: {
     whatWentWell: string[];
     whatCouldImprove: string[];
@@ -60,14 +60,14 @@ export interface EnhancedTask {
   sprintId?: string;
   title: string;
   description: string;
-  status: 'todo' | 'in-progress' | 'review' | 'done' | 'blocked';
+  status: TaskStatus;
   assignee?: string;
   storyPoints: number;
   priority: 'critical' | 'high' | 'medium' | 'low';
   labels: string[];
-  acceptanceCriteria: string[];
-  dependencies: string[]; // task IDs
-  notes: TaskNote[];
+  acceptanceCriteria: AcceptanceCriterion[];
+  dependencies: TaskDependency[];
+  notes?: TaskNote[];
   codeReferences: CodeReference[];
   generatedBy: 'manual' | 'ai' | 'hook' | 'analysis';
   aiMetadata?: {
@@ -80,10 +80,80 @@ export interface EnhancedTask {
     estimated: number; // hours
     actual: number; // hours
     remaining: number; // hours
+    lastActivity?: Date;
+  };
+  stateHistory: TaskStateTransition[];
+  blockerInfo?: {
+    reason: string;
+    expectedResolution?: Date;
+    escalatedAt?: Date;
+    blockedBy?: string; // user ID who blocked it
+  };
+  focusMetadata?: {
+    focusedAt: Date;
+    estimatedCompletion: Date;
+    lastCommit?: Date;
+    lastTimeEntry?: Date;
   };
   createdAt: Date;
   updatedAt: Date;
   completedAt?: Date;
+  archivedAt?: Date;
+  archivedReason?: string;
+}
+
+// Enhanced Task State Management Types
+export type TaskStatus = 
+  | 'todo'            // Initial state, ready to be worked on
+  | 'focused'         // Currently being worked on by developer (only 1 per developer)
+  | 'in-progress'     // Started but not currently active
+  | 'blocked'         // Cannot proceed due to dependencies/external factors
+  | 'dimmed'          // Low priority, not actively pursued
+  | 'done'            // Completed and verified
+  | 'archived_done'   // Completed tasks moved out of active workflow
+  | 'archived_blocked' // Permanently blocked tasks
+  | 'archived_dimmed'; // Low-priority tasks that aged out
+
+export interface AcceptanceCriterion {
+  id: string;
+  description: string;
+  verified: boolean;
+  verifiedBy?: string;
+  verifiedAt?: Date;
+  testCases?: string[];
+}
+
+export interface TaskDependency {
+  taskId: string;
+  type: 'blocks' | 'blocked_by' | 'related';
+  createdAt: Date;
+  createdBy: string;
+  reason?: string;
+}
+
+export interface TaskStateTransition {
+  id: string;
+  fromState: TaskStatus | null; // null for initial creation
+  toState: TaskStatus;
+  changedBy: string;
+  changedAt: Date;
+  reason?: string;
+  validationResult?: StateValidationResult;
+  criticalClaudeAnalysis?: Record<string, any>;
+}
+
+export interface StateValidationResult {
+  valid: boolean;
+  reason?: string;
+  warnings?: string[];
+  requiredActions?: StateAction[];
+  criticalClaudeRecommendations?: string[];
+}
+
+export interface StateAction {
+  type: 'block_transition' | 'create_task' | 'escalate' | 'notify' | 'run_analysis';
+  target: string;
+  metadata: Record<string, any>;
 }
 
 export interface TaskNote {
@@ -91,7 +161,7 @@ export interface TaskNote {
   content: string;
   author: string;
   createdAt: Date;
-  type: 'progress' | 'blocker' | 'question' | 'decision';
+  type: 'progress' | 'blocker' | 'question' | 'decision' | 'state_change';
 }
 
 export interface CodeReference {
@@ -192,11 +262,16 @@ export interface BacklogConfig {
   storyPointScale: number[]; // [1, 2, 3, 5, 8, 13, 21]
   aiEnabled: boolean;
   hooksEnabled: boolean;
+  maxFocusedTasks: number; // Maximum focused tasks per developer
+  maxInProgressTasks: number; // Maximum in-progress tasks per developer
+  autoArchiveDays: number; // Days before dimmed tasks are auto-archived
+  blockerEscalationDays: number; // Days before blocked tasks are escalated
   criticalClaudeEndpoint?: string;
   teamMembers: {
     username: string;
     name: string;
     role: string;
     capacity: number; // story points per sprint
+    maxFocusedTasks?: number; // Override per developer
   }[];
 }
