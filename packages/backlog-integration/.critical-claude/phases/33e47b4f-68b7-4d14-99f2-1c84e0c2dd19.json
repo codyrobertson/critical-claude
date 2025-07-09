@@ -10,7 +10,9 @@
     "Configure CI/CD",
     "Define project structure"
   ],
-  "epics": [],
+  "epics": [
+    "21f8ccbf-1f3a-481b-a1c4-edd0e1964419"
+  ],
   "createdAt": "2025-07-08T23:42:18.315Z",
   "updatedAt": "2025-07-08T23:42:18.315Z"
 }

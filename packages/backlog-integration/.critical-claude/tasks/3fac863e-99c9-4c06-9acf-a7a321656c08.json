@@ -1,0 +1,34 @@
+{
+  "id": "3fac863e-99c9-4c06-9acf-a7a321656c08",
+  "title": "create todo statistics and analytics",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "low",
+  "labels": [
+    "analytics",
+    "reporting"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "0e42ebca-7f86-437f-98bb-fcedc3350fde",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:32.971Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:32.971Z",
+  "updatedAt": "2025-07-09T21:15:32.971Z"
+}

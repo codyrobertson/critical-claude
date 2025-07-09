@@ -1,0 +1,34 @@
+{
+  "id": "64c5c30f-5e8b-4370-95c8-4a44877e0f5e",
+  "title": "create user documentation",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 3,
+  "priority": "low",
+  "labels": [
+    "docs",
+    "help"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "f3632337-ad45-4569-b334-ae261ee32298",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:38.736Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:38.736Z",
+  "updatedAt": "2025-07-09T21:15:38.736Z"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "e2db1d0a-38b0-42e0-9018-40e112361922",
+  "title": "setup project structure",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 3,
+  "priority": "high",
+  "labels": [
+    "setup",
+    "foundation"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "0e372694-97fc-49da-9be5-71eac0b998ef",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:20.695Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:20.695Z",
+  "updatedAt": "2025-07-09T21:15:20.695Z"
+}

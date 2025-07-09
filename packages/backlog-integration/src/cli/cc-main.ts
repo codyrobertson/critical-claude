@@ -204,6 +204,35 @@ function initializeCLI() {
       }
     });
 
+  // Claude Code integration
+  program
+    .command('sync-claude-code')
+    .alias('sync')
+    .description('Sync with Claude Code native todo system')
+    .option('--execute', 'Actually execute the sync (default: dry-run)')
+    .option('--status', 'Show sync status')
+    .option('--setup-hooks', 'Setup Claude Code hooks')
+    .option('--demo', 'Show integration demo')
+    .action(async (options) => {
+      try {
+        const { ClaudeCodeSyncCommand } = await import('./commands/claude-code-sync.js');
+        const handler = new ClaudeCodeSyncCommand();
+        
+        if (options.status) {
+          await handler.execute('status', null, options);
+        } else if (options.setupHooks) {
+          await handler.execute('setup-hooks', null, options);
+        } else if (options.demo) {
+          await handler.execute('demo', null, options);
+        } else {
+          await handler.execute('sync', null, options);
+        }
+      } catch (error) {
+        logger.error('Claude Code sync failed', error as Error);
+        process.exit(1);
+      }
+    });
+
   // Status overview
   program
     .command('status')
@@ -235,6 +264,13 @@ function initializeCLI() {
     console.log('  $ cc task "fix login bug @high #auth due:friday"');
     console.log('  $ cc task "implement user profile 8pts for:@alice"');
     console.log('  $ cc task "refactor payment [needs testing] #refactor"');
+    console.log('');
+    console.log(chalk.cyan('Claude Code Integration:'));
+    console.log('  $ cc sync-claude-code                       # Sync to Claude Code todos');
+    console.log('  $ cc sync-claude-code --execute             # Execute sync');
+    console.log('  $ cc sync-claude-code --status              # Show sync status');
+    console.log('  $ cc sync-claude-code --setup-hooks         # Setup automatic sync');
+    console.log('  $ cc sync-claude-code --demo                # Show integration demo');
     console.log('');
     console.log(chalk.gray('For command details: cc <command> --help'));
   });

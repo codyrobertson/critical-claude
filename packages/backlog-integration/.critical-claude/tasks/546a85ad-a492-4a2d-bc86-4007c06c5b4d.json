@@ -1,0 +1,34 @@
+{
+  "id": "546a85ad-a492-4a2d-bc86-4007c06c5b4d",
+  "title": "implement delete todo with confirmation",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 3,
+  "priority": "low",
+  "labels": [
+    "crud",
+    "delete"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "3b7e387f-4d9e-4b0b-9156-e81d69499074",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:26.464Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:26.464Z",
+  "updatedAt": "2025-07-09T21:15:26.464Z"
+}
