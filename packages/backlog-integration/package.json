@@ -5,11 +5,19 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "cc-backlog": "dist/cli/index.js",
+    "cc": "dist/cli/cc.js"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
+    "start": "node dist/cli/index.js",
     "test": "jest",
+    "test:claude": "npm run build && node dist/cli/test-claude.js",
+    "test:simple": "npm run build && node dist/cli/simple-test.js",
     "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {

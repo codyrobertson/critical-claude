@@ -310,7 +310,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             code: {
               type: 'string',
-              description: 'The source code to analyze (required if filePath not provided)',
+              description: 'The source code to analyze',
             },
             filename: {
               type: 'string',
@@ -321,10 +321,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               description: 'Path to the file to analyze (alternative to providing code directly)',
             },
           },
-          anyOf: [
-            { required: ['code', 'filename'] },
-            { required: ['filePath'] }
-          ],
+          required: [],
         },
       },
       {
@@ -335,7 +332,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           properties: {
             code: {
               type: 'string',
-              description: 'The source code to analyze (required if filePath not provided)',
+              description: 'The source code to analyze',
             },
             filename: {
               type: 'string',
@@ -365,10 +362,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               },
             },
           },
-          anyOf: [
-            { required: ['code', 'filename'] },
-            { required: ['filePath'] }
-          ],
+          required: [],
         },
       },
       {

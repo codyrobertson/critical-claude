@@ -6,7 +6,7 @@
 export * from './types/agile.js';
 export * from './core/critical-claude-client.js';
 
-// Re-export core Critical Claude functionality
-export { logger } from '@critical-claude/core';
-export { SystemDesignServer } from '@critical-claude/system-design';
-export { DataFlowServer } from '@critical-claude/data-flow';
+// TODO: Re-export core Critical Claude functionality when packages are available
+// export { logger } from '@critical-claude/core';
+// export { SystemDesignServer } from '@critical-claude/system-design';
+// export { DataFlowServer } from '@critical-claude/data-flow';

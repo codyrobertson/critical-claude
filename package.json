@@ -26,7 +26,11 @@
     "docs": "npm run docs --workspaces",
     "bootstrap": "npm run setup && npm run test",
     "migrate": "tsx scripts/migrate-to-monorepo.ts migrate",
-    "rollback": "tsx scripts/migrate-to-monorepo.ts rollback"
+    "rollback": "tsx scripts/migrate-to-monorepo.ts rollback",
+    "build:prod": "npm run clean && npm run build && npm run typecheck",
+    "deploy": "npm run build:prod && npm publish --access public",
+    "deploy:dev": "npm run build && npm publish --tag dev --access public",
+    "deploy:staging": "npm run build:prod && npm publish --tag staging --access public"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

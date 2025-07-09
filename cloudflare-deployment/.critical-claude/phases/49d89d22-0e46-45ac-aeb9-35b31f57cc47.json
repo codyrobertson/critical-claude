@@ -1,0 +1,18 @@
+{
+  "id": "49d89d22-0e46-45ac-aeb9-35b31f57cc47",
+  "name": "Project Setup",
+  "description": "Initial project setup and configuration",
+  "status": "planning",
+  "startDate": "2025-07-09T02:54:58.230Z",
+  "endDate": "2025-10-07T02:54:58.230Z",
+  "goals": [
+    "Set up development environment",
+    "Configure CI/CD",
+    "Define project structure"
+  ],
+  "epics": [
+    "64e44cae-8dc3-46e1-8f29-8f7dda0e016a"
+  ],
+  "createdAt": "2025-07-09T02:54:58.230Z",
+  "updatedAt": "2025-07-09T02:54:58.230Z"
+}

@@ -1,0 +1,51 @@
+{
+  "id": "8580e319-d933-4506-bc2c-808689e36846",
+  "title": "Set up authentication infrastructure",
+  "description": "Configure authentication providers and session management",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "high",
+  "labels": [
+    "auth",
+    "infrastructure"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "070605f5-1be9-4f95-a721-85ee5c4a1b45",
+      "description": "Authentication providers configured",
+      "verified": false
+    },
+    {
+      "id": "cb4f0cb3-bdef-4827-bc62-ada41b33a191",
+      "description": "Session management implemented",
+      "verified": false
+    }
+  ],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "ai",
+  "aiMetadata": {
+    "confidence": 0.9,
+    "reasoning": "Authentication is critical infrastructure",
+    "suggestedEffort": 5,
+    "riskFactors": []
+  },
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "2f4b6d39-7d79-4432-8c93-1932fc918045",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-08T23:49:44.318Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-08T23:49:44.318Z",
+  "updatedAt": "2025-07-08T23:49:44.318Z"
+}

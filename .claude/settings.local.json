@@ -51,7 +51,15 @@
       "mcp__critical-claude__cc_system_design_analyze",
       "mcp__critical-claude__cc_data_flow_diagram",
       "mcp__critical-claude__cc_crit_code",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(claude auth status)",
+      "Bash(cc:*)",
+      "Bash(npm unlink:*)",
+      "Bash(npx build-in-public-bot:*)",
+      "mcp__critical-claude__cc_data_flow_analyze",
+      "mcp__critical-claude__cc_data_flow_trace",
+      "mcp__critical-claude__cc_crit_arch",
+      "mcp__critical-claude__cc_plan_arch"
     ],
     "deny": []
   }

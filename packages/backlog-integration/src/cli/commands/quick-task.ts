@@ -5,6 +5,7 @@
 
 import chalk from 'chalk';
 import ora from 'ora';
+// @ts-ignore
 import inquirer from 'inquirer';
 import { CommandHandler } from '../command-registry.js';
 import { ContextManager } from '../../core/context-manager.js';
@@ -115,7 +116,7 @@ export class QuickTaskCommand implements CommandHandler {
       // Update context for next time
       await this.contextManager.updateContext({
         lastTaskId: task.id,
-        recentLabels: [...new Set([...context.recentLabels, ...parsed.labels])].slice(-10)
+        recentLabels: [...new Set([...context.recentLabels, ...(parsed.labels || [])])].slice(-10)
       });
       
       // Progressive enhancement - enhance with AI in background if requested
@@ -147,7 +148,7 @@ export class QuickTaskCommand implements CommandHandler {
         type: 'input',
         name: 'title',
         message: 'Task title:',
-        validate: (input) => input.trim().length > 0 || 'Title is required'
+        validate: (input: string) => input.trim().length > 0 || 'Title is required'
       },
       {
         type: 'input',
@@ -166,14 +167,14 @@ export class QuickTaskCommand implements CommandHandler {
         name: 'storyPoints',
         message: 'Story points:',
         default: 2,
-        validate: (input) => input > 0 || 'Must be greater than 0'
+        validate: (input: number) => input > 0 || 'Must be greater than 0'
       },
       {
         type: 'input',
         name: 'labels',
         message: 'Labels (comma-separated):',
         default: context.recentLabels.slice(0, 3).join(', '),
-        filter: (input) => input.split(',').map(l => l.trim()).filter(l => l)
+        filter: (input: string) => input.split(',').map((l: string) => l.trim()).filter((l: string) => l)
       },
       {
         type: 'input',
@@ -219,7 +220,7 @@ export class QuickTaskCommand implements CommandHandler {
     process.stdin.setEncoding('utf8');
     
     for await (const chunk of process.stdin) {
-      lines.push(...chunk.split('\n').filter(line => line.trim()));
+      lines.push(...chunk.split('\n').filter((line: string) => line.trim()));
     }
     
     if (lines.length === 0) {
@@ -232,7 +233,7 @@ export class QuickTaskCommand implements CommandHandler {
     await this.contextManager.initialize();
     const context = await this.contextManager.getCurrentContext();
     
-    const results = [];
+    const results: Array<{success: boolean; task?: EnhancedTask; error?: string}> = [];
     for (const line of lines) {
       const spinner = ora(`Creating: ${line.substring(0, 50)}...`).start();
       

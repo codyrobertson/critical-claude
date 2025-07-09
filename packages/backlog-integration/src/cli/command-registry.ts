@@ -11,6 +11,7 @@ export interface CommandLoader {
   description: string;
   loader: () => Promise<CommandHandler>;
   options?: CommandOption[];
+  category?: string;
 }
 
 export interface CommandOption {
@@ -57,7 +58,7 @@ export class CommandRegistry {
       .action(async (description, options) => {
         const { QuickTaskCommand } = await import('./commands/quick-task.js');
         const handler = new QuickTaskCommand();
-        await handler.execute(description || [], options);
+        await handler.execute('default', description || [], options);
       });
     
     // Register all other commands
@@ -145,8 +146,8 @@ export function registerAllCommands(): void {
     name: 'agile',
     description: 'AGILE hierarchy management (Phase > Epic > Sprint > Task)',
     loader: async () => {
-      const { AgileCommands } = await import('./commands/agile/index.js');
-      return new AgileCommands();
+      const { CriticalClaudeCommands } = await import('./commands.js');
+      return new CriticalClaudeCommands();
     }
   });
   
@@ -155,8 +156,8 @@ export function registerAllCommands(): void {
     name: 'ai',
     description: 'AI-powered development assistance',
     loader: async () => {
-      const { AICommands } = await import('./commands/ai/index.js');
-      return new AICommands();
+      const { CriticalClaudeCommands } = await import('./commands.js');
+      return new CriticalClaudeCommands();
     }
   });
   
@@ -165,8 +166,8 @@ export function registerAllCommands(): void {
     name: 'analyze',
     description: 'Project analysis and reporting',
     loader: async () => {
-      const { AnalyzeCommands } = await import('./commands/analyze/index.js');
-      return new AnalyzeCommands();
+      const { CriticalClaudeCommands } = await import('./commands.js');
+      return new CriticalClaudeCommands();
     }
   });
   
@@ -175,18 +176,18 @@ export function registerAllCommands(): void {
     name: 'hooks',
     description: 'Manage Claude Code hooks integration',
     loader: async () => {
-      const { HooksCommands } = await import('./commands/hooks/index.js');
-      return new HooksCommands();
+      const { CriticalClaudeCommands } = await import('./commands.js');
+      return new CriticalClaudeCommands();
     }
   });
   
   // Direct plan generation (backwards compatibility)
   commandRegistry.register({
-    name: 'cc-plan <description>',
+    name: 'cc-plan',
     description: 'Generate tasks from feature description using AI',
     loader: async () => {
-      const { AIPlanCommand } = await import('./commands/ai/plan.js');
-      return new AIPlanCommand();
+      const { CriticalClaudeCommands } = await import('./commands.js');
+      return new CriticalClaudeCommands();
     },
     options: [
       { flags: '-t, --team-size <size>', description: 'Team size', defaultValue: 2 },
@@ -198,11 +199,11 @@ export function registerAllCommands(): void {
   
   // Direct code analysis (backwards compatibility)
   commandRegistry.register({
-    name: 'cc-analyze [path]',
+    name: 'cc-analyze',
     description: 'Analyze code and generate improvement tasks',
     loader: async () => {
-      const { AIAnalyzeCommand } = await import('./commands/ai/analyze.js');
-      return new AIAnalyzeCommand();
+      const { CriticalClaudeCommands } = await import('./commands.js');
+      return new CriticalClaudeCommands();
     },
     options: [
       { flags: '-c, --create-tasks', description: 'Auto-create tasks from analysis' },

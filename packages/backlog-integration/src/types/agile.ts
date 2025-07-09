@@ -114,6 +114,8 @@ export type TaskStatus =
   | 'archived_blocked' // Permanently blocked tasks
   | 'archived_dimmed'; // Low-priority tasks that aged out
 
+export type TaskPriority = 'low' | 'medium' | 'high' | 'critical';
+
 export interface AcceptanceCriterion {
   id: string;
   description: string;
