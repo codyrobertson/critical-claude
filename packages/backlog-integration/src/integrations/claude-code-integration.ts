@@ -6,6 +6,7 @@
 import { logger } from '../core/logger.js';
 import { EnhancedTask } from '../types/agile.js';
 import { BacklogManager } from '../cli/backlog-manager.js';
+import { getHookConfig, isHookFeatureEnabled, getCanaryWarning } from '../config/hooks.js';
 
 interface ClaudeCodeTodo {
   content: string;
@@ -19,6 +20,20 @@ export class ClaudeCodeIntegration {
 
   constructor(backlogManager: BacklogManager) {
     this.backlogManager = backlogManager;
+    this.checkHookStatus();
+  }
+
+  private checkHookStatus(): void {
+    const config = getHookConfig();
+    
+    if (config.canary && !config.enabled) {
+      logger.warn('Hook features are disabled by default (canary)');
+      logger.warn(getCanaryWarning());
+    }
+    
+    if (config.enabled && config.canary) {
+      logger.warn('⚠️  Using experimental hook features - only for development!');
+    }
   }
 
   /**
@@ -28,6 +43,12 @@ export class ClaudeCodeIntegration {
    */
   async syncToClaudeCodeTodos(tasks: EnhancedTask[]): Promise<void> {
     try {
+      // Check if sync is enabled
+      if (!isHookFeatureEnabled('syncEnabled')) {
+        logger.warn('Claude Code sync is disabled - enable with CRITICAL_CLAUDE_HOOKS_ENABLED=true');
+        return;
+      }
+
       logger.info('Syncing Critical Claude tasks to Claude Code todos');
       
       // Convert our enhanced tasks to Claude Code todo format
@@ -83,11 +104,12 @@ export class ClaudeCodeIntegration {
   /**
    * Map Critical Claude task status to Claude Code todo status
    */
-  private mapStatusToClaudeCode(status: string): 'pending' | 'in_progress' | 'completed' {
+  mapStatusToClaudeCode(status: string): 'pending' | 'in_progress' | 'completed' {
     switch (status) {
       case 'todo':
       case 'dimmed':
         return 'pending';
+      case 'in_progress':
       case 'in-progress':
       case 'focused':
         return 'in_progress';
@@ -99,6 +121,55 @@ export class ClaudeCodeIntegration {
       default:
         return 'pending';
     }
+  }
+
+  /**
+   * Map Claude Code todo status back to Critical Claude task status
+   */
+  mapStatusFromClaudeCode(status: 'pending' | 'in_progress' | 'completed'): string {
+    switch (status) {
+      case 'pending':
+        return 'todo';
+      case 'in_progress':
+        return 'in_progress';
+      case 'completed':
+        return 'done';
+      default:
+        return 'todo';
+    }
+  }
+
+  /**
+   * Parse natural language elements from task content
+   */
+  parseNaturalLanguage(content: string): { priority?: string; labels?: string[]; storyPoints?: number; assignee?: string } {
+    const result: { priority?: string; labels?: string[]; storyPoints?: number; assignee?: string } = {};
+    
+    // Parse priority (@high, @medium, @low, @critical)
+    const priorityMatch = content.match(/@(high|medium|low|critical)/i);
+    if (priorityMatch) {
+      result.priority = priorityMatch[1].toLowerCase();
+    }
+    
+    // Parse labels (#frontend, #backend, etc.)
+    const labelMatches = content.match(/#(\w+)/g);
+    if (labelMatches) {
+      result.labels = labelMatches.map(label => label.substring(1));
+    }
+    
+    // Parse story points (5pts, 8pts, etc.)
+    const pointsMatch = content.match(/(\d+)pts?/i);
+    if (pointsMatch) {
+      result.storyPoints = parseInt(pointsMatch[1], 10);
+    }
+    
+    // Parse assignee (for:alice, for:bob, etc.)
+    const assigneeMatch = content.match(/for:(\w+)/i);
+    if (assigneeMatch) {
+      result.assignee = assigneeMatch[1];
+    }
+    
+    return result;
   }
 
   /**

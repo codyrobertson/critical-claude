@@ -3,10 +3,22 @@
  * Connects Critical Claude task system with Claude Code's native todo and hooks
  */
 import { logger } from '../core/logger.js';
+import { getHookConfig, isHookFeatureEnabled, getCanaryWarning } from '../config/hooks.js';
 export class ClaudeCodeIntegration {
     backlogManager;
     constructor(backlogManager) {
         this.backlogManager = backlogManager;
+        this.checkHookStatus();
+    }
+    checkHookStatus() {
+        const config = getHookConfig();
+        if (config.canary && !config.enabled) {
+            logger.warn('Hook features are disabled by default (canary)');
+            logger.warn(getCanaryWarning());
+        }
+        if (config.enabled && config.canary) {
+            logger.warn('⚠️  Using experimental hook features - only for development!');
+        }
     }
     /**
      * Sync Critical Claude tasks to Claude Code todos
@@ -15,6 +27,11 @@ export class ClaudeCodeIntegration {
      */
     async syncToClaudeCodeTodos(tasks) {
         try {
+            // Check if sync is enabled
+            if (!isHookFeatureEnabled('syncEnabled')) {
+                logger.warn('Claude Code sync is disabled - enable with CRITICAL_CLAUDE_HOOKS_ENABLED=true');
+                return;
+            }
             logger.info('Syncing Critical Claude tasks to Claude Code todos');
             // Convert our enhanced tasks to Claude Code todo format
             const claudeCodeTodos = tasks.map(task => ({
@@ -65,6 +82,7 @@ export class ClaudeCodeIntegration {
             case 'todo':
             case 'dimmed':
                 return 'pending';
+            case 'in_progress':
             case 'in-progress':
             case 'focused':
                 return 'in_progress';
@@ -76,6 +94,48 @@ export class ClaudeCodeIntegration {
             default:
                 return 'pending';
         }
+    }
+    /**
+     * Map Claude Code todo status back to Critical Claude task status
+     */
+    mapStatusFromClaudeCode(status) {
+        switch (status) {
+            case 'pending':
+                return 'todo';
+            case 'in_progress':
+                return 'in_progress';
+            case 'completed':
+                return 'done';
+            default:
+                return 'todo';
+        }
+    }
+    /**
+     * Parse natural language elements from task content
+     */
+    parseNaturalLanguage(content) {
+        const result = {};
+        // Parse priority (@high, @medium, @low, @critical)
+        const priorityMatch = content.match(/@(high|medium|low|critical)/i);
+        if (priorityMatch) {
+            result.priority = priorityMatch[1].toLowerCase();
+        }
+        // Parse labels (#frontend, #backend, etc.)
+        const labelMatches = content.match(/#(\w+)/g);
+        if (labelMatches) {
+            result.labels = labelMatches.map(label => label.substring(1));
+        }
+        // Parse story points (5pts, 8pts, etc.)
+        const pointsMatch = content.match(/(\d+)pts?/i);
+        if (pointsMatch) {
+            result.storyPoints = parseInt(pointsMatch[1], 10);
+        }
+        // Parse assignee (for:alice, for:bob, etc.)
+        const assigneeMatch = content.match(/for:(\w+)/i);
+        if (assigneeMatch) {
+            result.assignee = assigneeMatch[1];
+        }
+        return result;
     }
     /**
      * Create Claude Code hooks for automatic task synchronization

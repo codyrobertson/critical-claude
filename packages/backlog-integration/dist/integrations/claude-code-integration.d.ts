@@ -13,6 +13,7 @@ interface ClaudeCodeTodo {
 export declare class ClaudeCodeIntegration {
     private backlogManager;
     constructor(backlogManager: BacklogManager);
+    private checkHookStatus;
     /**
      * Sync Critical Claude tasks to Claude Code todos
      * This creates a bidirectional sync between our enhanced task system
@@ -26,7 +27,20 @@ export declare class ClaudeCodeIntegration {
     /**
      * Map Critical Claude task status to Claude Code todo status
      */
-    private mapStatusToClaudeCode;
+    mapStatusToClaudeCode(status: string): 'pending' | 'in_progress' | 'completed';
+    /**
+     * Map Claude Code todo status back to Critical Claude task status
+     */
+    mapStatusFromClaudeCode(status: 'pending' | 'in_progress' | 'completed'): string;
+    /**
+     * Parse natural language elements from task content
+     */
+    parseNaturalLanguage(content: string): {
+        priority?: string;
+        labels?: string[];
+        storyPoints?: number;
+        assignee?: string;
+    };
     /**
      * Create Claude Code hooks for automatic task synchronization
      */
