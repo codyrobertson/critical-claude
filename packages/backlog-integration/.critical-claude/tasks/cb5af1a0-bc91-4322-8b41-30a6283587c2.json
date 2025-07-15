@@ -1,0 +1,45 @@
+{
+  "id": "cb5af1a0-bc91-4322-8b41-30a6283587c2",
+  "title": "Implement Create git hooks system for automatic task creation from commit patterns",
+  "description": "Core implementation for: Create git hooks system for automatic task creation from commit patterns. Claude Code analysis failed, manual breakdown required.",
+  "status": "todo",
+  "storyPoints": 8,
+  "priority": "medium",
+  "labels": [
+    "manual-breakdown-needed"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "eeb4e3c8-4503-4170-b9b3-fa48e559594a",
+      "description": "Create git hooks system for automatic task creation from commit patterns implemented and tested",
+      "verified": false
+    }
+  ],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "ai",
+  "aiMetadata": {
+    "confidence": 0.5,
+    "reasoning": "Fallback task - needs manual breakdown",
+    "suggestedEffort": 8,
+    "riskFactors": []
+  },
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "074339ca-79c9-4980-8f40-a06dbc6a06b4",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-08T23:58:51.352Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-08T23:58:51.352Z",
+  "updatedAt": "2025-07-08T23:58:51.352Z"
+}

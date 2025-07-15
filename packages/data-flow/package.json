@@ -1,0 +1,25 @@
+{
+  "name": "@critical-claude/data-flow",
+  "version": "1.0.0",
+  "description": "Data flow analysis and diagram generation for codebases",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@critical-claude/core": "workspace:^",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.8",
+    "mermaid": "^10.6.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "jest": "^30.0.0-alpha.6",
+    "typescript": "^5.7.3"
+  }
+}

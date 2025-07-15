@@ -1,0 +1,34 @@
+{
+  "id": "fc426784-306b-4e2d-9199-3afe21e50c0f",
+  "title": "implement due date functionality",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "medium",
+  "labels": [
+    "dates",
+    "scheduling"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "69571d70-f517-4fa1-b720-cbdf5caeceb9",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:28.637Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:28.637Z",
+  "updatedAt": "2025-07-09T21:15:28.637Z"
+}

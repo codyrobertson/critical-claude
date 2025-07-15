@@ -1,0 +1,33 @@
+{
+  "id": "ad1f8f6a-5dfc-489a-b1d5-d13810cef35c",
+  "title": "fix auth bug",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "high",
+  "labels": [
+    "security"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "30a7bdbd-da1f-4e17-85a0-e5fca5a54112",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:10:46.461Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:10:46.461Z",
+  "updatedAt": "2025-07-09T21:10:46.461Z"
+}

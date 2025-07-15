@@ -1,0 +1,24 @@
+{
+  "name": "@critical-claude/system-design",
+  "version": "1.0.0",
+  "description": "MVP-focused system design and architecture planning",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@critical-claude/core": "workspace:^",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "jest": "^30.0.0-alpha.6",
+    "typescript": "^5.7.3"
+  }
+}

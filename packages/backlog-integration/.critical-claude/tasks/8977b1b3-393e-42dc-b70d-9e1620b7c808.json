@@ -1,0 +1,34 @@
+{
+  "id": "8977b1b3-393e-42dc-b70d-9e1620b7c808",
+  "title": "configure build tools and TypeScript",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 2,
+  "priority": "medium",
+  "labels": [
+    "tooling",
+    "config"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "0a5650e7-093b-43d9-9535-ee0bb4236b6d",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:21.418Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:21.418Z",
+  "updatedAt": "2025-07-09T21:15:21.418Z"
+}

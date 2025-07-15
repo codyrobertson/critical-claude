@@ -1,0 +1,34 @@
+{
+  "id": "d5d050af-c18e-4fd8-9c72-b439e636dcf3",
+  "title": "setup routing with React Router",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 3,
+  "priority": "medium",
+  "labels": [
+    "routing",
+    "navigation"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "32d20b1e-c1e0-4e45-86a7-6be8d31f64d1",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:22.865Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:22.865Z",
+  "updatedAt": "2025-07-09T21:15:22.865Z"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "93ae826c-ed61-4453-ba82-95a1e73aff2e",
+  "title": "create todo list display with filtering",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 8,
+  "priority": "medium",
+  "labels": [
+    "display",
+    "filtering"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "498412a6-d207-45f5-9df3-76b8c41a2920",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:25.023Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:25.023Z",
+  "updatedAt": "2025-07-09T21:15:25.023Z"
+}

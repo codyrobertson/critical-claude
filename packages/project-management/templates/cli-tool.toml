@@ -1,0 +1,46 @@
+# Critical Claude Configuration for CLI Tools
+# Optimized for command-line applications and developer tools
+
+[project]
+name = "{{PROJECT_NAME}}"
+type = "cli-tool"
+language = "{{LANGUAGE}}"
+framework = "{{FRAMEWORK}}"
+team_size = {{TEAM_SIZE}}
+user_count = {{USER_COUNT}}
+initialized_at = "{{TIMESTAMP}}"
+
+[requirements]
+security_level = "standard"
+performance_target = "100ms"
+startup_time = "50ms"
+
+[critique]
+# CLI tool specific thresholds
+[critique.severity_overrides]
+command_injection = "critical"
+path_traversal = "critical"
+performance_threshold = "low"
+over_engineering_alert = true
+
+[critique.focus_areas]
+usability = ["help-text", "error-messages", "argument-parsing", "output-format"]
+performance = ["startup-time", "memory-usage", "file-operations"]
+security = ["input-validation", "file-permissions", "shell-escaping"]
+
+[web_search]
+enabled = false  # Usually not needed for CLI tools
+search_depth = "basic"
+
+[performance]
+# CLI-specific performance targets
+startup_time_limit = "100ms"
+memory_limit = "50MB"
+file_operation_timeout = "5s"
+
+[cli_specific]
+# CLI tool specific settings
+require_help_command = true
+require_version_flag = true
+support_config_file = true
+output_formats = ["plain", "json", "yaml"]

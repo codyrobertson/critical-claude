@@ -1,0 +1,31 @@
+{
+  "id": "e7bd574c-bbc9-4932-bd8a-3c4f574ea5eb",
+  "title": "update documentation",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 2,
+  "priority": "medium",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "46b1eaed-c6f0-4c54-bba6-ed318570aa97",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:11:01.765Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:11:01.765Z",
+  "updatedAt": "2025-07-09T21:11:01.765Z"
+}

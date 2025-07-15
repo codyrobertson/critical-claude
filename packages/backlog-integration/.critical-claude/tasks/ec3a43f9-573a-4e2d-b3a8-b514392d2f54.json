@@ -1,0 +1,34 @@
+{
+  "id": "ec3a43f9-573a-4e2d-b3a8-b514392d2f54",
+  "title": "implement error boundaries and error handling",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "high",
+  "labels": [
+    "errors",
+    "resilience"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "9166ea0d-9e80-4766-934e-64e72369b717",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:35.855Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:35.855Z",
+  "updatedAt": "2025-07-09T21:15:35.855Z"
+}

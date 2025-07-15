@@ -1,0 +1,34 @@
+{
+  "id": "3bb7a800-4760-4fc6-9393-b89a54cfe5a6",
+  "title": "implement state management with Redux",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 8,
+  "priority": "high",
+  "labels": [
+    "state",
+    "redux"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "74488416-8d45-472e-a1ba-771ca2c6f902",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-09T21:15:23.584Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-09T21:15:23.584Z",
+  "updatedAt": "2025-07-09T21:15:23.584Z"
+}

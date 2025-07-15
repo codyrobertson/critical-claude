@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "critical-claude-test": {
+      "command": "node",
+      "args": [
+        "/Users/Cody/code_projects/critical_claude/critical-claude-mcp/build/index.js"
+      ]
+    }
+  }
+}
