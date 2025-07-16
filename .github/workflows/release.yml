@@ -1,0 +1,268 @@
+name: Release and Package
+
+on:
+  push:
+    branches: [ main, rename-to-critical-claude ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, rename-to-critical-claude ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd packages/backlog-integration && npm ci
+    
+    - name: Run tests
+      run: |
+        npm run test
+        npm run lint
+        npm run typecheck
+    
+    - name: Build packages
+      run: npm run build
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/rename-to-critical-claude' || startsWith(github.ref, 'refs/tags/v'))
+    permissions:
+      contents: write
+      packages: write
+      pull-requests: write
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Install dependencies
+      run: |
+        npm ci
+        cd packages/backlog-integration && npm ci
+    
+    - name: Build packages
+      run: npm run build
+    
+    - name: Generate changelog
+      id: changelog
+      run: |
+        if git describe --tags --abbrev=0 2>/dev/null; then
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          echo "## Changes since $LAST_TAG" > CHANGES.md
+          git log --oneline --pretty=format:"- %s" $LAST_TAG..HEAD >> CHANGES.md
+        else
+          echo "## Initial Release" > CHANGES.md
+          git log --oneline --pretty=format:"- %s" >> CHANGES.md
+        fi
+        
+        # Set output for later use
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        cat CHANGES.md >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+    
+    - name: Get version
+      id: version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        else
+          VERSION=$(node -p "require('./package.json').version")
+          VERSION="$VERSION-$(git rev-parse --short HEAD)"
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "is_prerelease=${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/v') }}" >> $GITHUB_OUTPUT
+    
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ steps.version.outputs.version }}
+        body: ${{ steps.changelog.outputs.changelog }}
+        draft: false
+        prerelease: ${{ steps.version.outputs.is_prerelease }}
+    
+    - name: Setup GitHub Package Registry
+      run: |
+        echo "@critical-claude:registry=https://npm.pkg.github.com" >> ~/.npmrc
+        echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+    
+    - name: Publish to GitHub Package Registry
+      run: |
+        # Update package.json for GitHub registry
+        node -e "
+          const pkg = require('./package.json');
+          pkg.name = '@critical-claude/critical-claude';
+          pkg.repository.url = 'https://github.com/critical-claude/critical-claude.git';
+          pkg.publishConfig = {
+            registry: 'https://npm.pkg.github.com',
+            access: 'public'
+          };
+          require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+        "
+        
+        # Update backlog-integration package
+        cd packages/backlog-integration
+        node -e "
+          const pkg = require('./package.json');
+          pkg.repository = {
+            type: 'git',
+            url: 'https://github.com/critical-claude/critical-claude.git',
+            directory: 'packages/backlog-integration'
+          };
+          pkg.publishConfig = {
+            registry: 'https://npm.pkg.github.com',
+            access: 'public'
+          };
+          require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+        "
+        
+        # Publish packages
+        npm publish --registry=https://npm.pkg.github.com
+        cd ../..
+        npm publish --registry=https://npm.pkg.github.com
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Publish to NPM (on tagged release)
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        # Restore original package.json for NPM
+        git checkout -- package.json packages/backlog-integration/package.json
+        
+        # Publish to NPM
+        npm publish --access public
+        cd packages/backlog-integration
+        npm publish --access public
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    
+    - name: Update GitHub repository topics
+      run: |
+        curl -X PUT \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/topics \
+          -d '{"names":["mcp-server","code-analysis","claude-ai","security-tools","performance-analysis","architecture-review","development-tools","typescript","nodejs","critical-claude"]}'
+    
+    - name: Create package info
+      run: |
+        mkdir -p dist/package-info
+        cat > dist/package-info/releases.json << EOF
+        {
+          "version": "${{ steps.version.outputs.version }}",
+          "release_date": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+          "changelog": $(echo '${{ steps.changelog.outputs.changelog }}' | jq -R -s .),
+          "github_packages": {
+            "critical-claude": "https://github.com/critical-claude/critical-claude/pkgs/npm/critical-claude",
+            "backlog-integration": "https://github.com/critical-claude/critical-claude/pkgs/npm/backlog-integration"
+          },
+          "npm_packages": {
+            "critical-claude": "https://www.npmjs.com/package/critical-claude",
+            "backlog-integration": "https://www.npmjs.com/package/@critical-claude/backlog-integration"
+          },
+          "installation": {
+            "npm": "npm install -g critical-claude",
+            "github": "npm install -g @critical-claude/critical-claude --registry=https://npm.pkg.github.com"
+          }
+        }
+        EOF
+    
+    - name: Upload package info
+      uses: actions/upload-artifact@v3
+      with:
+        name: package-info
+        path: dist/package-info/
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/rename-to-critical-claude' || startsWith(github.ref, 'refs/tags/v'))
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Setup Docker buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=semver,pattern={{major}}
+          type=sha
+    
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        platforms: linux/amd64,linux/arm64
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  update-docs:
+    needs: [release, docker]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/rename-to-critical-claude')
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Update documentation with latest release info
+      run: |
+        if [ -f "dist/package-info/releases.json" ]; then
+          # Update installation instructions in docs
+          sed -i 's/npm install -g critical-claude.*/npm install -g critical-claude # Latest: ${{ needs.release.outputs.version }}/g' docs/index.html
+          sed -i 's/npm install -g critical-claude.*/npm install -g critical-claude # Latest: ${{ needs.release.outputs.version }}/g' INSTALLATION.md
+          
+          # Commit changes
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/ INSTALLATION.md
+          git commit -m "docs: Update installation instructions with latest release ${{ needs.release.outputs.version }}" || exit 0
+          git push
+        fi

@@ -68,5 +68,18 @@
     "development-tools"
   ],
   "author": "Critical Claude Team",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/critical-claude/critical-claude.git",
+    "directory": "packages/backlog-integration"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "homepage": "https://critical-claude.github.io/critical-claude/",
+  "bugs": {
+    "url": "https://github.com/critical-claude/critical-claude/issues"
+  }
 }

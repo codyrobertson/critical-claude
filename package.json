@@ -33,6 +33,13 @@
     "deploy": "npm run build:prod && npm publish --access public",
     "deploy:dev": "npm run build && npm publish --tag dev --access public",
     "deploy:staging": "npm run build:prod && npm publish --tag staging --access public",
+    "deploy:github": "npm run build:prod && npm publish --registry=https://npm.pkg.github.com --access public",
+    "version:patch": "npm version patch && git push --follow-tags",
+    "version:minor": "npm version minor && git push --follow-tags",
+    "version:major": "npm version major && git push --follow-tags",
+    "release": "npm run version:patch",
+    "release:minor": "npm run version:minor",
+    "release:major": "npm run version:major",
     "prepare-package": "node scripts/prepare-package.js",
     "test-install": "npm pack && npm install -g critical-claude-*.tgz"
   },
@@ -58,6 +65,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/critical-claude/critical-claude.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "homepage": "https://critical-claude.github.io/critical-claude/",
+  "bugs": {
+    "url": "https://github.com/critical-claude/critical-claude/issues"
   },
   "keywords": [
     "mcp",

@@ -20,7 +20,8 @@
     <meta property="twitter:description" content="AI-powered code analysis that catches what everyone else misses. Prevent production disasters with Critical Claude's security, performance, and architecture review tools.">
     <meta property="twitter:image" content="https://critical-claude.github.io/critical-claude/assets/critical-claude-hero.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/@webtui/css@latest/webtui.css">
     <link rel="stylesheet" href="assets/style.css">
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
@@ -70,8 +71,8 @@
                     After 15+ years of debugging production disasters at 3 AM, Critical Claude prevents the next production outage before it happens. AI-powered security, performance, and architecture analysis for Claude Code, Cursor, Zed, and more.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#installation" class="btn btn-primary">Get Started</a>
-                    <a href="#examples" class="btn btn-secondary">See Examples</a>
+                    <button variant="primary" size="large" onclick="location.href='#installation'">Get Started</button>
+                    <button variant="secondary" size="large" onclick="location.href='#examples'">See Examples</button>
                 </div>
                 <div class="hero-stats">
                     <div class="stat">
@@ -101,32 +102,32 @@
             <p class="section-subtitle">The problems we solve in production environments</p>
             
             <div class="features-grid">
-                <div class="feature">
+                <div box-="card" class="feature">
                     <div class="feature-icon">🛡️</div>
                     <h3>Security Vulnerabilities</h3>
                     <p>Detects SQL injection, XSS, authentication bypasses, and data exposure with real exploitation scenarios</p>
                 </div>
-                <div class="feature">
+                <div box-="card" class="feature">
                     <div class="feature-icon">⚡</div>
                     <h3>Performance Bottlenecks</h3>
                     <p>Identifies algorithmic complexity issues, memory leaks, and scaling problems that crash systems under load</p>
                 </div>
-                <div class="feature">
+                <div box-="card" class="feature">
                     <div class="feature-icon">🏗️</div>
                     <h3>Architecture Issues</h3>
                     <p>Catches SOLID violations, tight coupling, and maintainability problems that create technical debt</p>
                 </div>
-                <div class="feature">
+                <div box-="card" class="feature">
                     <div class="feature-icon">🎯</div>
                     <h3>Production Readiness</h3>
                     <p>Evaluates error handling, logging, monitoring, and recovery mechanisms for enterprise environments</p>
                 </div>
-                <div class="feature">
+                <div box-="card" class="feature">
                     <div class="feature-icon">🔧</div>
                     <h3>Working Code Fixes</h3>
                     <p>Provides complete, executable solutions for every issue found - not just suggestions</p>
                 </div>
-                <div class="feature">
+                <div box-="card" class="feature">
                     <div class="feature-icon">🌐</div>
                     <h3>Real-time Intelligence</h3>
                     <p>Cross-checks against CVE databases and validates recommendations against current industry standards</p>
@@ -528,5 +529,6 @@ cd critical-claude</code></pre>
     </footer>
 
     <script src="assets/script.js"></script>
+    <script src="assets/webtui-setup.js"></script>
 </body>
 </html>
