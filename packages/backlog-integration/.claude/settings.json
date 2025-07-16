@@ -1,0 +1,19 @@
+{
+  "hooks": [
+    {
+      "name": "critical-claude-sync",
+      "event": "PostToolUse",
+      "command": "/Users/Cody/.critical-claude/claude-code-sync.sh",
+      "enabled": true,
+      "matcher": {
+        "tools": ["Write", "Edit", "MultiEdit", "TodoWrite", "TodoRead"]
+      }
+    },
+    {
+      "name": "critical-claude-sync-on-stop",
+      "event": "Stop",
+      "command": "/Users/Cody/.critical-claude/claude-code-sync.sh",
+      "enabled": true
+    }
+  ]
+}

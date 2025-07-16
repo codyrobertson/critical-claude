@@ -1115,6 +1115,2127 @@
       ],
       "createdAt": "2025-07-09T21:15:40.554Z",
       "updatedAt": "2025-07-09T21:15:40.554Z"
+    },
+    {
+      "id": "807e47c7-0f73-41af-8efd-811bf1bf9b98",
+      "title": "implement Claude Code hook integration",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "hooks",
+        "integration"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "f972c964-a97a-4951-9be2-8a2aba23f177",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-09T21:32:54.266Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-09T21:32:54.266Z",
+      "updatedAt": "2025-07-09T21:32:54.266Z"
+    },
+    {
+      "id": "b9c2bc9a-ed36-470b-862e-afa90614b44f",
+      "title": "test optimized CLI performance",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "8e63040f-e553-4098-845b-c7d7f20fd505",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-10T00:22:21.660Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-10T00:22:21.660Z",
+      "updatedAt": "2025-07-10T00:22:21.660Z"
+    },
+    {
+      "id": "adc23638-9e15-40bc-a9b9-ae7a36574b44",
+      "title": "setup project structure",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "high",
+      "labels": [
+        "setup",
+        "foundation"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "c7322e8e-e59f-49c4-80f9-abea0f3d0f57",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:51.314Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:51.314Z",
+      "updatedAt": "2025-07-11T23:07:51.314Z"
+    },
+    {
+      "id": "33c54bae-8201-4fd0-b6ae-433ae5b19dd1",
+      "title": "configure build tools and TypeScript",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [
+        "tooling",
+        "config"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "18e8c5a8-c207-4498-b028-381caa507901",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:52.050Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:52.050Z",
+      "updatedAt": "2025-07-11T23:07:52.050Z"
+    },
+    {
+      "id": "d2426614-b843-40a3-861c-d76c9163b954",
+      "title": "create basic UI components",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "medium",
+      "labels": [
+        "ui",
+        "components"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "19b209cc-5f53-450b-92ea-42f8a356ac84",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:52.779Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:52.779Z",
+      "updatedAt": "2025-07-11T23:07:52.779Z"
+    },
+    {
+      "id": "752c0849-7183-4db9-b7a3-5814c86ab309",
+      "title": "setup routing with React Router",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "medium",
+      "labels": [
+        "routing",
+        "navigation"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "46465b59-2b08-4df9-b0e1-e7e750a579a0",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:53.508Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:53.508Z",
+      "updatedAt": "2025-07-11T23:07:53.508Z"
+    },
+    {
+      "id": "6f1dc49b-d7dc-4db0-9ae4-2b9124eba04a",
+      "title": "implement state management with Redux",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "high",
+      "labels": [
+        "state",
+        "redux"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "7a1af09b-fd8d-4eb1-a713-825ecbda969c",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:54.239Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:54.239Z",
+      "updatedAt": "2025-07-11T23:07:54.239Z"
+    },
+    {
+      "id": "7c380a4d-9223-4b92-942a-bdea9b6e76a6",
+      "title": "implement add todo functionality",
+      "description": "with form validation",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "crud",
+        "create"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "78f110b3-8a13-46b4-8a71-4b1e9ca956de",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:54.969Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:54.969Z",
+      "updatedAt": "2025-07-11T23:07:54.969Z"
+    },
+    {
+      "id": "18b052ac-2161-4b7e-9b34-bdfc47756adb",
+      "title": "create todo list display with filtering",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "medium",
+      "labels": [
+        "display",
+        "filtering"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "0994ab1f-c78b-42e9-accb-64089229b2a0",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:55.699Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:55.699Z",
+      "updatedAt": "2025-07-11T23:07:55.699Z"
+    },
+    {
+      "id": "143409f3-21a1-4a31-83e1-c6b03856ec86",
+      "title": "add edit todo capability",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "medium",
+      "labels": [
+        "crud",
+        "edit"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "df52ac3b-88fc-44be-a70c-c909f8c8ea30",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:56.431Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:56.431Z",
+      "updatedAt": "2025-07-11T23:07:56.431Z"
+    },
+    {
+      "id": "47a08ea0-0481-445f-a310-75ac12f604a8",
+      "title": "implement delete todo with confirmation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "low",
+      "labels": [
+        "crud",
+        "delete"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "252ccaab-4578-46a8-8a22-5f76292c85dc",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:57.160Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:57.160Z",
+      "updatedAt": "2025-07-11T23:07:57.160Z"
+    },
+    {
+      "id": "58f911be-b873-4154-b223-ef7086480a6e",
+      "title": "add todo completion toggle -team",
+      "description": "",
+      "status": "todo",
+      "assignee": "dev",
+      "storyPoints": 2,
+      "priority": "high",
+      "labels": [
+        "interaction",
+        "toggle"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "ba001e77-f04a-4bf6-8182-fb4f0d18e749",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:57.891Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:57.891Z",
+      "updatedAt": "2025-07-11T23:07:57.891Z"
+    },
+    {
+      "id": "59c87659-20b2-4c7d-9d56-7c0d409a4e45",
+      "title": "create todo categories and tagging",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "medium",
+      "labels": [
+        "organization",
+        "tags"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "624c74d7-1e67-4384-a801-8bd0a37043c0",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:58.627Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:58.627Z",
+      "updatedAt": "2025-07-11T23:07:58.627Z"
+    },
+    {
+      "id": "fb776f40-def5-4004-819f-ed1bff5a94a7",
+      "title": "implement due date functionality",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "medium",
+      "labels": [
+        "dates",
+        "scheduling"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "12eb0622-49e4-4d2b-9e6d-dd59e6c33d61",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:07:59.359Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:07:59.359Z",
+      "updatedAt": "2025-07-11T23:07:59.359Z"
+    },
+    {
+      "id": "c520e124-621f-45c6-bd8f-d4ec1fd38ede",
+      "title": "implement drag and drop reordering",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "medium",
+      "labels": [
+        "interaction",
+        "dnd"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "d7da36bc-a04a-42f2-b83c-9f03a243a8cb",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:00.094Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:00.094Z",
+      "updatedAt": "2025-07-11T23:08:00.094Z"
+    },
+    {
+      "id": "7d0ca220-0fcd-4b72-b4ed-8c8a2d864ae0",
+      "title": "add search functionality with fuzzy matching",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "medium",
+      "labels": [
+        "search",
+        "filtering"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "b9f9ba67-64e0-4e5f-927d-17177edff76d",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:00.825Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:00.825Z",
+      "updatedAt": "2025-07-11T23:08:00.825Z"
+    },
+    {
+      "id": "077b62c4-1553-4333-bfc1-f03535b054ad",
+      "title": "create data persistence with localStorage",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "high",
+      "labels": [
+        "persistence",
+        "storage"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "16e1afb1-5348-47bb-97a4-62433a7d012b",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:01.557Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:01.557Z",
+      "updatedAt": "2025-07-11T23:08:01.557Z"
+    },
+    {
+      "id": "f29264dc-4d03-4a51-984c-de9e9f19a223",
+      "title": "implement todo sharing between users",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 13,
+      "priority": "low",
+      "labels": [
+        "sharing",
+        "collaboration"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "3c364e56-a54b-4cef-b95a-426ecbca7aae",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:02.285Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:02.285Z",
+      "updatedAt": "2025-07-11T23:08:02.285Z"
+    },
+    {
+      "id": "c9d767e1-2577-47d6-aa12-5d2efc94f4bc",
+      "title": "add notification system for due dates",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "medium",
+      "labels": [
+        "notifications",
+        "alerts"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "6dfc44c2-833f-41f1-84e5-874f66bd7cde",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:03.017Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:03.017Z",
+      "updatedAt": "2025-07-11T23:08:03.017Z"
+    },
+    {
+      "id": "38495de8-9fa7-4a33-9862-979faa08dea1",
+      "title": "create todo statistics and analytics",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "low",
+      "labels": [
+        "analytics",
+        "reporting"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "9dac2d58-933e-4b63-a727-91267ac0c809",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:03.752Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:03.752Z",
+      "updatedAt": "2025-07-11T23:08:03.752Z"
+    },
+    {
+      "id": "d7166e0d-4558-4163-9e5e-7d36d78042ca",
+      "title": "implement dark mode theme toggle",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "low",
+      "labels": [
+        "theming",
+        "ui"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "ae9e99a0-9a2e-4d47-868f-001bc81a047e",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:04.491Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:04.491Z",
+      "updatedAt": "2025-07-11T23:08:04.491Z"
+    },
+    {
+      "id": "f27fe31f-1028-4778-80f6-8cdfffeb751c",
+      "title": "write comprehensive unit tests",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "critical",
+      "labels": [
+        "testing",
+        "unit"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "21902406-02a6-4544-97db-407caab8e5ca",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:05.226Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:05.226Z",
+      "updatedAt": "2025-07-11T23:08:05.226Z"
+    },
+    {
+      "id": "00a3090e-4e93-4390-9f27-870d8ceaa575",
+      "title": "add integration tests for user flows",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 13,
+      "priority": "high",
+      "labels": [
+        "testing",
+        "integration"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "c8a64c08-8464-4309-b16e-48799ca0430e",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:05.963Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:05.963Z",
+      "updatedAt": "2025-07-11T23:08:05.963Z"
+    },
+    {
+      "id": "4f18dedc-df90-46ab-b232-f7954d37a448",
+      "title": "implement error boundaries and error handling",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "errors",
+        "resilience"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "1438edc5-cf57-4f31-894d-63d7a057b611",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:06.698Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:06.698Z",
+      "updatedAt": "2025-07-11T23:08:06.698Z"
+    },
+    {
+      "id": "118ccbe0-9177-42cf-b92e-75e64875aacf",
+      "title": "optimize bundle size and performance",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "medium",
+      "labels": [
+        "performance",
+        "optimization"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "063d420d-1bd0-4a09-8cb2-cd64f1c09ff1",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:07.423Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:07.423Z",
+      "updatedAt": "2025-07-11T23:08:07.423Z"
+    },
+    {
+      "id": "dfbd2ddb-b112-44fb-9c69-80ca4586263c",
+      "title": "add accessibility features",
+      "description": "ARIA, keyboard nav",
+      "status": "todo",
+      "storyPoints": 8,
+      "priority": "high",
+      "labels": [
+        "a11y",
+        "accessibility"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "ef2377e9-6bd2-4cca-aa78-5a30a5614117",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:08.161Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:08.161Z",
+      "updatedAt": "2025-07-11T23:08:08.161Z"
+    },
+    {
+      "id": "f125e093-bfab-4ccd-9ddb-9c5d04ec92b3",
+      "title": "setup CI/CD pipeline",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "medium",
+      "labels": [
+        "devops",
+        "automation"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "44d87dae-b6a5-49bc-93cd-0d55d2262543",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:08.896Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:08.896Z",
+      "updatedAt": "2025-07-11T23:08:08.896Z"
+    },
+    {
+      "id": "27183e8a-080e-4143-9bfe-391886c767be",
+      "title": "create user documentation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "low",
+      "labels": [
+        "docs",
+        "help"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "22c1f0c0-6a9b-4b8a-8d55-340e8c775ff8",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:09.629Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:09.629Z",
+      "updatedAt": "2025-07-11T23:08:09.629Z"
+    },
+    {
+      "id": "70a3ace1-edfc-4f27-9b57-f925f8b0bc0b",
+      "title": "implement real-time collaborative editing",
+      "description": "complex feature requiring WebSocket integration, conflict resolution, and operational transformation",
+      "status": "todo",
+      "storyPoints": 21,
+      "priority": "critical",
+      "labels": [
+        "realtime",
+        "collaboration",
+        "websockets"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "f3f5e349-5bfc-4b34-8fcf-dd0d18a65594",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:10.568Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:10.568Z",
+      "updatedAt": "2025-07-11T23:08:10.568Z"
+    },
+    {
+      "id": "213acaa7-fb4d-4a6a-9fdc-5c88185a29ce",
+      "title": "fix critical login bug",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "2fc03eb2-d13c-4dda-9f72-ce83b9e1ea6c",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:11.008Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:11.008Z",
+      "updatedAt": "2025-07-11T23:08:11.008Z"
+    },
+    {
+      "id": "f7497036-53ed-4f9b-9c98-644973c24589",
+      "title": "update README",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "98252d66-deac-488c-945a-12cbb00c5db5",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:11.235Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:11.235Z",
+      "updatedAt": "2025-07-11T23:08:11.235Z"
+    },
+    {
+      "id": "f71146ed-e269-431d-9bd5-e0efb318f475",
+      "title": "refactor user service",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "9fa78b39-479d-4153-ac14-8acab4e25dc5",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-11T23:08:11.467Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-11T23:08:11.467Z",
+      "updatedAt": "2025-07-11T23:08:11.467Z"
+    },
+    {
+      "id": "240949d9-c6da-4e8b-88dc-093d0811ca0b",
+      "title": "add",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "916b9fb0-636c-4b6f-8bfc-5ebb1bd9cb5e",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-13T21:52:55.173Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-13T21:52:55.173Z",
+      "updatedAt": "2025-07-13T21:52:55.173Z"
+    },
+    {
+      "id": "05425d22-7207-41c3-9df7-8bbb09b015f8",
+      "title": "create",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "d1d92be8-39ab-4952-885c-f267fbfe82ed",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-14T17:11:58.825Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-14T17:11:58.825Z",
+      "updatedAt": "2025-07-14T17:11:58.825Z"
+    },
+    {
+      "id": "4e2d6211-d475-4ac1-a4d7-9fb302b6a284",
+      "title": "Fix authentication bug",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "high",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "618df39e-f104-4d52-9b11-171be4460e19",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-14T17:43:27.972Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-14T17:43:27.972Z",
+      "updatedAt": "2025-07-14T17:43:27.972Z"
+    },
+    {
+      "id": "f0a0f4b5-1827-4a28-be0c-c7339757351a",
+      "title": "Urgent bug fix needs immediate attention",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "critical",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "5700781c-eba2-4b2e-814c-7fb7cedce8e4",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-14T17:43:27.976Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-14T17:43:27.976Z",
+      "updatedAt": "2025-07-14T17:43:27.976Z"
+    },
+    {
+      "id": "eb8b39ff-a1d1-40a7-a921-35ee2d195112",
+      "title": "add",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "fb204a1b-d954-4fbc-95fd-2fd3833dedf3",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:53:39.321Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:53:39.321Z",
+      "updatedAt": "2025-07-15T03:53:39.321Z"
+    },
+    {
+      "id": "4bc0f02d-3b9d-4c2a-8599-be86a81f2e5c",
+      "title": "add",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "58b661c6-7f29-4176-814c-5e4b0cdb4122",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:56:44.837Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:56:44.837Z",
+      "updatedAt": "2025-07-15T03:56:44.837Z"
+    },
+    {
+      "id": "dd74caee-96d9-466b-a4ed-d21d35aaf19c",
+      "title": "add",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "64fccdb5-7c21-4181-8940-211f636e0ef7",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:57:35.831Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:57:35.831Z",
+      "updatedAt": "2025-07-15T03:57:35.831Z"
+    },
+    {
+      "id": "cf8898c5-311a-4cf2-b712-ec59195b54c7",
+      "title": "add",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "b8a04e35-6790-41c9-be76-aaf52d3a584c",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:57:49.193Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:57:49.193Z",
+      "updatedAt": "2025-07-15T03:57:49.193Z"
+    },
+    {
+      "id": "266c495c-4766-4559-b826-628326cb221f",
+      "title": "add",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "e178b24a-8ef6-4c19-b953-1e55f2488ebc",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:57:57.442Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:57:57.442Z",
+      "updatedAt": "2025-07-15T03:57:57.442Z"
+    },
+    {
+      "id": "63820de2-d114-41a0-92a0-1bc0fc4180d1",
+      "title": "Hook integration test task -test",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "high",
+      "labels": [
+        "hook"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "70e3583a-512c-43fb-ae02-ae8ac04b5d4d",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:58:53.566Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:58:53.566Z",
+      "updatedAt": "2025-07-15T03:58:53.566Z"
+    },
+    {
+      "id": "f7240dbe-6f46-451b-8d93-c7eaa710ff92",
+      "title": "Hook integration test task -test",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "high",
+      "labels": [
+        "hook"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "7c40f76c-77ea-4cf0-97f1-e4ca1f61f501",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:59:30.843Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:59:30.843Z",
+      "updatedAt": "2025-07-15T03:59:30.843Z"
+    },
+    {
+      "id": "9c58be3f-34eb-4671-a506-61577d16ee26",
+      "title": "Hook integration test task -test",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "high",
+      "labels": [
+        "hook"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "10698043-302d-4e7f-95e0-05a8d51220c8",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T03:59:44.917Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T03:59:44.917Z",
+      "updatedAt": "2025-07-15T03:59:44.917Z"
+    },
+    {
+      "id": "f34df24e-73a8-4a2d-8aaa-eeba3bc071ea",
+      "title": "E2E Test: Implement user login",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "3194216d-f090-40a2-b4f2-a3b02d856615",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T04:00:53.761Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T04:00:53.761Z",
+      "updatedAt": "2025-07-15T04:00:53.761Z"
+    },
+    {
+      "id": "22332136-ab35-43ed-b4e5-f4a675b97593",
+      "title": "E2E Test: Add unit tests",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "medium",
+      "labels": [
+        "testing"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "98a2e366-488b-41f2-883a-54b8afb1f53d",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T04:00:54.391Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T04:00:54.391Z",
+      "updatedAt": "2025-07-15T04:00:54.391Z"
+    },
+    {
+      "id": "199b100c-9834-4be7-86e7-7bb81f71987c",
+      "title": "E2E Test: Update documentation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 1,
+      "priority": "low",
+      "labels": [
+        "docs"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "6fc7c23e-061d-4826-a3ec-408eb552704d",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T04:00:55.023Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T04:00:55.023Z",
+      "updatedAt": "2025-07-15T04:00:55.023Z"
+    },
+    {
+      "id": "789eccdb-5f06-498c-80f3-d57698e788c3",
+      "title": "add",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 2,
+      "priority": "medium",
+      "labels": [],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "fe70fea7-33df-4348-bb30-9618c7506094",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T04:31:28.425Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T04:31:28.425Z",
+      "updatedAt": "2025-07-15T04:31:28.425Z"
+    },
+    {
+      "id": "9bc7efa6-5beb-4b1f-a037-d7e46d434d9a",
+      "title": "Complete workflow test",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "high",
+      "labels": [
+        "e2e",
+        "integration"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "9c6698f6-cd17-460e-bb4d-c16766ecf725",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T04:31:59.115Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T04:31:59.115Z",
+      "updatedAt": "2025-07-15T04:31:59.115Z"
+    },
+    {
+      "id": "79fb4d8e-8984-418d-aacb-2aeced7b17fd",
+      "title": "E2E Test: Implement user login",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "0c6d813d-df64-4947-a909-7868c9badce2",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:10:55.830Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:10:55.830Z",
+      "updatedAt": "2025-07-15T05:10:55.830Z"
+    },
+    {
+      "id": "edb404d8-8c0b-47d1-a3b4-f85a2fa795c1",
+      "title": "E2E Test: Add unit tests",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "medium",
+      "labels": [
+        "testing"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "a7adce45-a1d8-4e12-b3f9-6a264fc7b3aa",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:10:56.463Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:10:56.463Z",
+      "updatedAt": "2025-07-15T05:10:56.463Z"
+    },
+    {
+      "id": "3734dc18-b8e1-47ac-a5ff-13d1352cffb7",
+      "title": "E2E Test: Update documentation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 1,
+      "priority": "low",
+      "labels": [
+        "docs"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "a5884b17-6bed-48dc-81aa-7a4e346b7ad8",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:10:57.123Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:10:57.123Z",
+      "updatedAt": "2025-07-15T05:10:57.123Z"
+    },
+    {
+      "id": "0037678a-3863-483a-8e3e-12927347b99a",
+      "title": "E2E Test: Implement user login",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "d7a530ec-99ab-47e9-b0b5-3db35267f212",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:35:26.727Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:35:26.727Z",
+      "updatedAt": "2025-07-15T05:35:26.727Z"
+    },
+    {
+      "id": "f2fcf5bd-340f-4bd5-b1d3-cdbbcff2bd20",
+      "title": "E2E Test: Add unit tests",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "medium",
+      "labels": [
+        "testing"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "2c61e576-c76e-4a8e-af62-7a966e1b2bf3",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:35:27.352Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:35:27.352Z",
+      "updatedAt": "2025-07-15T05:35:27.352Z"
+    },
+    {
+      "id": "c38b8952-7881-45e2-bb63-d1639eebd55c",
+      "title": "E2E Test: Update documentation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 1,
+      "priority": "low",
+      "labels": [
+        "docs"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "47c393d9-20b4-4fdc-972b-70cc8a1a6e33",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:35:27.977Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:35:27.977Z",
+      "updatedAt": "2025-07-15T05:35:27.977Z"
+    },
+    {
+      "id": "174fd88d-6d35-4177-8d4a-2304e1ef367b",
+      "title": "E2E Test: Implement user login",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "1760e3a4-3b4d-4e9d-8563-2f2bdca5fcdf",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:35:41.982Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:35:41.982Z",
+      "updatedAt": "2025-07-15T05:35:41.982Z"
+    },
+    {
+      "id": "d7d28c57-68be-40f2-8642-bab2e1a26d74",
+      "title": "E2E Test: Add unit tests",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "medium",
+      "labels": [
+        "testing"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "d46dc160-1e51-421e-a3f1-e64026ccbd7d",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:35:42.605Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:35:42.605Z",
+      "updatedAt": "2025-07-15T05:35:42.605Z"
+    },
+    {
+      "id": "e1902f1d-ba38-42cb-9ac4-6a62abc849ca",
+      "title": "E2E Test: Update documentation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 1,
+      "priority": "low",
+      "labels": [
+        "docs"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "fb581153-bdd4-4808-89f3-7c9906cc5453",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T05:35:43.232Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T05:35:43.232Z",
+      "updatedAt": "2025-07-15T05:35:43.232Z"
+    },
+    {
+      "id": "5b76b804-e64a-4c19-953a-d62ced4c7c34",
+      "title": "E2E Test: Implement user login",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "253b2cdb-be6a-4ac3-9080-ea56d9d08a07",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T06:25:28.907Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T06:25:28.907Z",
+      "updatedAt": "2025-07-15T06:25:28.907Z"
+    },
+    {
+      "id": "7e425d67-8438-4eb9-b10f-03e83e89f2da",
+      "title": "E2E Test: Add unit tests",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "medium",
+      "labels": [
+        "testing"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "b8e5a4d4-f179-431a-a6db-54f84cc4f36a",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T06:25:29.536Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T06:25:29.536Z",
+      "updatedAt": "2025-07-15T06:25:29.536Z"
+    },
+    {
+      "id": "d13a3e9a-1a87-4b77-b129-1f5b47e49338",
+      "title": "E2E Test: Update documentation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 1,
+      "priority": "low",
+      "labels": [
+        "docs"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "0b9ac26d-66b2-41da-b9af-64b24818cf78",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T06:25:30.166Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T06:25:30.166Z",
+      "updatedAt": "2025-07-15T06:25:30.166Z"
+    },
+    {
+      "id": "b3a55428-3279-4211-9374-1202f4cfa25c",
+      "title": "E2E Test: Implement user login",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 5,
+      "priority": "high",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "f60fd7c6-157c-4063-9f9e-a21b23d55b25",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T20:42:28.151Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T20:42:28.151Z",
+      "updatedAt": "2025-07-15T20:42:28.151Z"
+    },
+    {
+      "id": "aa919977-c5f5-4aab-ae32-779ba7c7cb1f",
+      "title": "E2E Test: Add unit tests",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 3,
+      "priority": "medium",
+      "labels": [
+        "testing"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "01dc416e-6e01-44ba-9eb5-494f881bf7be",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T20:42:28.797Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T20:42:28.797Z",
+      "updatedAt": "2025-07-15T20:42:28.797Z"
+    },
+    {
+      "id": "f11599b5-074a-4581-a4aa-d8648f57901f",
+      "title": "E2E Test: Update documentation",
+      "description": "",
+      "status": "todo",
+      "storyPoints": 1,
+      "priority": "low",
+      "labels": [
+        "docs"
+      ],
+      "acceptanceCriteria": [],
+      "dependencies": [],
+      "notes": [],
+      "codeReferences": [],
+      "generatedBy": "manual",
+      "timeTracking": {
+        "estimated": 0,
+        "actual": 0,
+        "remaining": 0
+      },
+      "stateHistory": [
+        {
+          "id": "1d7f4ddb-b845-44c1-bd85-5f83669006eb",
+          "fromState": null,
+          "toState": "todo",
+          "changedBy": "system",
+          "changedAt": "2025-07-15T20:42:29.431Z",
+          "reason": "Task created"
+        }
+      ],
+      "createdAt": "2025-07-15T20:42:29.431Z",
+      "updatedAt": "2025-07-15T20:42:29.431Z"
     }
   ],
   "burndownData": [],

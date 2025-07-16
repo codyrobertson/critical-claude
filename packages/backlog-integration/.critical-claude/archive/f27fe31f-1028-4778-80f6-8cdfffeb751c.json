@@ -1,0 +1,34 @@
+{
+  "id": "f27fe31f-1028-4778-80f6-8cdfffeb751c",
+  "title": "write comprehensive unit tests",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 8,
+  "priority": "critical",
+  "labels": [
+    "testing",
+    "unit"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "21902406-02a6-4544-97db-407caab8e5ca",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:08:05.226Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:08:05.226Z",
+  "updatedAt": "2025-07-11T23:08:05.226Z"
+}

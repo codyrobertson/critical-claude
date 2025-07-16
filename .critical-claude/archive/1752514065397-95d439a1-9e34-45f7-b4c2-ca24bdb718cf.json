@@ -1,0 +1,67 @@
+{
+  "id": "95d439a1-9e34-45f7-b4c2-ca24bdb718cf",
+  "title": "Add time tracking with start/stop timers",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 6,
+  "priority": "medium",
+  "labels": [
+    "time",
+    "tracking",
+    "productivity"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "c53fa7bb-e4c1-44f4-93b4-2126868cda64",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-14T00:02:12.248Z",
+      "reason": "Task created"
+    },
+    {
+      "id": "a33c6da5-f091-4f4a-a82a-0c98e2e0fbb6",
+      "fromState": "todo",
+      "toState": "done",
+      "changedAt": "2025-07-14T00:14:35.614Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    },
+    {
+      "id": "30936976-31df-4b9e-aed6-f71c7f64d428",
+      "fromState": "done",
+      "toState": "todo",
+      "changedAt": "2025-07-14T00:14:36.125Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    },
+    {
+      "id": "b4077a04-9281-4172-94ef-8ea8f056a95c",
+      "fromState": "todo",
+      "toState": "done",
+      "changedAt": "2025-07-14T00:14:36.461Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    },
+    {
+      "id": "527244b9-bae5-4c14-97d4-4218a3f147e2",
+      "fromState": "done",
+      "toState": "todo",
+      "changedAt": "2025-07-14T00:14:36.826Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    }
+  ],
+  "createdAt": "2025-07-14T00:02:12.248Z",
+  "updatedAt": "2025-07-14T00:14:36.826Z"
+}

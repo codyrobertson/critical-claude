@@ -1,0 +1,33 @@
+{
+  "id": "63820de2-d114-41a0-92a0-1bc0fc4180d1",
+  "title": "Hook integration test task -test",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 2,
+  "priority": "high",
+  "labels": [
+    "hook"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "70e3583a-512c-43fb-ae02-ae8ac04b5d4d",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:58:53.566Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:58:53.566Z",
+  "updatedAt": "2025-07-15T03:58:53.566Z"
+}

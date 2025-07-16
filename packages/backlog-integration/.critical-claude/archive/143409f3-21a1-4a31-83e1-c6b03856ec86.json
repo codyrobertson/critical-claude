@@ -1,0 +1,34 @@
+{
+  "id": "143409f3-21a1-4a31-83e1-c6b03856ec86",
+  "title": "add edit todo capability",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "medium",
+  "labels": [
+    "crud",
+    "edit"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "df52ac3b-88fc-44be-a70c-c909f8c8ea30",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:07:56.431Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:07:56.431Z",
+  "updatedAt": "2025-07-11T23:07:56.431Z"
+}

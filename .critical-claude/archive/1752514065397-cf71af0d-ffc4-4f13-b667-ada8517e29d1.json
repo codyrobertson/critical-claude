@@ -1,0 +1,35 @@
+{
+  "id": "cf71af0d-ffc4-4f13-b667-ada8517e29d1",
+  "title": "Add burndown charts and visual sprint progress",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 7,
+  "priority": "low",
+  "labels": [
+    "charts",
+    "visualization",
+    "metrics"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "5f490a29-de2b-4989-a144-5dca050b4d19",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-14T00:02:23.211Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-14T00:02:23.211Z",
+  "updatedAt": "2025-07-14T00:02:23.211Z"
+}

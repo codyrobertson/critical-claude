@@ -1,38 +1,37 @@
 /**
- * Claude Code Sync Command
- * Demonstrates integration between Critical Claude and Claude Code's native todo system
+ * Claude Code Sync Command - Real bidirectional sync between Critical Claude and Claude Code
  */
 import { CommandHandler } from '../command-registry.js';
 export declare class ClaudeCodeSyncCommand implements CommandHandler {
     private backlogManager;
     private integration;
+    private realIntegration;
+    private hookAwareManager;
+    private conflictResolver;
     constructor();
     execute(action: string, input: any, options: any): Promise<void>;
+    private syncToClaudeCode;
+    private syncFromClaudeCode;
+    private performBidirectionalSync;
+    private executeClaudeCodeTodoWrite;
+    private executeClaudeCodeTodoRead;
+    private resolveConflicts;
     /**
-     * Sync Critical Claude tasks to Claude Code todos
+     * Apply a conflict resolution to the actual systems
      */
-    private syncTasks;
-    /**
-     * Actually execute the sync to Claude Code's TodoWrite
-     */
-    private executeClaudeCodeSync;
-    /**
-     * Show synchronization status
-     */
-    private showSyncStatus;
-    /**
-     * Setup Claude Code hooks for automatic synchronization
-     */
-    private setupHooks;
-    /**
-     * Demonstrate the integration with examples
-     */
-    private demonstrateIntegration;
-    /**
-     * Helper methods
-     */
-    private getStatusIcon;
+    private applyConflictResolution;
+    private mapTaskStatusToTodoStatus;
+    private mapTodoStatusToTaskStatus;
+    private getStatusEmoji;
     private getPriorityColor;
-    private mapStatusToClaudeCode;
+    private testIntegrationMethods;
+    /**
+     * Process hook events that may have triggered task state changes
+     */
+    private processHookEvents;
+    /**
+     * Detect hook event from environment variables or other context
+     */
+    private detectHookEvent;
 }
 //# sourceMappingURL=claude-code-sync.d.ts.map

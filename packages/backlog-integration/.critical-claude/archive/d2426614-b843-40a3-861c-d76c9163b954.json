@@ -1,0 +1,34 @@
+{
+  "id": "d2426614-b843-40a3-861c-d76c9163b954",
+  "title": "create basic UI components",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "medium",
+  "labels": [
+    "ui",
+    "components"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "19b209cc-5f53-450b-92ea-42f8a356ac84",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:07:52.779Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:07:52.779Z",
+  "updatedAt": "2025-07-11T23:07:52.779Z"
+}

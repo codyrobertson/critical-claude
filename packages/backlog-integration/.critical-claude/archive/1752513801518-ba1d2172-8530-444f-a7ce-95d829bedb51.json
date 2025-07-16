@@ -1,0 +1,65 @@
+{
+  "id": "ba1d2172-8530-444f-a7ce-95d829bedb51",
+  "title": "Fix O(n²) performance bottleneck in backlog-manager.ts:486",
+  "description": "Critical Claude identified a performance issue causing O(n²) operations in the backlog manager. This needs immediate attention for production scalability.",
+  "priority": "critical",
+  "status": "todo",
+  "labels": [
+    "performance",
+    "critical-path",
+    "production"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "bb90e1b7-7a97-4639-9481-083fad5bc860",
+      "description": "Performance bottleneck identified and resolved",
+      "verified": false
+    },
+    {
+      "id": "f4509341-9e24-4bfc-a324-479f33a2d6dc",
+      "description": "Algorithm complexity reduced from O(n²) to O(n) or better",
+      "verified": false
+    },
+    {
+      "id": "78ab9dbe-c968-4f51-939b-974946decc54",
+      "description": "Load testing shows improved performance metrics",
+      "verified": false
+    },
+    {
+      "id": "110c5660-8319-47bc-9ba6-709dbb1893ad",
+      "description": "No regression in existing functionality",
+      "verified": false
+    }
+  ],
+  "storyPoints": 5,
+  "timeTracking": {
+    "estimated": 8,
+    "actual": 0,
+    "remaining": 8
+  },
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude project analysis",
+    "suggestedEffort": 5,
+    "riskFactors": [
+      "timeline estimation",
+      "scope creep"
+    ]
+  },
+  "stateHistory": [
+    {
+      "id": "769a66ad-ab97-42a4-a130-cfbb635e7316",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-analysis",
+      "changedAt": "2025-07-14T17:08:22.819Z",
+      "reason": "Task created from project analysis"
+    }
+  ],
+  "createdAt": "2025-07-14T17:08:22.819Z",
+  "updatedAt": "2025-07-14T17:08:22.819Z"
+}

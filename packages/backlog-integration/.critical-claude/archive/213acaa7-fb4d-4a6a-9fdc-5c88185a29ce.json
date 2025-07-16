@@ -1,0 +1,31 @@
+{
+  "id": "213acaa7-fb4d-4a6a-9fdc-5c88185a29ce",
+  "title": "fix critical login bug",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 2,
+  "priority": "medium",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "2fc03eb2-d13c-4dda-9f72-ce83b9e1ea6c",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:08:11.008Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:08:11.008Z",
+  "updatedAt": "2025-07-11T23:08:11.008Z"
+}

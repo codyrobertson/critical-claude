@@ -475,32 +475,62 @@ export class BacklogManager {
     totalSprints: number;
     totalTasks: number;
     aiGeneratedTasks: number;
+    // For test compatibility
+    total: number;
+    byStatus: Record<string, number>;
+    byPriority: Record<string, number>;
   }> {
     const phases = await this.getPhases();
     const epics = await this.getEpics();
     
+    // Get all sprints at once instead of individual lookups (O(n) instead of O(n²))
+    const allSprints = await this.getSprints();
+    
+    // Get all tasks for detailed statistics
+    const allTasks = await this.listTasks();
+    
+    // Create lookup map for O(1) sprint access
+    const sprintMap = new Map(allSprints.map(sprint => [sprint.id, sprint]));
+    
     let totalSprints = 0;
-    let totalTasks = 0;
+    let totalTasksFromSprints = 0;
     let aiGeneratedTasks = 0;
     
     for (const epic of epics) {
       totalSprints += epic.sprints.length;
       
+      // Use map lookup instead of individual getSprint() calls
       for (const sprintId of epic.sprints) {
-        const sprint = await this.getSprint(sprintId);
+        const sprint = sprintMap.get(sprintId);
         if (sprint) {
-          totalTasks += sprint.tasks.length;
+          totalTasksFromSprints += sprint.tasks.length;
           aiGeneratedTasks += sprint.tasks.filter(task => task.generatedBy === 'ai').length;
         }
       }
+    }
+    
+    // Calculate task statistics by status and priority
+    const byStatus: Record<string, number> = {};
+    const byPriority: Record<string, number> = {};
+    
+    for (const task of allTasks) {
+      // Count by status
+      byStatus[task.status] = (byStatus[task.status] || 0) + 1;
+      
+      // Count by priority
+      byPriority[task.priority] = (byPriority[task.priority] || 0) + 1;
     }
     
     return {
       totalPhases: phases.length,
       totalEpics: epics.length,
       totalSprints,
-      totalTasks,
-      aiGeneratedTasks
+      totalTasks: Math.max(totalTasksFromSprints, allTasks.length), // Use the higher count (some tasks might not be in sprints)
+      aiGeneratedTasks,
+      // For test compatibility
+      total: allTasks.length,
+      byStatus,
+      byPriority
     };
   }
   
@@ -590,6 +620,80 @@ export class BacklogManager {
       return task;
     } catch (error) {
       return null;
+    }
+  }
+
+  async listTasks(): Promise<EnhancedTask[]> {
+    try {
+      const files = await fs.readdir(this.config.tasksPath);
+      const tasks: EnhancedTask[] = [];
+      
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const taskId = file.replace('.json', '');
+          const task = await this.getTask(taskId);
+          if (task) {
+            tasks.push(task);
+          }
+        }
+      }
+      
+      // Sort by creation date (newest first)
+      tasks.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+      
+      return tasks;
+    } catch (error) {
+      logger.error('Failed to list tasks', error as Error);
+      return [];
+    }
+  }
+
+  async updateTask(taskId: string, updates: Partial<EnhancedTask>): Promise<EnhancedTask> {
+    const existingTask = await this.getTask(taskId);
+    if (!existingTask) {
+      throw new Error(`Task not found: ${taskId}`);
+    }
+
+    // Merge updates with existing task
+    const updatedTask: EnhancedTask = {
+      ...existingTask,
+      ...updates,
+      id: taskId, // Ensure ID doesn't change
+      updatedAt: new Date()
+    };
+
+    // If status changed, update state history
+    if (updates.status && updates.status !== existingTask.status) {
+      updatedTask.stateHistory = [
+        ...existingTask.stateHistory,
+        {
+          id: uuidv4(),
+          fromState: existingTask.status,
+          toState: updates.status,
+          changedAt: new Date(),
+          changedBy: 'user',
+          reason: 'Manual update via UI'
+        }
+      ];
+    }
+
+    await this.saveTask(updatedTask);
+    logger.info(`Task updated: ${updatedTask.title}`);
+    return updatedTask;
+  }
+
+  async deleteTask(taskId: string): Promise<void> {
+    const existingTask = await this.getTask(taskId);
+    if (!existingTask) {
+      throw new Error(`Task not found: ${taskId}`);
+    }
+
+    try {
+      const filePath = path.join(this.config.tasksPath, `${taskId}.json`);
+      await fs.unlink(filePath);
+      logger.info(`Task deleted: ${existingTask.title}`);
+    } catch (error) {
+      throw new Error(`Failed to delete task: ${(error as Error).message}`);
     }
   }
   

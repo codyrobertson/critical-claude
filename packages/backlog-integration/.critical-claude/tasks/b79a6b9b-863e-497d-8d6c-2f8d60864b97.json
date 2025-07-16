@@ -1,0 +1,31 @@
+{
+  "id": "b79a6b9b-863e-497d-8d6c-2f8d60864b97",
+  "title": "Urgent bug fix needs immediate attention",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 1,
+  "priority": "critical",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "hook",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "34562040-a5b5-4642-bccb-3228e0b1e3f7",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:54:47.042Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:54:47.042Z",
+  "updatedAt": "2025-07-15T03:54:47.042Z"
+}

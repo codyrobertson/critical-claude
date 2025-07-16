@@ -1,0 +1,106 @@
+# GitHub Pages Configuration for Critical Claude
+
+# Site settings
+title: Critical Claude
+description: "Battle-tested code analysis that catches what everyone else misses. AI-powered security, performance, and architecture review for Claude Code, Cursor, Zed, and more."
+url: "https://critical-claude.github.io"
+baseurl: "/critical-claude"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# SEO settings
+lang: en_US
+author: Critical Claude Team
+twitter:
+  username: critical_claude
+  card: summary_large_image
+facebook:
+  publisher: https://www.facebook.com/criticalclaude
+
+# GitHub settings
+github:
+  repository_url: https://github.com/critical-claude/critical-claude
+  is_project_page: true
+
+# Exclude from processing
+exclude:
+  - README.md
+  - LICENSE
+  - package.json
+  - package-lock.json
+  - node_modules
+  - .git
+  - .github
+  - .vscode
+  - src
+  - build
+  - dist
+
+# Include in processing
+include:
+  - _headers
+  - _redirects
+
+# Sass settings
+sass:
+  sass_dir: _sass
+  style: compressed
+
+# Permalink structure
+permalink: pretty
+
+# Default layouts
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+# Collections
+collections:
+  docs:
+    output: true
+    permalink: /:collection/:name/
+
+# Navigation
+navigation:
+  - title: Features
+    url: "/#features"
+  - title: Installation
+    url: "/#installation"
+  - title: Documentation
+    url: "/#docs"
+  - title: Examples
+    url: "/#examples"
+  - title: GitHub
+    url: "https://github.com/critical-claude/critical-claude"
+    external: true
+
+# Footer links
+footer_links:
+  - title: GitHub
+    url: "https://github.com/critical-claude/critical-claude"
+  - title: Issues
+    url: "https://github.com/critical-claude/critical-claude/issues"
+  - title: Discord
+    url: "https://discord.gg/critical-claude"
+  - title: Twitter
+    url: "https://twitter.com/critical_claude"
+
+# Analytics (placeholder)
+google_analytics: UA-XXXXXXXXX-X
+
+# Social media
+social:
+  name: Critical Claude
+  links:
+    - https://twitter.com/critical_claude
+    - https://github.com/critical-claude
+    - https://discord.gg/critical-claude

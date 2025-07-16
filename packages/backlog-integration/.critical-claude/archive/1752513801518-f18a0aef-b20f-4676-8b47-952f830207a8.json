@@ -1,0 +1,70 @@
+{
+  "id": "f18a0aef-b20f-4676-8b47-952f830207a8",
+  "title": "Document MCP integration for team knowledge transfer",
+  "description": "Create comprehensive documentation for the MCP (Model Context Protocol) integration to enable team knowledge sharing and maintenance.",
+  "priority": "medium",
+  "status": "todo",
+  "labels": [
+    "documentation",
+    "mcp",
+    "knowledge-transfer"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "e4fb5f21-1ad6-4a08-a5f7-1fee35d3d3d5",
+      "description": "MCP integration architecture documented",
+      "verified": false
+    },
+    {
+      "id": "f3832666-7622-423f-8972-858f67a7c2e4",
+      "description": "Setup and configuration guide",
+      "verified": false
+    },
+    {
+      "id": "0e677e11-b7ad-4566-b19a-945e476275be",
+      "description": "Troubleshooting common issues",
+      "verified": false
+    },
+    {
+      "id": "361c8233-4ab3-4137-acc7-5da9937e9c48",
+      "description": "Code examples and usage patterns",
+      "verified": false
+    },
+    {
+      "id": "95dfe62f-0dd7-46bf-9996-5e1140a437bc",
+      "description": "Team can maintain integration without original author",
+      "verified": false
+    }
+  ],
+  "storyPoints": 3,
+  "timeTracking": {
+    "estimated": 4,
+    "actual": 0,
+    "remaining": 4
+  },
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude project analysis",
+    "suggestedEffort": 3,
+    "riskFactors": [
+      "timeline estimation",
+      "scope creep"
+    ]
+  },
+  "stateHistory": [
+    {
+      "id": "61dcc7c9-b9b8-4c80-80fe-2782ed3223aa",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-analysis",
+      "changedAt": "2025-07-14T17:08:22.820Z",
+      "reason": "Task created from project analysis"
+    }
+  ],
+  "createdAt": "2025-07-14T17:08:22.820Z",
+  "updatedAt": "2025-07-14T17:08:22.820Z"
+}

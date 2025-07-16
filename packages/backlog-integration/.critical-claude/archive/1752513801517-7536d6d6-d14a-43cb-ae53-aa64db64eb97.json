@@ -1,0 +1,65 @@
+{
+  "id": "7536d6d6-d14a-43cb-ae53-aa64db64eb97",
+  "title": "Add critical path test coverage for task management and MCP integration",
+  "description": "Add essential test coverage for the most critical code paths: task CRUD operations, MCP protocol integration, and keyboard navigation logic.",
+  "priority": "high",
+  "status": "todo",
+  "labels": [
+    "testing",
+    "critical-path",
+    "stability"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "4c66bdae-a1b3-4449-a28f-992d212ea416",
+      "description": "Unit tests for task creation, update, delete operations",
+      "verified": false
+    },
+    {
+      "id": "a5e89bdb-bd14-4199-b66e-92fa1a927395",
+      "description": "Integration tests for MCP communication",
+      "verified": false
+    },
+    {
+      "id": "7f12617b-639a-42fd-b4b3-3b0296e908f5",
+      "description": "Keyboard navigation tests for UI interactions",
+      "verified": false
+    },
+    {
+      "id": "795890a4-27bf-40e8-ad3f-a4022daa6faf",
+      "description": "Minimum 80% coverage on critical paths",
+      "verified": false
+    }
+  ],
+  "storyPoints": 8,
+  "timeTracking": {
+    "estimated": 12,
+    "actual": 0,
+    "remaining": 12
+  },
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude project analysis",
+    "suggestedEffort": 8,
+    "riskFactors": [
+      "timeline estimation",
+      "scope creep"
+    ]
+  },
+  "stateHistory": [
+    {
+      "id": "a9d4e697-51cc-4d2c-bae5-f15058bb00c5",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-analysis",
+      "changedAt": "2025-07-14T17:08:22.820Z",
+      "reason": "Task created from project analysis"
+    }
+  ],
+  "createdAt": "2025-07-14T17:08:22.820Z",
+  "updatedAt": "2025-07-14T17:08:22.820Z"
+}

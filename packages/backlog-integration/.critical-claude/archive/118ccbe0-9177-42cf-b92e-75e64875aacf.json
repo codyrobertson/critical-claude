@@ -1,0 +1,34 @@
+{
+  "id": "118ccbe0-9177-42cf-b92e-75e64875aacf",
+  "title": "optimize bundle size and performance",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 8,
+  "priority": "medium",
+  "labels": [
+    "performance",
+    "optimization"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "063d420d-1bd0-4a09-8cb2-cd64f1c09ff1",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:08:07.423Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:08:07.423Z",
+  "updatedAt": "2025-07-11T23:08:07.423Z"
+}

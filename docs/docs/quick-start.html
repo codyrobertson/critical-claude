@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start Guide - Critical Claude</title>
+    <meta name="description" content="Get up and running with Critical Claude in 5 minutes. Step-by-step installation guide for Claude Code, Cursor, Zed, and VS Code.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+    <link rel="icon" href="../assets/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">
+                    <img src="../assets/critical-claude-logo.svg" alt="Critical Claude" class="logo">
+                    <span class="logo-text">Critical Claude</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html#features" class="nav-link">Features</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#installation" class="nav-link">Installation</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#docs" class="nav-link">Documentation</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#examples" class="nav-link">Examples</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://github.com/critical-claude/critical-claude" class="nav-link nav-github" target="_blank">GitHub</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Documentation Content -->
+    <main class="docs-main">
+        <div class="docs-container">
+            <div class="docs-sidebar">
+                <h3>Documentation</h3>
+                <nav class="docs-nav">
+                    <a href="quick-start.html" class="docs-nav-link active">Quick Start</a>
+                    <a href="mcp-tools.html" class="docs-nav-link">MCP Tools</a>
+                    <a href="security-analysis.html" class="docs-nav-link">Security Analysis</a>
+                    <a href="performance-optimization.html" class="docs-nav-link">Performance</a>
+                    <a href="project-planning.html" class="docs-nav-link">Project Planning</a>
+                    <a href="hook-system.html" class="docs-nav-link">Hook System</a>
+                </nav>
+            </div>
+            
+            <div class="docs-content">
+                <div class="docs-header">
+                    <h1>🚀 Quick Start Guide</h1>
+                    <p class="docs-subtitle">Get up and running with Critical Claude in under 5 minutes</p>
+                </div>
+
+                <div class="docs-body">
+                    <section class="docs-section">
+                        <h2>Prerequisites</h2>
+                        <p>Before installing Critical Claude, ensure you have the following:</p>
+                        <ul>
+                            <li><strong>Node.js 18+</strong> - Latest LTS version recommended</li>
+                            <li><strong>npm 9+</strong> - For workspace and MCP support</li>
+                            <li><strong>Git</strong> - For cloning the repository</li>
+                        </ul>
+                        
+                        <div class="code-block">
+                            <pre><code># Check your versions
+node --version  # Should be 18.0.0 or higher
+npm --version   # Should be 9.0.0 or higher
+git --version   # Any recent version</code></pre>
+                        </div>
+                    </section>
+
+                    <section class="docs-section">
+                        <h2>Installation Methods</h2>
+                        <p>Choose the installation method that best fits your workflow:</p>
+
+                        <div class="method-tabs">
+                            <button class="method-tab active" data-method="local">Local Development</button>
+                            <button class="method-tab" data-method="npm">NPM Package</button>
+                            <button class="method-tab" data-method="docker">Docker</button>
+                        </div>
+
+                        <div class="method-content">
+                            <div class="method-pane active" id="local">
+                                <h3>Local Development Setup</h3>
+                                <p>Best for development and customization:</p>
+                                <div class="code-block">
+                                    <pre><code># 1. Clone the repository
+git clone https://github.com/critical-claude/critical-claude.git
+cd critical-claude
+
+# 2. Install dependencies and build
+npm run setup
+
+# 3. Start all services
+npm run start:all</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-pane" id="npm">
+                                <h3>NPM Package Installation</h3>
+                                <p>Quick global installation:</p>
+                                <div class="code-block">
+                                    <pre><code># Install globally
+npm install -g critical-claude
+
+# Verify installation
+critical-claude --version
+
+# Setup for your editor
+critical-claude setup claude-code</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="method-pane" id="docker">
+                                <h3>Docker Installation</h3>
+                                <p>Isolated container environment:</p>
+                                <div class="code-block">
+                                    <pre><code># Pull the image
+docker pull critical-claude/critical-claude:latest
+
+# Run with MCP server
+docker run -d -p 3000:3000 \
+  -v $(pwd):/workspace \
+  critical-claude/critical-claude:latest</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="docs-section">
+                        <h2>Editor Integration</h2>
+                        <p>Configure Critical Claude with your preferred editor:</p>
+
+                        <div class="editor-grid">
+                            <div class="editor-card">
+                                <h3>🤖 Claude Code</h3>
+                                <p>Full MCP integration with all tools</p>
+                                <div class="code-block">
+                                    <pre><code># Auto-configure
+critical-claude setup claude-code
+
+# Manual configuration
+# Add to ~/.claude/settings.json:
+{
+  "mcpServers": {
+    "critical-claude": {
+      "command": "node",
+      "args": ["./packages/code-critique/dist/server.js"],
+      "cwd": "/path/to/critical-claude"
+    }
+  }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="editor-card">
+                                <h3>📝 Cursor</h3>
+                                <p>Battle-tested persona via .cursorrules</p>
+                                <div class="code-block">
+                                    <pre><code># Copy the Critical Claude persona
+cp .cursorrules /path/to/your/project/
+
+# Or download directly
+curl -o .cursorrules https://raw.githubusercontent.com/critical-claude/critical-claude/main/.cursorrules</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="editor-card">
+                                <h3>⚡ Zed</h3>
+                                <p>Assistant integration with context</p>
+                                <div class="code-block">
+                                    <pre><code># Add to Zed settings.json:
+{
+  "assistant": {
+    "version": "2",
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-20241022"
+    }
+  }
+}</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="editor-card">
+                                <h3>💡 VS Code</h3>
+                                <p>Extension + MCP server</p>
+                                <div class="code-block">
+                                    <pre><code># Install extension
+code --install-extension critical-claude.vscode-critical-claude
+
+# Configure MCP server in settings</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="docs-section">
+                        <h2>Verification</h2>
+                        <p>Test your installation to ensure everything works:</p>
+
+                        <div class="verification-steps">
+                            <div class="verification-step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Test MCP Connection</h4>
+                                    <p>In Claude Code, try using a tool:</p>
+                                    <div class="code-block">
+                                        <pre><code>Use cc_crit_code to analyze this function:
+function login(user, pass) {
+  return db.query(`SELECT * FROM users WHERE username='${user}' AND password='${pass}'`);
+}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="verification-step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Check Available Tools</h4>
+                                    <p>Verify all tools are accessible:</p>
+                                    <div class="code-block">
+                                        <pre><code># Should show available tools:
+# - cc_crit_code
+# - cc_crit_arch  
+# - cc_plan_timeline
+# - cc_system_design_analyze
+# - cc_tech_stack_recommend
+# - And more...</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="verification-step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Test Project Analysis</h4>
+                                    <p>Run a full project analysis:</p>
+                                    <div class="code-block">
+                                        <pre><code>Use cc_crit_explore to analyze the structure of my project at /path/to/project</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="docs-section">
+                        <h2>Troubleshooting</h2>
+                        <p>Common issues and solutions:</p>
+
+                        <div class="troubleshooting">
+                            <div class="issue">
+                                <h4>❌ MCP Server Not Loading</h4>
+                                <p><strong>Symptoms:</strong> Tools not available in Claude Code</p>
+                                <p><strong>Solution:</strong></p>
+                                <div class="code-block">
+                                    <pre><code># Check server is running
+node ./packages/code-critique/dist/server.js
+
+# Verify path in settings.json
+# Restart Claude Code</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="issue">
+                                <h4>❌ Build Errors</h4>
+                                <p><strong>Symptoms:</strong> npm run setup fails</p>
+                                <p><strong>Solution:</strong></p>
+                                <div class="code-block">
+                                    <pre><code># Clean and rebuild
+npm run clean
+npm run setup
+
+# Check Node.js version
+node --version  # Must be 18+</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="issue">
+                                <h4>❌ Permission Errors</h4>
+                                <p><strong>Symptoms:</strong> EACCES errors during installation</p>
+                                <p><strong>Solution:</strong></p>
+                                <div class="code-block">
+                                    <pre><code># Fix npm permissions
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
+
+# Or use npx instead of global install
+npx critical-claude setup claude-code</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="docs-section">
+                        <h2>Next Steps</h2>
+                        <p>Now that you have Critical Claude installed, explore these guides:</p>
+                        
+                        <div class="next-steps">
+                            <a href="mcp-tools.html" class="next-step-card">
+                                <h4>🔧 MCP Tools Reference</h4>
+                                <p>Complete guide to all available tools and parameters</p>
+                            </a>
+                            
+                            <a href="security-analysis.html" class="next-step-card">
+                                <h4>🛡️ Security Analysis</h4>
+                                <p>Deep dive into vulnerability detection and prevention</p>
+                            </a>
+                            
+                            <a href="performance-optimization.html" class="next-step-card">
+                                <h4>⚡ Performance Optimization</h4>
+                                <p>Identify and fix performance bottlenecks</p>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Critical Claude</h4>
+                    <p>Battle-tested code analysis that prevents production disasters.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Documentation</h4>
+                    <ul>
+                        <li><a href="quick-start.html">Quick Start</a></li>
+                        <li><a href="mcp-tools.html">MCP Tools</a></li>
+                        <li><a href="security-analysis.html">Security Analysis</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="https://github.com/critical-claude/critical-claude/issues">Bug Reports</a></li>
+                        <li><a href="mailto:support@critical-claude.dev">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Critical Claude. MIT License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/script.js"></script>
+    <script>
+        // Documentation-specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Method tabs
+            const methodTabs = document.querySelectorAll('.method-tab');
+            const methodPanes = document.querySelectorAll('.method-pane');
+
+            methodTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const method = this.getAttribute('data-method');
+                    
+                    methodTabs.forEach(t => t.classList.remove('active'));
+                    methodPanes.forEach(p => p.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(method).classList.add('active');
+                });
+            });
+
+            // Add copy buttons to code blocks
+            document.querySelectorAll('.code-block pre').forEach(pre => {
+                const button = document.createElement('button');
+                button.className = 'copy-code-btn';
+                button.textContent = 'Copy';
+                button.onclick = () => {
+                    navigator.clipboard.writeText(pre.textContent);
+                    button.textContent = 'Copied!';
+                    setTimeout(() => button.textContent = 'Copy', 2000);
+                };
+                pre.appendChild(button);
+            });
+        });
+    </script>
+
+    <style>
+        /* Documentation-specific styles */
+        .docs-main {
+            padding-top: 70px;
+            min-height: 100vh;
+            background-color: #f7fafc;
+        }
+
+        .docs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .docs-sidebar {
+            position: sticky;
+            top: 90px;
+            height: fit-content;
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .docs-sidebar h3 {
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .docs-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .docs-nav-link {
+            padding: 0.5rem 0.75rem;
+            text-decoration: none;
+            color: #4a5568;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .docs-nav-link:hover,
+        .docs-nav-link.active {
+            background-color: #fed7d7;
+            color: #c53030;
+        }
+
+        .docs-content {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .docs-header {
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .docs-subtitle {
+            color: #4a5568;
+            font-size: 1.125rem;
+        }
+
+        .docs-section {
+            margin-bottom: 3rem;
+        }
+
+        .docs-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #2d3748;
+        }
+
+        .docs-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: #2d3748;
+        }
+
+        .docs-section h4 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .docs-section p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+            color: #4a5568;
+        }
+
+        .docs-section ul {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        .docs-section li {
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+        }
+
+        .code-block {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .code-block pre {
+            color: #e2e8f0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .code-block:hover .copy-code-btn {
+            opacity: 1;
+        }
+
+        .method-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .method-tab {
+            padding: 0.5rem 1rem;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .method-tab.active,
+        .method-tab:hover {
+            background: #ff4444;
+            color: white;
+        }
+
+        .method-pane {
+            display: none;
+        }
+
+        .method-pane.active {
+            display: block;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .editor-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .editor-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .editor-card p {
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .verification-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .verification-step {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .step-number {
+            width: 2rem;
+            height: 2rem;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .troubleshooting {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .issue {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .issue h4 {
+            margin-bottom: 0.5rem;
+            color: #c53030;
+        }
+
+        .next-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .next-step-card {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+
+        .next-step-card:hover {
+            border-color: #ff4444;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255,68,68,0.1);
+        }
+
+        .next-step-card h4 {
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+        }
+
+        .next-step-card p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #4a5568;
+        }
+
+        @media (max-width: 768px) {
+            .docs-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+
+            .docs-sidebar {
+                position: static;
+                order: 2;
+            }
+
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .method-tabs {
+                flex-wrap: wrap;
+            }
+
+            .verification-step {
+                flex-direction: column;
+            }
+
+            .next-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

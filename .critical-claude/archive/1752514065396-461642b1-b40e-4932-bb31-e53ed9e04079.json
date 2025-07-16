@@ -1,0 +1,35 @@
+{
+  "id": "461642b1-b40e-4932-bb31-e53ed9e04079",
+  "title": "Create task templates for quick common task types",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 2,
+  "priority": "low",
+  "labels": [
+    "templates",
+    "productivity",
+    "quick"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "1502737a-0438-44eb-a503-bf1ff185de56",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-14T00:02:06.509Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-14T00:02:06.509Z",
+  "updatedAt": "2025-07-14T00:02:06.509Z"
+}

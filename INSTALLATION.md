@@ -21,7 +21,7 @@ node --version  # Should be 18.0.0 or higher
 npm --version   # Should be 8.0.0 or higher
 
 # Install Critical Claude globally
-npm install -g critical-claude
+npm install -g critical-claude # Latest: 1.0.0
 ```
 
 ---
@@ -393,7 +393,7 @@ critical-claude ui monitor
 ```bash
 # Reinstall globally
 npm uninstall -g critical-claude
-npm install -g critical-claude
+npm install -g critical-claude # Latest: 1.0.0
 
 # Or use npx
 npx critical-claude --version

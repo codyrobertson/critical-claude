@@ -18,6 +18,8 @@ export class EnhancedClaudeCodeProvider {
     config;
     sessionCache = new Map();
     tempDir;
+    initialized = false;
+    initializationPromise = null;
     constructor(config) {
         this.config = {
             outputFormat: 'json',
@@ -25,8 +27,26 @@ export class EnhancedClaudeCodeProvider {
             ...config
         };
         this.tempDir = path.join(process.cwd(), '.claude-temp');
-        this.ensureTempDir();
+        // DON'T call ensureTempDir here - make it lazy
         logger.info('EnhancedClaudeCodeProvider initialized', this.config);
+    }
+    async ensureInitialized() {
+        if (!this.initialized) {
+            if (!this.initializationPromise) {
+                this.initializationPromise = this.performInitialization();
+            }
+            await this.initializationPromise;
+            this.initialized = true;
+        }
+    }
+    async performInitialization() {
+        try {
+            await fs.mkdir(this.tempDir, { recursive: true });
+        }
+        catch (error) {
+            logger.error('Failed to create temp directory', error);
+            throw error;
+        }
     }
     /**
      * Validate and sanitize tool schema for Claude CLI compatibility
@@ -81,6 +101,7 @@ export class EnhancedClaudeCodeProvider {
      * Generate tasks from feature description using Claude Code
      */
     async generateTasksFromFeature(featureDescription, projectContext) {
+        await this.ensureInitialized();
         const prompt = this.buildFeaturePrompt(featureDescription, projectContext);
         try {
             const response = await this.executeClaudeCommand(prompt, {

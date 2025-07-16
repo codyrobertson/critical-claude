@@ -1,0 +1,14 @@
+{
+  "id": "cacd658c-dd67-40e8-b01c-8987e5e9cf06",
+  "title": "Write documentation",
+  "description": "",
+  "status": "todo",
+  "priority": "low",
+  "assignee": "bob",
+  "storyPoints": 1,
+  "labels": [
+    "docs,writing"
+  ],
+  "createdAt": "2025-07-14T17:48:38.060Z",
+  "updatedAt": "2025-07-14T17:48:38.060Z"
+}

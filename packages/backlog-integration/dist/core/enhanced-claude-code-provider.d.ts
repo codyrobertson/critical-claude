@@ -15,7 +15,11 @@ export declare class EnhancedClaudeCodeProvider {
     private config;
     private sessionCache;
     private tempDir;
+    private initialized;
+    private initializationPromise;
     constructor(config: ClaudeCodeConfig);
+    private ensureInitialized;
+    private performInitialization;
     /**
      * Validate and sanitize tool schema for Claude CLI compatibility
      * Removes oneOf/allOf/anyOf at top level which cause CLI errors

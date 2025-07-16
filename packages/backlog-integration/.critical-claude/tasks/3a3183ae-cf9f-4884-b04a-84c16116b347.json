@@ -1,0 +1,31 @@
+{
+  "id": "3a3183ae-cf9f-4884-b04a-84c16116b347",
+  "title": "🔥 Custom Prompt Integration for Task Management",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 1,
+  "priority": "high",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "hook",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "31037c0e-b370-4f87-ad1a-fb047754710e",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:54:47.042Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:54:47.042Z",
+  "updatedAt": "2025-07-15T03:54:47.042Z"
+}

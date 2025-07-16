@@ -421,6 +421,60 @@ flow
         process.exit(1);
     }
 });
+// Task management (simple interface)
+const task = program
+    .command('task')
+    .alias('t')
+    .description('Task management commands');
+task
+    .command('list')
+    .alias('ls')
+    .description('List all tasks')
+    .action(async () => {
+    const child = spawn('cc-backlog', ['task-ui', 'list'], {
+        stdio: 'inherit',
+        env: process.env
+    });
+    child.on('error', (error) => {
+        console.error(chalk.red('❌ Failed to run task command:'), error.message);
+        process.exit(1);
+    });
+    child.on('exit', (code) => {
+        process.exit(code || 0);
+    });
+});
+task
+    .command('show <id>')
+    .description('Show task details')
+    .action(async (id) => {
+    const child = spawn('cc-backlog', ['task-ui', 'show', id], {
+        stdio: 'inherit',
+        env: process.env
+    });
+    child.on('error', (error) => {
+        console.error(chalk.red('❌ Failed to run task command:'), error.message);
+        process.exit(1);
+    });
+    child.on('exit', (code) => {
+        process.exit(code || 0);
+    });
+});
+task
+    .command('ui')
+    .description('Launch task management interface')
+    .action(async () => {
+    const child = spawn('cc-backlog', ['task-ui'], {
+        stdio: 'inherit',
+        env: process.env
+    });
+    child.on('error', (error) => {
+        console.error(chalk.red('❌ Failed to run task UI:'), error.message);
+        process.exit(1);
+    });
+    child.on('exit', (code) => {
+        process.exit(code || 0);
+    });
+});
 // Backlog management (delegate to cc-backlog)
 program
     .command('backlog <command...>')
@@ -475,12 +529,14 @@ program
 program.on('--help', () => {
     console.log('');
     console.log('Examples:');
+    console.log('  $ cc task list                           # List all tasks');
+    console.log('  $ cc task ui                             # Launch task interface');
     console.log('  $ cc crit code src/index.ts              # Brutal code review');
     console.log('  $ cc explore .                           # Explore codebase');
     console.log('  $ cc plan timeline "chat app"            # Generate timeline');
     console.log('  $ cc mvp MyApp -d "Social app" -u "Gen Z"');
     console.log('  $ cc flow analyze .                      # Analyze data flow');
-    console.log('  $ cc backlog task add "Fix login bug"    # Add task to backlog');
+    console.log('  $ cc backlog status                      # Project overview');
     console.log('  $ cc "What is the meaning of life?"      # Direct chat');
     console.log('');
     console.log('Use "cc <command> --help" for command details');

@@ -1,0 +1,75 @@
+{
+  "id": "93b7a04f-e553-4b8d-a5f8-660842594118",
+  "title": "Create one-script installation that does everything",
+  "description": "Build a single installation script that sets up Critical Claude, configures Claude Desktop MCP, and integrates custom prompts automatically.",
+  "priority": "high",
+  "status": "todo",
+  "labels": [
+    "installation",
+    "user-experience",
+    "automation"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "8ee9a5e4-4671-4a4c-9a95-f6347db74e71",
+      "description": "Single script installs all dependencies",
+      "verified": false
+    },
+    {
+      "id": "c64a14d3-18f2-4620-ae6b-447e3f4af74e",
+      "description": "Automatically configures Claude Desktop MCP settings",
+      "verified": false
+    },
+    {
+      "id": "e9312741-ef2e-469e-ad49-2ec41d7de00a",
+      "description": "Sets up custom prompt integration",
+      "verified": false
+    },
+    {
+      "id": "c0981e06-d72b-43ad-a2f4-15202d7dafe6",
+      "description": "Provides clear success/failure feedback",
+      "verified": false
+    },
+    {
+      "id": "fb741c94-c84d-4322-9cae-e5a47ba778d3",
+      "description": "Works on macOS and Linux",
+      "verified": false
+    },
+    {
+      "id": "0393ccb9-6302-4c64-8967-d7fb64a359af",
+      "description": "Handles existing installations gracefully",
+      "verified": false
+    }
+  ],
+  "storyPoints": 13,
+  "timeTracking": {
+    "estimated": 16,
+    "actual": 0,
+    "remaining": 16
+  },
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude project analysis",
+    "suggestedEffort": 13,
+    "riskFactors": [
+      "timeline estimation",
+      "scope creep"
+    ]
+  },
+  "stateHistory": [
+    {
+      "id": "0d8a9d25-8550-478e-ab99-26bb6c7b50f4",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-analysis",
+      "changedAt": "2025-07-14T17:08:22.820Z",
+      "reason": "Task created from project analysis"
+    }
+  ],
+  "createdAt": "2025-07-14T17:08:22.820Z",
+  "updatedAt": "2025-07-14T17:08:22.820Z"
+}

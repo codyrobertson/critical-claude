@@ -1,0 +1,65 @@
+{
+  "id": "8b6c72fb-5d12-454c-8c35-7c5258b4a529",
+  "title": "📋 Add Critical Path Test Coverage",
+  "description": "Add essential test coverage for task management, MCP integration, and keyboard navigation to prevent regressions.",
+  "priority": "medium",
+  "status": "todo",
+  "storyPoints": 8,
+  "labels": [
+    "testing",
+    "stability",
+    "coverage"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "d10665f7-96a8-49b5-92de-c89bd665cdee",
+      "description": "Unit tests for task CRUD operations",
+      "verified": false
+    },
+    {
+      "id": "0f5ebcf4-2e46-4f8b-93dd-a0ebfaacd143",
+      "description": "Integration tests for MCP communication",
+      "verified": false
+    },
+    {
+      "id": "ba4fe560-1eed-4ba4-90fb-8c5d164e6263",
+      "description": "Keyboard navigation tests",
+      "verified": false
+    },
+    {
+      "id": "d7d4554b-3727-4107-8517-35fff2255491",
+      "description": "80% coverage on critical paths",
+      "verified": false
+    }
+  ],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "critical-analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude comprehensive project analysis",
+    "suggestedEffort": 8,
+    "riskFactors": [
+      "scope-creep",
+      "timeline-estimation"
+    ]
+  },
+  "timeTracking": {
+    "estimated": 12,
+    "actual": 0,
+    "remaining": 12
+  },
+  "stateHistory": [
+    {
+      "id": "54862878-a9ab-42c8-b97e-c58eb08641ed",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-root-reset",
+      "changedAt": "2025-07-14T17:27:45.398Z",
+      "reason": "Task created from root reset - priority focus"
+    }
+  ],
+  "createdAt": "2025-07-14T17:27:45.398Z",
+  "updatedAt": "2025-07-14T17:27:45.398Z"
+}

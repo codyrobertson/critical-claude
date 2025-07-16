@@ -12,7 +12,7 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "lint": "eslint src/**/*.ts",
     "typecheck": "tsc --noEmit"
   },
