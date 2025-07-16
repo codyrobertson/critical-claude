@@ -1,0 +1,21 @@
+{
+  "version": "1.0.0",
+  "release_date": "2025-07-16T21:38:57.834Z",
+  "changelog": "- feat: Complete WebTUI integration, GitHub Package Registry, and release tracking\n- feat: Add comprehensive Jekyll GitHub Pages deployment workflow\n- feat: Create comprehensive GitHub Pages site for Critical Claude\n- Merge main branch and resolve README conflict\n- feat: Add comprehensive documentation and hook canary flags\n- fix: Resolve keyboard input issues in task UI manager\n- feat: Add Claude Code integration with bidirectional todo sync\n- fix: Complete full implementation of lazy loading CLI with all command handlers\n- feat: Implement lazy loading CLI architecture with natural language task creation\n- feat: Add Critical Claude Backlog Integration package\n- fix: Resolve MCP tool errors and add file path support\n- feat: Complete System Design and Data Flow agent implementation\n- feat: Add System Design and Data Flow agents to Critical Claude MCP\n- fix: Update MCP server branding from Brutal to Critical Claude\n- 🔒 CRITICAL: Deploy security fixes for 4 CVSS 9.0+ vulnerabilities\n- docs: Update project README\n- feat: Complete monorepo migration with fixed imports and interfaces\n- Create README.md\n- feat: Implement Phase 4 - Prompt Management System\n- feat: Implement Phase 3 - Project Initialization System\n- feat: Add web search integration for fact-checking and vulnerability verification\n- feat: Rename brutal-critique to critical_claude with new command structure\n- feat: Update brutal_timeline tool to accept natural language inputs\n- Update documentation and README\n- Fix Jest tests to work with ESM modules\n- feat: Add brutal_timeline tool for reality-based project planning\n- 🚨 CRITICAL: Fix resource exhaustion and memory leak vulnerabilities",
+  "github_packages": {
+    "critical-claude": "https://github.com/critical-claude/critical-claude/pkgs/npm/critical-claude",
+    "backlog-integration": "https://github.com/critical-claude/critical-claude/pkgs/npm/backlog-integration"
+  },
+  "npm_packages": {
+    "critical-claude": "https://www.npmjs.com/package/critical-claude",
+    "backlog-integration": "https://www.npmjs.com/package/@critical-claude/backlog-integration"
+  },
+  "installation": {
+    "npm": "npm install -g critical-claude",
+    "github": "npm install -g @critical-claude/critical-claude --registry=https://npm.pkg.github.com"
+  },
+  "docker": {
+    "image": "ghcr.io/critical-claude/critical-claude:1.0.0",
+    "latest": "ghcr.io/critical-claude/critical-claude:latest"
+  }
+}
