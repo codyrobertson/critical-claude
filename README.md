@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🔥 Critical Claude
 
 <div align="center">
