@@ -1,0 +1,33 @@
+{
+  "id": "edb404d8-8c0b-47d1-a3b4-f85a2fa795c1",
+  "title": "E2E Test: Add unit tests",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 3,
+  "priority": "medium",
+  "labels": [
+    "testing"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "a7adce45-a1d8-4e12-b3f9-6a264fc7b3aa",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T05:10:56.463Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T05:10:56.463Z",
+  "updatedAt": "2025-07-15T05:10:56.463Z"
+}

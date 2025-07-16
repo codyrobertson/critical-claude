@@ -46,6 +46,9 @@ export declare class BacklogManager {
         totalSprints: number;
         totalTasks: number;
         aiGeneratedTasks: number;
+        total: number;
+        byStatus: Record<string, number>;
+        byPriority: Record<string, number>;
     }>;
     changeTaskState(taskId: string, newState: TaskStatus, changedBy: string, reason?: string, metadata?: Record<string, any>): Promise<{
         success: boolean;
@@ -65,6 +68,9 @@ export declare class BacklogManager {
         message: string;
     }>;
     getTask(id: string): Promise<EnhancedTask | null>;
+    listTasks(): Promise<EnhancedTask[]>;
+    updateTask(taskId: string, updates: Partial<EnhancedTask>): Promise<EnhancedTask>;
+    deleteTask(taskId: string): Promise<void>;
     private ensureAcceptanceCriteria;
     private ensureTaskDependencies;
     private convertAcceptanceCriteria;

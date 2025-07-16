@@ -1,0 +1,34 @@
+{
+  "id": "c520e124-621f-45c6-bd8f-d4ec1fd38ede",
+  "title": "implement drag and drop reordering",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 8,
+  "priority": "medium",
+  "labels": [
+    "interaction",
+    "dnd"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "d7da36bc-a04a-42f2-b83c-9f03a243a8cb",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:08:00.094Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:08:00.094Z",
+  "updatedAt": "2025-07-11T23:08:00.094Z"
+}

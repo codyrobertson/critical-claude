@@ -1,0 +1,59 @@
+{
+  "id": "52b4fe30-e135-4994-b524-44b71ad54bf8",
+  "title": "Add search and filter functionality with / command",
+  "description": "",
+  "status": "done",
+  "storyPoints": 5,
+  "priority": "high",
+  "labels": [
+    "search",
+    "filter",
+    "ui"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "19d89d30-aaca-4b39-9d2a-26d1a733284e",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-14T00:01:49.376Z",
+      "reason": "Task created"
+    },
+    {
+      "id": "5c83c452-42bd-4797-9842-5d593fa90232",
+      "fromState": "todo",
+      "toState": "done",
+      "changedAt": "2025-07-14T05:45:26.132Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    },
+    {
+      "id": "d85286ac-10eb-41c8-a757-b33b7a196b58",
+      "fromState": "done",
+      "toState": "todo",
+      "changedAt": "2025-07-14T05:45:26.886Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    },
+    {
+      "id": "332c0563-4e70-49b1-9a8e-03d55f6aa296",
+      "fromState": "todo",
+      "toState": "done",
+      "changedAt": "2025-07-14T05:45:29.979Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    }
+  ],
+  "createdAt": "2025-07-14T00:01:49.376Z",
+  "updatedAt": "2025-07-14T05:45:29.979Z"
+}

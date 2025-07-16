@@ -215,6 +215,154 @@ program
     }
   });
 
+// Task UI command
+program
+  .command('task-ui [action] [args...]')
+  .alias('ui')
+  .description('Simple task management interface')
+  .action(async (action, args, options) => {
+    try {
+      const { SimpleTaskUICommand } = await import('./commands/simple-task-ui.js');
+      const taskUI = new SimpleTaskUICommand();
+      await taskUI.execute(action || 'menu', args, options);
+    } catch (error) {
+      console.error(chalk.red(`Task UI failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+// Live monitor command
+program
+  .command('live')
+  .alias('monitor')
+  .description('Live monitor for tasks and sync activity with real-time updates')
+  .action(async () => {
+    try {
+      const { LiveCommand } = await import('./commands/live.js');
+      const live = new LiveCommand();
+      await live.execute('monitor', null, {});
+    } catch (error) {
+      console.error(chalk.red(`Live monitor failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+// Hooks management command
+program
+  .command('hooks [action]')
+  .description('Manage Claude Code hooks integration')
+  .action(async (action, options) => {
+    try {
+      const { HookSetupCommand } = await import('./commands/hook-setup.js');
+      const hookSetup = new HookSetupCommand();
+      await hookSetup.execute(action || 'help', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Hooks command failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+// Claude Code hooks management (separate command)
+program
+  .command('cc-hooks [action]')
+  .alias('claude-hooks')
+  .description('Advanced Claude Code hooks management')
+  .action(async (action, options) => {
+    try {
+      const { HookSetupCommand } = await import('./commands/hook-setup.js');
+      const hookSetup = new HookSetupCommand();
+      await hookSetup.execute(action || 'help', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Claude Code hooks command failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+// Add Claude Code hook subcommands
+program
+  .command('cc-hooks-install')
+  .description('Install basic Claude Code hooks')
+  .action(async (options) => {
+    try {
+      const { HookSetupCommand } = await import('./commands/hook-setup.js');
+      const hookSetup = new HookSetupCommand();
+      await hookSetup.execute('install', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Hook installation failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('cc-hooks-status')
+  .description('Show Claude Code hook status and activity')
+  .action(async (options) => {
+    try {
+      const { HookSetupCommand } = await import('./commands/hook-setup.js');
+      const hookSetup = new HookSetupCommand();
+      await hookSetup.execute('status', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Hook status check failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('cc-hooks-test')
+  .description('Test Claude Code hook integration')
+  .action(async (options) => {
+    try {
+      const { HookSetupCommand } = await import('./commands/hook-setup.js');
+      const hookSetup = new HookSetupCommand();
+      await hookSetup.execute('test', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Hook test failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('cc-hooks-upgrade')
+  .description('Upgrade to advanced Claude Code hooks')
+  .action(async (options) => {
+    try {
+      const { HookSetupCommand } = await import('./commands/hook-setup.js');
+      const hookSetup = new HookSetupCommand();
+      await hookSetup.execute('upgrade', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Hook upgrade failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('cc-hooks-comprehensive-test')
+  .description('Run comprehensive hook testing for all edge cases')
+  .action(async (options) => {
+    try {
+      const { ComprehensiveHookTestCommand } = await import('./commands/comprehensive-hook-test.js');
+      const hookTest = new ComprehensiveHookTestCommand();
+      await hookTest.execute('test', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Comprehensive hook test failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
+program
+  .command('cc-hooks-real-test')
+  .description('Test hooks with real Claude Code instances')
+  .action(async (options) => {
+    try {
+      const { RealClaudeIntegrationTestCommand } = await import('./commands/real-claude-integration-test.js');
+      const realTest = new RealClaudeIntegrationTestCommand();
+      await realTest.execute('test', null, options);
+    } catch (error) {
+      console.error(chalk.red(`Real Claude integration test failed: ${(error as Error).message}`));
+      process.exit(1);
+    }
+  });
+
 // Parse command line
 program.parseAsync(process.argv).catch((error) => {
   const err = error as any;

@@ -10,33 +10,41 @@
  *   cc analyze velocity                        - Analysis commands
  */
 
-import { program } from 'commander';
-import chalk from 'chalk';
-import { CommandRegistry } from './command-registry.js';
-import { QuickTaskCommand } from './commands/quick-task.js';
-import { CriticalClaudeCommands } from './commands.js';
-import { logger } from '../core/logger.js';
+import { performance } from 'perf_hooks';
 
-// Create command registry for lazy loading
-const registry = new CommandRegistry();
+// Measure startup time
+const startTime = performance.now();
 
-// Register command loaders
-registry.register({
-  name: 'task',
-  description: 'Quick task creation with natural language parsing',
-  category: 'quick',
-  loader: async () => new QuickTaskCommand()
-});
+// Only import what we absolutely need upfront
+import { Command } from 'commander';
 
-registry.register({
-  name: 'agile',
-  description: 'Full AGILE hierarchy management (Phase > Epic > Sprint > Task)',
-  category: 'agile',
-  loader: async () => new CriticalClaudeCommands()
-});
+// Dynamic imports for heavy dependencies
+let chalk: any;
+let registry: any;
+let logger: any;
+
+async function loadHeavyDependencies() {
+  if (!chalk) {
+    const [chalkModule, registryModule, loggerModule] = await Promise.all([
+      import('chalk'),
+      import('./command-registry.js'),
+      import('../core/logger.js')
+    ]);
+    
+    chalk = chalkModule.default;
+    const { CommandRegistry } = registryModule;
+    logger = loggerModule.logger;
+    registry = new CommandRegistry();
+  }
+  return { chalk, registry, logger };
+}
+
+// Command registration will be done lazily when needed
 
 // Initialize CLI
-function initializeCLI() {
+async function initializeCLI() {
+  const program = new Command();
+  
   program
     .name('cc')
     .description('Critical Claude CLI - Enhanced AGILE backlog management')
@@ -73,10 +81,11 @@ function initializeCLI() {
     .option('--ai-enhance', 'Use AI to enhance task details')
     .action(async (input, options) => {
       try {
+        const { registry, logger } = await loadHeavyDependencies();
         const handler = await registry.getHandler('task');
         await handler.execute('create', input, options);
       } catch (error) {
-        logger.error('Task creation failed', error as Error);
+        console.error('❌ Task creation failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -90,10 +99,11 @@ function initializeCLI() {
     .option('-f, --filter <filter>', 'Filter tasks')
     .action(async (options) => {
       try {
+        const { registry } = await loadHeavyDependencies();
         const handler = await registry.getHandler('task');
         await handler.execute('list', null, options);
       } catch (error) {
-        logger.error('Task listing failed', error as Error);
+        console.error('❌ Task listing failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -104,10 +114,26 @@ function initializeCLI() {
     .description('Focus on a specific task')
     .action(async (taskId, options) => {
       try {
+        const { registry } = await loadHeavyDependencies();
         const handler = await registry.getHandler('task');
         await handler.execute('focus', taskId, options);
       } catch (error) {
-        logger.error('Task focus failed', error as Error);
+        console.error('❌ Task focus failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  taskCmd
+    .command('ui')
+    .alias('browse')
+    .description('Launch interactive task management UI')
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('task-ui');
+        await handler.execute('ui', null, options);
+      } catch (error) {
+        console.error('❌ Task UI failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -124,6 +150,7 @@ function initializeCLI() {
 
   // Lazy load AGILE subcommands when needed
   agileCmd.hook('preAction', async (thisCommand) => {
+    const { registry } = await loadHeavyDependencies();
     const handler = await registry.getHandler('agile');
     if (handler && handler.registerCommands) {
       handler.registerCommands(thisCommand);
@@ -139,11 +166,11 @@ function initializeCLI() {
     .option('-l, --labels <labels...>', 'Add labels')
     .action(async (description, options) => {
       try {
-        // Use context to create task with smart defaults
+        const { registry } = await loadHeavyDependencies();
         const handler = await registry.getHandler('task');
         await handler.execute('quick', description, options);
       } catch (error) {
-        logger.error('Quick task creation failed', error as Error);
+        console.error('❌ Quick task creation failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -164,10 +191,11 @@ function initializeCLI() {
     .option('-t, --team <member>', 'Specific team member')
     .action(async (options) => {
       try {
+        const { registry } = await loadHeavyDependencies();
         const handler = await registry.getHandler('agile');
         await handler.execute('analyze-velocity', null, options);
       } catch (error) {
-        logger.error('Velocity analysis failed', error as Error);
+        console.error('❌ Velocity analysis failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -179,10 +207,11 @@ function initializeCLI() {
     .option('--create-tasks', 'Create mitigation tasks')
     .action(async (options) => {
       try {
+        const { registry } = await loadHeavyDependencies();
         const handler = await registry.getHandler('agile');
         await handler.execute('analyze-risks', null, options);
       } catch (error) {
-        logger.error('Risk analysis failed', error as Error);
+        console.error('❌ Risk analysis failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -196,10 +225,11 @@ function initializeCLI() {
     .option('-r, --reset', 'Reset context')
     .action(async (options) => {
       try {
+        const { registry } = await loadHeavyDependencies();
         const handler = await registry.getHandler('task');
         await handler.execute('context', null, options);
       } catch (error) {
-        logger.error('Context management failed', error as Error);
+        console.error('❌ Context management failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -213,6 +243,8 @@ function initializeCLI() {
     .option('--status', 'Show sync status')
     .option('--setup-hooks', 'Setup Claude Code hooks')
     .option('--demo', 'Show integration demo')
+    .option('--test', 'Test integration methods without syncing')
+    .option('--direction <direction>', 'Sync direction (to-claude-code|from-claude-code|both)', 'both')
     .action(async (options) => {
       try {
         const { ClaudeCodeSyncCommand } = await import('./commands/claude-code-sync.js');
@@ -228,7 +260,78 @@ function initializeCLI() {
           await handler.execute('sync', null, options);
         }
       } catch (error) {
-        logger.error('Claude Code sync failed', error as Error);
+        console.error('❌ Claude Code sync failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  // Hook management commands
+  const hooksCmd = program
+    .command('hooks [action]')
+    .description('Manage Claude Code hooks integration')
+    .action(async (action, options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('hooks');
+        await handler.execute(action || 'help', null, options);
+      } catch (error) {
+        console.error('❌ Hooks command failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  hooksCmd
+    .command('install')
+    .description('Install basic Claude Code hooks')
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('hooks');
+        await handler.execute('install', null, options);
+      } catch (error) {
+        console.error('❌ Hook installation failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  hooksCmd
+    .command('status')
+    .description('Show hook status and activity')
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('hooks');
+        await handler.execute('status', null, options);
+      } catch (error) {
+        console.error('❌ Hook status check failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  hooksCmd
+    .command('test')
+    .description('Test hook integration')
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('hooks');
+        await handler.execute('test', null, options);
+      } catch (error) {
+        console.error('❌ Hook test failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  hooksCmd
+    .command('upgrade')
+    .description('Upgrade to advanced hooks')
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('hooks');
+        await handler.execute('upgrade', null, options);
+      } catch (error) {
+        console.error('❌ Hook upgrade failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -242,37 +345,114 @@ function initializeCLI() {
     .option('-f, --format <format>', 'Output format (text|json|markdown)', 'text')
     .action(async (options) => {
       try {
+        const { registry } = await loadHeavyDependencies();
         const handler = await registry.getHandler('agile');
         await handler.execute('status', null, options);
       } catch (error) {
-        logger.error('Status overview failed', error as Error);
+        console.error('❌ Status overview failed:', (error as Error).message);
         process.exit(1);
       }
     });
 
-  // Help enhancements
-  program.on('--help', () => {
+  // Live monitor command
+  program
+    .command('live')
+    .alias('l')
+    .description('Live monitor for tasks and sync activity with real-time updates')
+    .option('-t, --tail-lines <lines>', 'Number of log lines to tail', parseInt, 10)
+    .option('-r, --refresh-rate <ms>', 'Refresh rate in milliseconds', parseInt, 1000)
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('live');
+        await handler.execute('monitor', null, options);
+      } catch (error) {
+        console.error('❌ Live monitor failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  // Simple task management for small teams
+  program
+    .command('simple [action] [args...]')
+    .alias('s')
+    .description('Simplified task management for small teams')
+    .option('-s, --status <status>', 'Filter by status (todo|in-progress|blocked|done|archived)')
+    .option('-p, --priority <priority>', 'Task priority (critical|high|medium|low)')
+    .option('-a, --assignee <assignee>', 'Task assignee')
+    .option('--points <points>', 'Story points (1-13)')
+    .option('--due <date>', 'Due date (YYYY-MM-DD)')
+    .option('--labels <labels...>', 'Task labels/tags')
+    .option('--description <desc>', 'Task description')
+    .option('-v, --verbose', 'Show detailed information')
+    .action(async (action, args, options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('simple');
+        await handler.execute(action || 'list', args || [], options);
+      } catch (error) {
+        console.error('❌ Simple task command failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+
+  // Task UI as standalone command
+  program
+    .command('task-ui')
+    .alias('ui')
+    .description('Launch interactive task management UI with optimized performance')
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('task-ui');
+        await handler.execute('ui', null, options);
+      } catch (error) {
+        console.error('❌ Task UI failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  // Monitor command
+  program
+    .command('monitor')
+    .alias('m')
+    .description('Launch the Critical Claude task and hook monitor')
+    .option('-t, --terminal', 'Use terminal-based monitor instead of GUI')
+    .action(async (options) => {
+      try {
+        const { registry } = await loadHeavyDependencies();
+        const handler = await registry.getHandler('monitor');
+        await handler.execute(options.terminal ? 'terminal' : 'gui', null, options);
+      } catch (error) {
+        console.error('❌ Monitor launch failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  // Help enhancements - only load when needed
+  program.on('--help', async () => {
+    const { chalk } = await loadHeavyDependencies();
     console.log('');
     console.log(chalk.cyan('Quick Start Examples:'));
     console.log('  $ cc task "fix login bug"                    # Create task');
     console.log('  $ cc task "add auth @high #security 5pts"   # Natural language');
-    console.log('  $ cc quick "update docs"                    # Super quick');
-    console.log('  $ cc agile phase create "MVP Phase"         # Full AGILE');
+    console.log('  $ cc task-ui                                # Interactive task UI');
+    console.log('  $ cc simple create "update docs" @high       # Simple task');
+    console.log('  $ cc live                                   # Live monitor');
     console.log('  $ cc status                                 # Project overview');
     console.log('');
     console.log(chalk.cyan('Natural Language Task Examples:'));
     console.log('  $ cc task "fix login bug @high #auth due:friday"');
     console.log('  $ cc task "implement user profile 8pts for:@alice"');
-    console.log('  $ cc task "refactor payment [needs testing] #refactor"');
+    console.log('  $ cc sync-claude-code                       # Sync with Claude Code');
     console.log('');
-    console.log(chalk.cyan('Claude Code Integration:'));
-    console.log('  $ cc sync-claude-code                       # Sync to Claude Code todos');
-    console.log('  $ cc sync-claude-code --execute             # Execute sync');
-    console.log('  $ cc sync-claude-code --status              # Show sync status');
+    console.log(chalk.cyan('Monitor & Hooks:'));
+    console.log('  $ cc monitor                                # Launch Electron GUI monitor');
+    console.log('  $ cc monitor --terminal                     # Terminal-based monitor');
     console.log('  $ cc sync-claude-code --setup-hooks         # Setup automatic sync');
-    console.log('  $ cc sync-claude-code --demo                # Show integration demo');
     console.log('');
-    console.log(chalk.gray('For command details: cc <command> --help'));
+    console.log(chalk.gray('For more commands: cc --help'));
   });
 
   // Error handling
@@ -280,31 +460,47 @@ function initializeCLI() {
     if (err.code === 'commander.help' || err.code === 'commander.version') {
       process.exit(0);
     }
-    logger.error('Command failed', err);
+    console.error('❌ Command failed:', err.message);
     process.exit(1);
   });
 
   return program;
 }
 
-// Performance measurement
-const startTime = Date.now();
-
-// Initialize and run
-const cli = initializeCLI();
-
-// Measure startup time
-process.on('beforeExit', () => {
-  const startupTime = Date.now() - startTime;
-  if (process.env.CC_LOG_LEVEL === 'DEBUG') {
-    logger.debug(`CLI startup time: ${startupTime}ms`);
+// Run the CLI
+async function main() {
+  try {
+    const program = await initializeCLI();
+    await program.parseAsync(process.argv);
+    
+    // Measure performance
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+    
+    if (process.env.CC_PERFORMANCE_LOG === 'true') {
+      console.log(`CLI startup time: ${duration.toFixed(2)}ms`);
+    }
+    
+    // Exit if no arguments (show help)
+    if (!process.argv.slice(2).length) {
+      program.help();
+    }
+  } catch (error) {
+    console.error('❌ CLI initialization failed:', (error as Error).message);
+    process.exit(1);
   }
+}
+
+// Handle unhandled rejections
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
 });
 
-// Parse arguments
-cli.parse(process.argv);
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
+});
 
-// Show help if no arguments
-if (!process.argv.slice(2).length) {
-  cli.help();
-}
+main();

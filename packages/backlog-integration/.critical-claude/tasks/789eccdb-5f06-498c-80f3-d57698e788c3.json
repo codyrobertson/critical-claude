@@ -1,0 +1,31 @@
+{
+  "id": "789eccdb-5f06-498c-80f3-d57698e788c3",
+  "title": "add",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 2,
+  "priority": "medium",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "fe70fea7-33df-4348-bb30-9618c7506094",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T04:31:28.425Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T04:31:28.425Z",
+  "updatedAt": "2025-07-15T04:31:28.425Z"
+}

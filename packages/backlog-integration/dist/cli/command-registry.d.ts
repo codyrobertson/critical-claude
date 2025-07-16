@@ -40,6 +40,10 @@ export declare class CommandRegistry {
      */
     getHandler(name: string): Promise<CommandHandler>;
     /**
+     * Register default commands
+     */
+    private registerDefaultCommands;
+    /**
      * Get available commands without loading them
      */
     getAvailableCommands(): {

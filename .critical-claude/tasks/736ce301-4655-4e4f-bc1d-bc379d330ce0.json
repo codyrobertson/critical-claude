@@ -1,0 +1,70 @@
+{
+  "id": "736ce301-4655-4e4f-bc1d-bc379d330ce0",
+  "title": "🔥 Complete Installation Script (One-Command Setup)",
+  "description": "Create the master installation script that sets up Critical Claude, configures Claude Desktop MCP, and integrates custom prompts automatically.",
+  "priority": "high",
+  "status": "in-progress",
+  "storyPoints": 8,
+  "labels": [
+    "installation",
+    "automation",
+    "user-experience"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "b64ef39b-1461-4500-83e5-5c19f29e667b",
+      "description": "Single script installs all dependencies",
+      "verified": false
+    },
+    {
+      "id": "966ef6dc-b952-4f15-91b6-63bb833d91a0",
+      "description": "Automatically configures Claude Desktop MCP settings",
+      "verified": false
+    },
+    {
+      "id": "0a504876-7867-4ac0-a0e1-4635a9d7a9a2",
+      "description": "Sets up custom CLAUDE.md prompts",
+      "verified": false
+    },
+    {
+      "id": "96a74a64-7b0b-4a6c-a49b-583d6a581770",
+      "description": "Handles errors gracefully with clear feedback",
+      "verified": false
+    },
+    {
+      "id": "495ffbdd-627d-437b-b2a4-53bf6b486aa8",
+      "description": "Works on macOS and Linux",
+      "verified": false
+    }
+  ],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "critical-analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude comprehensive project analysis",
+    "suggestedEffort": 8,
+    "riskFactors": [
+      "scope-creep",
+      "timeline-estimation"
+    ]
+  },
+  "timeTracking": {
+    "estimated": 12,
+    "actual": 0,
+    "remaining": 12
+  },
+  "stateHistory": [
+    {
+      "id": "05e09b5c-7008-49bc-b93b-ad7fffe5b97e",
+      "fromState": null,
+      "toState": "in-progress",
+      "changedBy": "critical-claude-root-reset",
+      "changedAt": "2025-07-14T17:27:45.398Z",
+      "reason": "Task created from root reset - priority focus"
+    }
+  ],
+  "createdAt": "2025-07-14T17:27:45.398Z",
+  "updatedAt": "2025-07-14T17:27:45.398Z"
+}

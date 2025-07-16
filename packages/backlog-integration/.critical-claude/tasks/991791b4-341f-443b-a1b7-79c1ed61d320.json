@@ -1,0 +1,31 @@
+{
+  "id": "991791b4-341f-443b-a1b7-79c1ed61d320",
+  "title": "Fix authentication bug",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 1,
+  "priority": "high",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "hook",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "15b6e4f1-9668-4738-99e3-e266bf4f03e2",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:54:47.041Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:54:47.041Z",
+  "updatedAt": "2025-07-15T03:54:47.041Z"
+}

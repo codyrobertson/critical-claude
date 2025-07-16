@@ -1,0 +1,73 @@
+{
+  "id": "20a0e45e-533a-45bc-8a6a-c2c800cdb046",
+  "title": "🚨 URGENT: Fix Performance Bottleneck in BacklogManager",
+  "description": "Critical Claude analysis identified O(n²) performance issue in backlog-manager.ts:486. This will cause production failures under load.",
+  "priority": "critical",
+  "status": "focused",
+  "storyPoints": 5,
+  "labels": [
+    "performance",
+    "critical",
+    "production-blocker"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "83f31171-1859-4977-b248-04cc8ea9876f",
+      "description": "Identify the O(n²) operation in backlog-manager.ts:486",
+      "verified": false
+    },
+    {
+      "id": "4841f5ba-ee32-4492-b051-6851e9b31eda",
+      "description": "Refactor to O(n) or better complexity",
+      "verified": false
+    },
+    {
+      "id": "a08e1b12-2f2b-4d46-97cc-e34ff13c52c6",
+      "description": "Add performance tests to prevent regression",
+      "verified": false
+    },
+    {
+      "id": "2cb98873-f65a-45a9-b8d2-56062291d03b",
+      "description": "Verify no impact on existing functionality",
+      "verified": false
+    }
+  ],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "critical-analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude comprehensive project analysis",
+    "suggestedEffort": 5,
+    "riskFactors": [
+      "scope-creep",
+      "timeline-estimation"
+    ]
+  },
+  "timeTracking": {
+    "estimated": 7.5,
+    "actual": 0,
+    "remaining": 7.5
+  },
+  "stateHistory": [
+    {
+      "id": "5d470ee7-ca91-43c9-8534-095c1e74e062",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-root-reset",
+      "changedAt": "2025-07-14T17:27:45.397Z",
+      "reason": "Task created from root reset - priority focus"
+    },
+    {
+      "id": "1e3cf73a-deac-4c69-b0a0-9d37300dffc2",
+      "fromState": "todo",
+      "toState": "focused",
+      "changedAt": "2025-07-14T19:45:56.555Z",
+      "changedBy": "user",
+      "reason": "Manual update via UI"
+    }
+  ],
+  "createdAt": "2025-07-14T17:27:45.397Z",
+  "updatedAt": "2025-07-14T19:45:57.554Z"
+}

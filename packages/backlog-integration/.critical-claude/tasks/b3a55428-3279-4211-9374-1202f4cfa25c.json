@@ -1,0 +1,34 @@
+{
+  "id": "b3a55428-3279-4211-9374-1202f4cfa25c",
+  "title": "E2E Test: Implement user login",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "high",
+  "labels": [
+    "auth",
+    "security"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "f60fd7c6-157c-4063-9f9e-a21b23d55b25",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T20:42:28.151Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T20:42:28.151Z",
+  "updatedAt": "2025-07-15T20:42:28.151Z"
+}

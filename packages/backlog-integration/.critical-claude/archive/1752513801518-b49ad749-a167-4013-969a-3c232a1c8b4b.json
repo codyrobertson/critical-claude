@@ -1,0 +1,62 @@
+{
+  "id": "b49ad749-a167-4013-969a-3c232a1c8b4b",
+  "title": "Implement custom prompt integration with CLAUDE.md",
+  "description": "Create the custom prompt system that integrates Critical Claude task management with Claude Code. This should provide context-aware task creation and management workflows.",
+  "status": "todo",
+  "storyPoints": 5,
+  "priority": "high",
+  "labels": [
+    "prompts",
+    "claude-code",
+    "integration",
+    "workflow"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "6566fd85-28d9-4a76-9e26-f5f67735f588",
+      "description": "CLAUDE.md file contains task management prompts",
+      "verified": false
+    },
+    {
+      "id": "530594eb-fd6e-4502-93f6-32ff9ed34f70",
+      "description": "Prompts include code analysis → task creation workflow",
+      "verified": false
+    },
+    {
+      "id": "aa7d041a-33d1-440f-8ba5-ce183fd95f5f",
+      "description": "Integration with Critical Claude's brutal code review",
+      "verified": false
+    },
+    {
+      "id": "10c7aae8-1a1d-4771-bc1e-f51ebc13d2b0",
+      "description": "Templates for common scenarios (security, performance, architecture)",
+      "verified": false
+    },
+    {
+      "id": "2bdf00c9-348c-4f50-a5ed-5fe511f78c24",
+      "description": "Clear documentation for prompt usage",
+      "verified": false
+    }
+  ],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 6,
+    "actual": 0,
+    "remaining": 6
+  },
+  "stateHistory": [
+    {
+      "id": "9f8297c2-897b-4540-9d7b-435a4e1e9778",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-14T17:12:17.653Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-14T17:12:17.653Z",
+  "updatedAt": "2025-07-14T17:12:17.653Z"
+}

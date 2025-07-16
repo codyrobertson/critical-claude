@@ -1,0 +1,35 @@
+{
+  "id": "70a3ace1-edfc-4f27-9b57-f925f8b0bc0b",
+  "title": "implement real-time collaborative editing",
+  "description": "complex feature requiring WebSocket integration, conflict resolution, and operational transformation",
+  "status": "todo",
+  "storyPoints": 21,
+  "priority": "critical",
+  "labels": [
+    "realtime",
+    "collaboration",
+    "websockets"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "f3f5e349-5bfc-4b34-8fcf-dd0d18a65594",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:08:10.568Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:08:10.568Z",
+  "updatedAt": "2025-07-11T23:08:10.568Z"
+}

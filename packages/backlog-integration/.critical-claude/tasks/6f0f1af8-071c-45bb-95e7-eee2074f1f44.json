@@ -1,0 +1,31 @@
+{
+  "id": "6f0f1af8-071c-45bb-95e7-eee2074f1f44",
+  "title": "Sync test task",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 1,
+  "priority": "high",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "hook",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "e6b59d67-4324-4aea-a3ca-30123bf88aee",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:54:47.041Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:54:47.041Z",
+  "updatedAt": "2025-07-15T03:54:47.041Z"
+}

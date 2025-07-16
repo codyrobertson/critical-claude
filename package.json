@@ -1,51 +1,55 @@
 {
-  "name": "@critical-claude/workspace",
+  "name": "critical-claude",
   "version": "1.0.0",
   "description": "Critical Claude MCP Services - A comprehensive code analysis and development toolkit",
-  "private": true,
-  "workspaces": [
-    "packages/*"
+  "private": false,
+  "preferGlobal": true,
+  "bin": {
+    "critical-claude": "./bin/critical-claude.js",
+    "cc": "./bin/cc.js"
+  },
+  "files": [
+    "bin/",
+    "packages/backlog-integration/dist/",
+    "packages/backlog-integration/package.json",
+    "scripts/",
+    "install.js",
+    "README.md"
   ],
   "scripts": {
-    "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces",
-    "lint": "npm run lint --workspaces",
-    "typecheck": "npm run typecheck --workspaces",
-    "clean": "npm run clean --workspaces && rm -rf node_modules",
-    "dev": "npm run dev --workspaces",
-    "start:all": "concurrently \"npm run start --workspace=@critical-claude/code-critique\" \"npm run start --workspace=@critical-claude/project-management\" \"npm run start --workspace=@critical-claude/prompt-management\" \"npm run start --workspace=@critical-claude/web-search\" \"npm run start --workspace=@critical-claude/system-design\" \"npm run start --workspace=@critical-claude/data-flow\" \"npm run start --workspace=@critical-claude/backlog-integration\"",
-    "start:code-critique": "npm run start --workspace=@critical-claude/code-critique",
-    "start:project-management": "npm run start --workspace=@critical-claude/project-management", 
-    "start:prompt-management": "npm run start --workspace=@critical-claude/prompt-management",
-    "start:web-search": "npm run start --workspace=@critical-claude/web-search",
-    "start:system-design": "npm run start --workspace=@critical-claude/system-design",
-    "start:data-flow": "npm run start --workspace=@critical-claude/data-flow",
-    "start:backlog": "npm run start --workspace=@critical-claude/backlog-integration",
-    "install:all": "npm install",
+    "build": "cd packages/backlog-integration && npm run build",
+    "test": "cd packages/backlog-integration && npm run test",
+    "lint": "cd packages/backlog-integration && npm run lint",
+    "typecheck": "cd packages/backlog-integration && npm run typecheck",
+    "clean": "cd packages/backlog-integration && npm run clean",
+    "dev": "cd packages/backlog-integration && npm run dev",
+    "start": "cd packages/backlog-integration && npm run start",
+    "install:all": "cd packages/backlog-integration && npm install",
     "setup": "npm run install:all && npm run build",
-    "docs": "npm run docs --workspaces",
+    "postinstall": "node scripts/postinstall.js",
+    "preuninstall": "node scripts/cleanup.js",
     "bootstrap": "npm run setup && npm run test",
-    "migrate": "tsx scripts/migrate-to-monorepo.ts migrate",
-    "rollback": "tsx scripts/migrate-to-monorepo.ts rollback",
     "build:prod": "npm run clean && npm run build && npm run typecheck",
     "deploy": "npm run build:prod && npm publish --access public",
     "deploy:dev": "npm run build && npm publish --tag dev --access public",
-    "deploy:staging": "npm run build:prod && npm publish --tag staging --access public"
+    "deploy:staging": "npm run build:prod && npm publish --tag staging --access public",
+    "prepare-package": "node scripts/prepare-package.js",
+    "test-install": "npm pack && npm install -g critical-claude-*.tgz"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
-    "concurrently": "^8.2.2",
-    "typescript": "^5.0.0",
-    "tsx": "^4.0.0",
-    "eslint": "^8.57.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "prettier": "^3.0.0",
-    "jest": "^29.7.0",
-    "@types/jest": "^29.5.0",
-    "ts-jest": "^29.1.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.0"
+    "jest": "^29.7.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -74,5 +78,6 @@
     "*.{json,md}": [
       "prettier --write"
     ]
-  }
+  },
+  "dependencies": {}
 }

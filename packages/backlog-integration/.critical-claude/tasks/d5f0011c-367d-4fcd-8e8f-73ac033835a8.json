@@ -1,0 +1,31 @@
+{
+  "id": "d5f0011c-367d-4fcd-8e8f-73ac033835a8",
+  "title": "🔥 Complete Installation Script (One-Command Setup)",
+  "description": "",
+  "status": "in-progress",
+  "storyPoints": 1,
+  "priority": "high",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "hook",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "a485568b-e51a-4b26-8615-73c78e287de7",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:54:47.042Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:54:47.042Z",
+  "updatedAt": "2025-07-15T03:54:47.042Z"
+}

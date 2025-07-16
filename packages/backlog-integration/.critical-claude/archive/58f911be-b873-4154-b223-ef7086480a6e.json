@@ -1,0 +1,35 @@
+{
+  "id": "58f911be-b873-4154-b223-ef7086480a6e",
+  "title": "add todo completion toggle -team",
+  "description": "",
+  "status": "todo",
+  "assignee": "dev",
+  "storyPoints": 2,
+  "priority": "high",
+  "labels": [
+    "interaction",
+    "toggle"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "ba001e77-f04a-4bf6-8182-fb4f0d18e749",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-11T23:07:57.891Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-11T23:07:57.891Z",
+  "updatedAt": "2025-07-11T23:07:57.891Z"
+}

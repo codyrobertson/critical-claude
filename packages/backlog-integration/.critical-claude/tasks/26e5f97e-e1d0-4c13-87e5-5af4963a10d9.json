@@ -1,0 +1,31 @@
+{
+  "id": "26e5f97e-e1d0-4c13-87e5-5af4963a10d9",
+  "title": "📝 Simplify Data Flow Architecture",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 1,
+  "priority": "low",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "hook",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "3f72b0e1-ff03-425e-9549-ac2a4d6a283e",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:54:47.041Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:54:47.041Z",
+  "updatedAt": "2025-07-15T03:54:47.041Z"
+}

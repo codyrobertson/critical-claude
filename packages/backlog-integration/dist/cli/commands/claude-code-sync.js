@@ -1,250 +1,409 @@
 /**
- * Claude Code Sync Command
- * Demonstrates integration between Critical Claude and Claude Code's native todo system
+ * Claude Code Sync Command - Real bidirectional sync between Critical Claude and Claude Code
  */
 import chalk from 'chalk';
 import { BacklogManager } from '../backlog-manager.js';
 import { ClaudeCodeIntegration } from '../../integrations/claude-code-integration.js';
-import { logger } from '../../core/logger.js';
+import { RealClaudeCodeIntegration } from '../../integrations/claude-code-real-integration.js';
+import { HookAwareTaskManager } from '../../integrations/hook-aware-task-manager.js';
+import { ConflictResolver } from '../../integrations/conflict-resolver.js';
+const logger = {
+    info: (msg, data) => console.log(`[INFO] ${msg}`, data || ''),
+    error: (msg, error) => console.error(`[ERROR] ${msg}`, error?.message || ''),
+    warn: (msg, data) => console.warn(`[WARN] ${msg}`, data || '')
+};
 export class ClaudeCodeSyncCommand {
     backlogManager;
     integration;
+    realIntegration;
+    hookAwareManager;
+    conflictResolver;
     constructor() {
         this.backlogManager = new BacklogManager();
         this.integration = new ClaudeCodeIntegration(this.backlogManager);
+        this.realIntegration = new RealClaudeCodeIntegration();
+        this.hookAwareManager = new HookAwareTaskManager();
+        this.conflictResolver = new ConflictResolver({
+            defaultStrategy: 'last_write_wins',
+            autoResolveTypes: ['status_mismatch', 'priority_mismatch', 'missing_in_source', 'missing_in_target'],
+            manualReviewRequired: ['content_mismatch']
+        });
     }
     async execute(action, input, options) {
-        switch (action) {
-            case 'sync':
-            case 'default':
-                await this.syncTasks(options);
-                break;
-            case 'status':
-                await this.showSyncStatus();
-                break;
-            case 'setup-hooks':
-                await this.setupHooks();
-                break;
-            case 'demo':
-                await this.demonstrateIntegration();
-                break;
-            default:
-                throw new Error(`Unknown action: ${action}`);
+        await this.backlogManager.initialize();
+        await this.realIntegration.initialize();
+        await this.hookAwareManager.initialize();
+        const direction = options.direction || 'both';
+        const executeSync = options.execute || false;
+        const testMode = options.test || false;
+        if (testMode) {
+            await this.testIntegrationMethods();
+            return;
         }
-    }
-    /**
-     * Sync Critical Claude tasks to Claude Code todos
-     */
-    async syncTasks(options) {
-        console.log(chalk.cyan('🔄 Syncing Critical Claude tasks to Claude Code todos'));
-        console.log(chalk.dim('━'.repeat(60)));
+        if (!executeSync) {
+            console.log(chalk.yellow('🔍 Preview mode - use --execute to perform actual sync'));
+        }
+        console.log(chalk.cyan('\n🔄 Critical Claude ↔ Claude Code Sync'));
+        console.log(chalk.gray('═════════════════════════════════════════'));
         try {
-            await this.backlogManager.initialize();
-            // Get all tasks from our system
-            const sprints = await this.backlogManager.getSprints();
-            const allTasks = sprints.flatMap(sprint => sprint.tasks);
-            if (allTasks.length === 0) {
-                console.log(chalk.yellow('No tasks found to sync'));
-                return;
+            // Process any pending hook events first
+            await this.processHookEvents();
+            switch (direction) {
+                case 'to-claude-code':
+                    await this.syncToClaudeCode(executeSync);
+                    break;
+                case 'from-claude-code':
+                    await this.syncFromClaudeCode(executeSync);
+                    break;
+                case 'both':
+                default:
+                    await this.performBidirectionalSync(executeSync);
+                    break;
             }
-            console.log(chalk.green(`Found ${allTasks.length} tasks to sync`));
-            // Sync to Claude Code format
-            await this.integration.syncToClaudeCodeTodos(allTasks);
-            // Show what would be synced
-            console.log(chalk.cyan('\n📋 Tasks that would be synced to Claude Code:'));
-            allTasks.forEach((task, index) => {
-                const statusIcon = this.getStatusIcon(task.status);
-                const priorityColor = this.getPriorityColor(task.priority);
-                console.log(`${index + 1}. ${statusIcon} ${priorityColor(task.priority.toUpperCase())} - ${task.title}`);
-                if (task.description) {
-                    console.log(`   ${chalk.dim(task.description)}`);
-                }
-                if (task.labels.length > 0) {
-                    console.log(`   ${chalk.blue('#' + task.labels.join(' #'))}`);
-                }
-                if (task.storyPoints > 0) {
-                    console.log(`   ${chalk.yellow(`${task.storyPoints} story points`)}`);
-                }
-                console.log('');
-            });
-            // Demonstrate the actual sync to Claude Code's TodoWrite
-            if (options.execute) {
-                console.log(chalk.cyan('🔄 Executing sync to Claude Code TodoWrite...'));
-                await this.executeClaudeCodeSync(allTasks);
-            }
-            else {
-                console.log(chalk.yellow('💡 Use --execute to actually sync to Claude Code todos'));
-                console.log(chalk.dim('   Example: cc sync-claude-code --execute'));
-            }
+            console.log(chalk.green('\n✅ Sync completed successfully!'));
         }
         catch (error) {
-            console.error(chalk.red(`Sync failed: ${error.message}`));
-            logger.error('Sync failed', error);
+            console.log(chalk.red(`\n❌ Sync failed: ${error.message}`));
+            logger.error('Sync operation failed', error);
         }
     }
-    /**
-     * Actually execute the sync to Claude Code's TodoWrite
-     */
-    async executeClaudeCodeSync(tasks) {
-        try {
-            // Format tasks for Claude Code's TodoWrite tool
-            const claudeCodeTodos = tasks.map(task => ({
-                content: `${task.title} - ${task.description || 'No description'} [${task.storyPoints}pts] #${task.labels.join(' #')}`,
-                status: this.mapStatusToClaudeCode(task.status),
+    async syncToClaudeCode(execute) {
+        console.log(chalk.blue('\n📤 Syncing Critical Claude tasks to Claude Code todos...'));
+        const tasks = await this.backlogManager.listTasks();
+        const activeTasks = tasks.filter(task => !['done', 'archived_done', 'archived_blocked', 'archived_dimmed'].includes(task.status));
+        if (activeTasks.length === 0) {
+            console.log(chalk.gray('   No active tasks to sync'));
+            return;
+        }
+        console.log(chalk.gray(`   Found ${activeTasks.length} active tasks to sync`));
+        if (execute) {
+            // Real TodoWrite integration
+            const claudeCodeTodos = activeTasks.map(task => ({
+                content: task.title,
+                status: this.mapTaskStatusToTodoStatus(task.status),
                 priority: task.priority,
                 id: task.id
             }));
-            // This would be the actual call to Claude Code's TodoWrite
-            console.log(chalk.green('✅ Sync completed successfully!'));
-            console.log(chalk.dim(`${claudeCodeTodos.length} tasks synced to Claude Code`));
-            // Show the format that would be sent to TodoWrite
-            console.log(chalk.cyan('\n📄 Claude Code TodoWrite format:'));
-            console.log('```json');
-            console.log(JSON.stringify(claudeCodeTodos, null, 2));
-            console.log('```');
+            await this.executeClaudeCodeTodoWrite(claudeCodeTodos);
+            console.log(chalk.green(`   ✅ Synced ${activeTasks.length} tasks to Claude Code`));
         }
-        catch (error) {
-            console.error(chalk.red(`Failed to execute sync: ${error.message}`));
-            throw error;
+        else {
+            // Preview what would be synced
+            activeTasks.forEach(task => {
+                const statusEmoji = this.getStatusEmoji(task.status);
+                const priorityColor = this.getPriorityColor(task.priority);
+                console.log(`   ${statusEmoji} ${priorityColor(task.priority.toUpperCase())} ${task.title}`);
+            });
         }
     }
-    /**
-     * Show synchronization status
-     */
-    async showSyncStatus() {
-        console.log(chalk.cyan('📊 Claude Code Sync Status'));
-        console.log(chalk.dim('━'.repeat(60)));
+    async syncFromClaudeCode(execute) {
+        console.log(chalk.blue('\n📥 Syncing Claude Code todos to Critical Claude tasks...'));
+        if (execute) {
+            // Read from Claude Code (would need actual TodoRead integration)
+            const claudeCodeTodos = await this.executeClaudeCodeTodoRead();
+            if (claudeCodeTodos.length === 0) {
+                console.log(chalk.gray('   No Claude Code todos found'));
+                return;
+            }
+            let syncedCount = 0;
+            for (const todo of claudeCodeTodos) {
+                try {
+                    // Check if task already exists
+                    const existingTask = await this.backlogManager.getTask(todo.id);
+                    if (existingTask) {
+                        // Update existing task
+                        await this.backlogManager.updateTask(todo.id, {
+                            title: todo.content,
+                            status: this.mapTodoStatusToTaskStatus(todo.status),
+                            priority: todo.priority || 'medium'
+                        });
+                    }
+                    else {
+                        // Create new task
+                        await this.backlogManager.createTask({
+                            id: todo.id,
+                            title: todo.content,
+                            status: this.mapTodoStatusToTaskStatus(todo.status),
+                            priority: todo.priority || 'medium',
+                            generatedBy: 'hook'
+                        });
+                    }
+                    syncedCount++;
+                }
+                catch (error) {
+                    logger.warn(`Failed to sync todo: ${todo.content}`, error);
+                }
+            }
+            console.log(chalk.green(`   ✅ Synced ${syncedCount} todos from Claude Code`));
+        }
+        else {
+            console.log(chalk.gray('   Would sync todos from Claude Code (preview mode)'));
+        }
+    }
+    async performBidirectionalSync(execute) {
+        console.log(chalk.blue('\n🔄 Performing bidirectional sync...'));
+        // First sync from Claude Code to get latest todos
+        await this.syncFromClaudeCode(execute);
+        // Then sync our tasks to Claude Code
+        await this.syncToClaudeCode(execute);
+        // Handle conflicts if any exist
+        if (execute) {
+            await this.resolveConflicts();
+        }
+    }
+    async executeClaudeCodeTodoWrite(todos) {
+        // Real integration with Claude Code's TodoWrite
+        logger.info('Executing REAL TodoWrite with todos', { count: todos.length });
+        const claudeCodeTodos = todos.map(todo => ({
+            content: todo.content,
+            status: todo.status,
+            priority: todo.priority,
+            id: todo.id
+        }));
+        const success = await this.realIntegration.executeRealTodoWrite(claudeCodeTodos);
+        if (success) {
+            console.log(chalk.green(`   ✅ Successfully executed TodoWrite for ${todos.length} todos`));
+        }
+        else {
+            console.log(chalk.yellow(`   ⚠️ TodoWrite execution partially successful (check logs)`));
+        }
+        // Log the operation for debugging
+        logger.info('Real TodoWrite operation completed', {
+            success,
+            todos: todos.map(t => ({ id: t.id, content: t.content, status: t.status }))
+        });
+    }
+    async executeClaudeCodeTodoRead() {
+        // Real integration with Claude Code's TodoRead
+        logger.info('Executing REAL TodoRead to get current todos');
+        const claudeCodeTodos = await this.realIntegration.executeRealTodoRead();
+        logger.info('Real TodoRead operation completed', { count: claudeCodeTodos.length });
+        if (claudeCodeTodos.length > 0) {
+            console.log(chalk.green(`   ✅ Successfully read ${claudeCodeTodos.length} todos from Claude Code`));
+        }
+        else {
+            console.log(chalk.gray('   📭 No todos found in Claude Code'));
+        }
+        return claudeCodeTodos;
+    }
+    async resolveConflicts() {
+        logger.info('Checking for sync conflicts...');
         try {
-            const status = await this.integration.getSyncStatus();
-            console.log(`${chalk.green('✅')} Critical Claude Tasks: ${status.criticalClaudeTasks}`);
-            console.log(`${chalk.blue('📋')} Claude Code Todos: ${status.claudeCodeTodos}`);
-            console.log(`${chalk.yellow('🔄')} Sync Enabled: ${status.syncEnabled ? 'Yes' : 'No'}`);
-            if (status.lastSync) {
-                console.log(`${chalk.magenta('⏰')} Last Sync: ${status.lastSync.toLocaleString()}`);
+            // Get current state from both systems
+            const criticalClaudeTasks = await this.backlogManager.listTasks();
+            const claudeCodeTodos = await this.realIntegration.executeRealTodoRead();
+            // Detect conflicts
+            const conflicts = this.conflictResolver.detectConflicts(criticalClaudeTasks, claudeCodeTodos);
+            if (conflicts.length === 0) {
+                console.log(chalk.gray('   No conflicts detected'));
+                return;
             }
-            else {
-                console.log(`${chalk.dim('⏰')} Last Sync: Never`);
+            console.log(chalk.yellow(`\n⚠️  Found ${conflicts.length} conflict(s) to resolve`));
+            // Resolve conflicts automatically
+            const resolutions = await this.conflictResolver.resolveConflicts(conflicts);
+            // Apply resolutions
+            let appliedCount = 0;
+            for (const conflict of conflicts) {
+                if (conflict.resolved && conflict.resolution) {
+                    await this.applyConflictResolution(conflict);
+                    appliedCount++;
+                }
             }
-            // Show sync recommendations
-            console.log(chalk.cyan('\n💡 Recommendations:'));
-            if (status.criticalClaudeTasks > 0 && status.claudeCodeTodos === 0) {
-                console.log('  • Run `cc sync-claude-code` to sync tasks to Claude Code');
+            console.log(chalk.green(`   ✅ Auto-resolved ${appliedCount}/${conflicts.length} conflicts`));
+            // Report any remaining unresolved conflicts
+            const unresolved = this.conflictResolver.getUnresolvedConflicts();
+            if (unresolved.length > 0) {
+                console.log(chalk.yellow(`   📋 ${unresolved.length} conflict(s) require manual review`));
+                unresolved.forEach(conflict => {
+                    console.log(chalk.gray(`      • ${conflict.description}`));
+                });
             }
-            if (!status.syncEnabled) {
-                console.log('  • Run `cc sync-claude-code setup-hooks` to enable automatic sync');
-            }
+            // Show conflict statistics
+            const stats = this.conflictResolver.getConflictStats();
+            logger.info('Conflict resolution completed', stats);
         }
         catch (error) {
-            console.error(chalk.red(`Failed to get sync status: ${error.message}`));
+            logger.error('Conflict resolution failed', error);
+            console.log(chalk.red('   ❌ Failed to resolve conflicts'));
         }
     }
     /**
-     * Setup Claude Code hooks for automatic synchronization
+     * Apply a conflict resolution to the actual systems
      */
-    async setupHooks() {
-        console.log(chalk.cyan('🔗 Setting up Claude Code hooks'));
-        console.log(chalk.dim('━'.repeat(60)));
+    async applyConflictResolution(conflict) {
         try {
-            await this.integration.setupClaudeCodeHooks();
-            console.log(chalk.green('✅ Claude Code hooks configured successfully!'));
-            console.log(chalk.cyan('\n📋 Next steps:'));
-            console.log('1. The hook configuration has been generated');
-            console.log('2. Add the hook to your Claude Code settings');
-            console.log('3. Tasks will automatically sync when Claude Code runs');
-            console.log(chalk.yellow('\n⚠️  Manual setup required:'));
-            console.log('Copy the hook configuration to your Claude Code settings file');
+            const resolution = conflict.resolution;
+            switch (resolution.strategy) {
+                case 'critical_claude_wins':
+                    // Update Claude Code with Critical Claude data
+                    if (conflict.type === 'missing_in_target') {
+                        // Create new todo in Claude Code
+                        const taskData = conflict.criticalClaudeData;
+                        const newTodo = {
+                            content: taskData.title,
+                            status: this.mapTaskStatusToTodoStatus(taskData.status),
+                            priority: taskData.priority,
+                            id: taskData.id
+                        };
+                        await this.realIntegration.executeRealTodoWrite([newTodo]);
+                    }
+                    break;
+                case 'claude_code_wins':
+                    // Update Critical Claude with Claude Code data
+                    if (conflict.type === 'missing_in_source') {
+                        // Create new task in Critical Claude
+                        const todoData = conflict.claudeCodeData;
+                        await this.backlogManager.createTask({
+                            id: todoData.id,
+                            title: todoData.content,
+                            status: this.mapTodoStatusToTaskStatus(todoData.status),
+                            priority: todoData.priority || 'medium',
+                            generatedBy: 'sync_conflict_resolution'
+                        });
+                    }
+                    break;
+                case 'last_write_wins':
+                case 'priority_wins':
+                    // Update both systems with resolved data
+                    if (conflict.type === 'status_mismatch' || conflict.type === 'priority_mismatch') {
+                        const resolvedData = resolution.resolvedData;
+                        await this.backlogManager.updateTask(conflict.taskId, resolvedData);
+                        // Also update Claude Code
+                        const updatedTodo = {
+                            content: resolvedData.title || conflict.criticalClaudeData?.title,
+                            status: (resolvedData.status ? this.mapTaskStatusToTodoStatus(resolvedData.status) : conflict.claudeCodeData?.status),
+                            priority: (resolvedData.priority || conflict.claudeCodeData?.priority),
+                            id: conflict.taskId
+                        };
+                        await this.realIntegration.executeRealTodoWrite([updatedTodo]);
+                    }
+                    break;
+            }
+            logger.info('Conflict resolution applied', {
+                conflictId: conflict.id,
+                strategy: resolution.strategy
+            });
         }
         catch (error) {
-            console.error(chalk.red(`Failed to setup hooks: ${error.message}`));
+            logger.error(`Failed to apply resolution for conflict ${conflict.id}`, error);
         }
     }
-    /**
-     * Demonstrate the integration with examples
-     */
-    async demonstrateIntegration() {
-        console.log(chalk.cyan('🎬 Claude Code Integration Demo'));
-        console.log(chalk.dim('━'.repeat(60)));
-        console.log(chalk.bold('\n🔄 Bidirectional Sync Capabilities:'));
-        console.log('');
-        // Show Critical Claude → Claude Code sync
-        console.log(chalk.green('1. Critical Claude → Claude Code Todos'));
-        console.log('   • Rich task metadata (story points, labels, assignees)');
-        console.log('   • Automatic status mapping (todo → pending, in-progress → in_progress)');
-        console.log('   • Preserves task relationships and context');
-        console.log('');
-        // Show Claude Code → Critical Claude sync
-        console.log(chalk.blue('2. Claude Code Todos → Critical Claude Tasks'));
-        console.log('   • Parses todo content for metadata');
-        console.log('   • Creates tasks in appropriate sprints');
-        console.log('   • Maintains sync state for updates');
-        console.log('');
-        // Show hook integration
-        console.log(chalk.magenta('3. Claude Code Hooks Integration'));
-        console.log('   • PreToolUse: Provides context about task sync');
-        console.log('   • PostToolUse: Suggests sync after todo operations');
-        console.log('   • Stop: Optional auto-sync when Claude finishes');
-        console.log('');
-        // Show example workflow
-        console.log(chalk.yellow('🚀 Example Workflow:'));
-        console.log('');
-        console.log(chalk.dim('1. Create tasks in Critical Claude:'));
-        console.log('   $ cc task "implement user auth @high #security 8pts"');
-        console.log('');
-        console.log(chalk.dim('2. Sync to Claude Code:'));
-        console.log('   $ cc sync-claude-code --execute');
-        console.log('');
-        console.log(chalk.dim('3. Work with Claude Code:'));
-        console.log('   $ claude "help me implement the user auth task"');
-        console.log('   # Claude Code now knows about the task from TodoRead');
-        console.log('');
-        console.log(chalk.dim('4. Update task status:'));
-        console.log('   # Claude Code updates todo status automatically');
-        console.log('   # Critical Claude syncs status back via hooks');
-        console.log(chalk.green('\n✨ Integration Benefits:'));
-        console.log('• Unified task management across both systems');
-        console.log('• Rich metadata in Critical Claude, simple todos in Claude Code');
-        console.log('• Automatic synchronization via hooks');
-        console.log('• Maintains context and relationships');
-        console.log('• Works with existing Claude Code workflows');
+    mapTaskStatusToTodoStatus(status) {
+        const mapping = {
+            'todo': 'pending',
+            'focused': 'in_progress',
+            'in-progress': 'in_progress',
+            'blocked': 'pending',
+            'dimmed': 'pending',
+            'done': 'completed'
+        };
+        return mapping[status] || 'pending';
     }
-    /**
-     * Helper methods
-     */
-    getStatusIcon(status) {
-        switch (status) {
-            case 'todo': return '📋';
-            case 'in-progress': return '🔄';
-            case 'focused': return '🎯';
-            case 'done': return '✅';
-            case 'blocked': return '⛔';
-            default: return '📋';
-        }
+    mapTodoStatusToTaskStatus(status) {
+        const mapping = {
+            'pending': 'todo',
+            'in_progress': 'in-progress',
+            'completed': 'done'
+        };
+        return mapping[status] || 'todo';
+    }
+    getStatusEmoji(status) {
+        const emojis = {
+            'todo': '📝',
+            'focused': '🎯',
+            'in-progress': '🚀',
+            'blocked': '🚫',
+            'dimmed': '💤',
+            'done': '✅'
+        };
+        return emojis[status] || '❓';
     }
     getPriorityColor(priority) {
-        switch (priority) {
-            case 'critical': return chalk.red;
-            case 'high': return chalk.yellow;
-            case 'medium': return chalk.blue;
-            case 'low': return chalk.gray;
-            default: return chalk.white;
+        const colors = {
+            'critical': chalk.red.bold,
+            'high': chalk.red,
+            'medium': chalk.yellow,
+            'low': chalk.gray
+        };
+        return colors[priority] || chalk.white;
+    }
+    async testIntegrationMethods() {
+        console.log(chalk.cyan('\n🧪 Testing Claude Code Integration Methods'));
+        console.log(chalk.gray('═══════════════════════════════════════════'));
+        const results = await this.realIntegration.testIntegration();
+        console.log(chalk.blue('\n📋 Integration Test Results:'));
+        console.log(`   Direct API Integration: ${results.direct ? chalk.green('✅ Available') : chalk.red('❌ Not Available')}`);
+        console.log(`   File-Based Integration: ${results.fileBased ? chalk.green('✅ Available') : chalk.red('❌ Not Available')}`);
+        console.log(`   Process-Based Integration: ${results.processBased ? chalk.green('✅ Available') : chalk.red('❌ Not Available')}`);
+        const availableCount = Object.values(results).filter(Boolean).length;
+        if (availableCount === 0) {
+            console.log(chalk.red('\n⚠️ No integration methods available - sync will be limited'));
+        }
+        else {
+            console.log(chalk.green(`\n✅ ${availableCount} integration method(s) available`));
+        }
+        console.log(chalk.cyan('\n💡 Recommendations:'));
+        if (!results.direct) {
+            console.log('   • Install Claude Code CLI for direct integration');
+        }
+        if (!results.fileBased) {
+            console.log('   • Check file system permissions for temp directory access');
+        }
+        if (!results.processBased) {
+            console.log('   • Ensure Claude Code is in system PATH');
+        }
+        if (availableCount > 0) {
+            console.log('\n🚀 Ready to perform real sync operations!');
         }
     }
-    mapStatusToClaudeCode(status) {
-        switch (status) {
-            case 'todo':
-            case 'dimmed':
-                return 'pending';
-            case 'in-progress':
-            case 'focused':
-                return 'in_progress';
-            case 'done':
-            case 'archived_done':
-                return 'completed';
-            case 'blocked':
-                return 'in_progress';
-            default:
-                return 'pending';
+    /**
+     * Process hook events that may have triggered task state changes
+     */
+    async processHookEvents() {
+        try {
+            // Detect hook events from environment or context
+            const hookEvent = this.detectHookEvent();
+            if (hookEvent) {
+                console.log(chalk.blue(`\n🔗 Processing hook event: ${hookEvent.type} (${hookEvent.tool})`));
+                const transitions = await this.hookAwareManager.processHookEvent(hookEvent);
+                if (transitions.length > 0) {
+                    console.log(chalk.green(`   ✅ Applied ${transitions.length} task state transition(s)`));
+                    transitions.forEach(t => {
+                        console.log(chalk.gray(`      ${t.taskId}: ${t.fromStatus} → ${t.toStatus}`));
+                    });
+                }
+                else {
+                    console.log(chalk.gray('   No task transitions needed'));
+                }
+            }
         }
+        catch (error) {
+            logger.warn('Hook event processing failed', error);
+        }
+    }
+    /**
+     * Detect hook event from environment variables or other context
+     */
+    detectHookEvent() {
+        // Check environment variables that hooks might set
+        const hookType = process.env.CC_HOOK_EVENT;
+        const hookTool = process.env.CC_HOOK_TOOL;
+        const hookFile = process.env.CC_HOOK_FILE;
+        if (hookType) {
+            return {
+                type: hookType,
+                tool: hookTool,
+                file: hookFile,
+                timestamp: new Date()
+            };
+        }
+        // If no explicit hook context, infer from sync being called
+        // (This happens when hooks trigger the sync)
+        return {
+            type: 'PostToolUse',
+            tool: 'TodoWrite', // Assume TodoWrite triggered this sync
+            timestamp: new Date()
+        };
     }
 }
 //# sourceMappingURL=claude-code-sync.js.map

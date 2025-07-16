@@ -1,0 +1,33 @@
+{
+  "id": "e1902f1d-ba38-42cb-9ac4-6a62abc849ca",
+  "title": "E2E Test: Update documentation",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 1,
+  "priority": "low",
+  "labels": [
+    "docs"
+  ],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "fb581153-bdd4-4808-89f3-7c9906cc5453",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T05:35:43.232Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T05:35:43.232Z",
+  "updatedAt": "2025-07-15T05:35:43.232Z"
+}

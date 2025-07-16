@@ -1,21 +1,21 @@
 {
   "recentLabels": [
-    "optimization",
-    "a11y",
-    "accessibility",
-    "devops",
-    "automation",
-    "docs",
-    "help",
     "realtime",
     "collaboration",
-    "websockets"
+    "websockets",
+    "hook",
+    "auth",
+    "security",
+    "testing",
+    "e2e",
+    "integration",
+    "docs"
   ],
   "recentAssignees": [],
   "focusedTasks": [],
   "teamMembers": [],
   "tasksCreatedToday": 0,
-  "lastActivityDate": "2025-07-09",
+  "lastActivityDate": "2025-07-15",
   "cacheTimestamps": {},
-  "lastTaskId": "023912c8-4a8c-4a13-8bca-8377c5bf6037"
+  "lastTaskId": "f11599b5-074a-4581-a4aa-d8648f57901f"
 }

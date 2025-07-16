@@ -1,0 +1,31 @@
+{
+  "id": "b9c2bc9a-ed36-470b-862e-afa90614b44f",
+  "title": "test optimized CLI performance",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 2,
+  "priority": "medium",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "8e63040f-e553-4098-845b-c7d7f20fd505",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-10T00:22:21.660Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-10T00:22:21.660Z",
+  "updatedAt": "2025-07-10T00:22:21.660Z"
+}

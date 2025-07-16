@@ -1,0 +1,71 @@
+{
+  "id": "1b6352f1-fac2-46b0-9e59-ea8127d00875",
+  "title": "Add custom prompt integration for task management workflow",
+  "description": "Create custom prompts that integrate with Claude Code to provide context-aware task management suggestions and workflows.",
+  "priority": "high",
+  "status": "todo",
+  "labels": [
+    "integration",
+    "claude-code",
+    "prompts",
+    "workflow"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "a006119d-e36f-4f2f-a811-ca34aaa4697c",
+      "description": "Custom prompts for task creation from code analysis",
+      "verified": false
+    },
+    {
+      "id": "31d4c653-e1f0-49fd-a3c0-563dcee4ad3a",
+      "description": "Context-aware suggestions based on current codebase",
+      "verified": false
+    },
+    {
+      "id": "a4c7661a-08c0-4583-be75-77d3b71e683c",
+      "description": "Integration with Critical Claude's brutal code review",
+      "verified": false
+    },
+    {
+      "id": "2609bf0c-49ea-4cbd-98cb-0312938c0e52",
+      "description": "Prompts for converting code issues to actionable tasks",
+      "verified": false
+    },
+    {
+      "id": "2709e4ab-44f8-432f-bc7c-af3643f99aa7",
+      "description": "Documentation for prompt usage",
+      "verified": false
+    }
+  ],
+  "storyPoints": 8,
+  "timeTracking": {
+    "estimated": 10,
+    "actual": 0,
+    "remaining": 10
+  },
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude project analysis",
+    "suggestedEffort": 8,
+    "riskFactors": [
+      "timeline estimation",
+      "scope creep"
+    ]
+  },
+  "stateHistory": [
+    {
+      "id": "3744dcec-2cb0-4de6-b547-11c440d304d7",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-analysis",
+      "changedAt": "2025-07-14T17:08:22.820Z",
+      "reason": "Task created from project analysis"
+    }
+  ],
+  "createdAt": "2025-07-14T17:08:22.820Z",
+  "updatedAt": "2025-07-14T17:08:22.820Z"
+}

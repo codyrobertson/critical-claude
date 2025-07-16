@@ -1,0 +1,31 @@
+{
+  "id": "7b6cb752-2a63-49be-804b-eda9cf44dc0d",
+  "title": "Test integration",
+  "description": "",
+  "status": "todo",
+  "storyPoints": 1,
+  "priority": "low",
+  "labels": [],
+  "acceptanceCriteria": [],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "hook",
+  "timeTracking": {
+    "estimated": 0,
+    "actual": 0,
+    "remaining": 0
+  },
+  "stateHistory": [
+    {
+      "id": "19fac731-f98c-4055-bd04-1a7f9b2ab72b",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-15T03:54:47.039Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-15T03:54:47.039Z",
+  "updatedAt": "2025-07-15T03:54:47.039Z"
+}

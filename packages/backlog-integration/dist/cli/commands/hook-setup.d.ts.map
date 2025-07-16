@@ -1,0 +1,1 @@
+{"version":3,"file":"hook-setup.d.ts","sourceRoot":"","sources":["../../../src/cli/commands/hook-setup.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAKH,OAAO,EAAE,cAAc,EAAE,MAAM,wBAAwB,CAAC;AAExD,qBAAa,gBAAiB,YAAW,cAAc;IAE/C,OAAO,CAAC,MAAM,EAAE,MAAM,EAAE,KAAK,EAAE,GAAG,EAAE,OAAO,EAAE,GAAG,GAAG,OAAO,CAAC,IAAI,CAAC;YAmBxD,YAAY;YAwDZ,cAAc;YA2Fd,SAAS;YA6DT,sBAAsB;YAqDtB,QAAQ;CAmBvB"}

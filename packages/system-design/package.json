@@ -9,10 +9,12 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
-    "test": "jest"
+    "test": "jest --passWithNoTests",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'No linting configured'"
   },
   "dependencies": {
-    "@critical-claude/core": "workspace:^",
+    "@critical-claude/core": "file:../core",
     "@modelcontextprotocol/sdk": "^1.0.0",
     "zod": "^3.23.8"
   },

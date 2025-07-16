@@ -1,0 +1,17 @@
+{
+  "id": "d048c2e9-67f4-4e03-ba83-b4b2073502d9",
+  "phaseId": "40241443-fd29-465a-9be2-707a234e0096",
+  "name": "General Backlog",
+  "description": "Default epic for quick task creation",
+  "businessValue": "",
+  "status": "planning",
+  "priority": "medium",
+  "estimatedEffort": 0,
+  "acceptanceCriteria": [],
+  "labels": [],
+  "sprints": [
+    "3a3f1591-03b5-4b59-80a1-3331b802492e"
+  ],
+  "createdAt": "2025-07-09T21:48:02.346Z",
+  "updatedAt": "2025-07-09T21:48:02.346Z"
+}

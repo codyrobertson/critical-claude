@@ -1,0 +1,71 @@
+{
+  "id": "f2bbf408-e9dd-4982-900d-23f3c7386d96",
+  "title": "Add monitoring and logging for production insights",
+  "description": "Implement basic monitoring and logging to understand how the tool is being used in production and identify issues early.",
+  "priority": "low",
+  "status": "todo",
+  "labels": [
+    "monitoring",
+    "logging",
+    "production",
+    "insights"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "bc3faec4-0bf4-4b9f-b88c-0987aacbc181",
+      "description": "Error logging with proper context",
+      "verified": false
+    },
+    {
+      "id": "af1d95d9-a877-4979-bcf2-ba39f311a662",
+      "description": "Usage metrics collection (anonymous)",
+      "verified": false
+    },
+    {
+      "id": "f81aa883-985a-47a6-b8ad-c157eb3932df",
+      "description": "Performance monitoring for critical operations",
+      "verified": false
+    },
+    {
+      "id": "f5b15de1-3340-4ac9-83ee-aa596cb7f16f",
+      "description": "Log rotation and cleanup",
+      "verified": false
+    },
+    {
+      "id": "d0e41e4c-3cea-42dc-9e08-d8ceb3dcd44a",
+      "description": "Dashboard or reporting mechanism",
+      "verified": false
+    }
+  ],
+  "storyPoints": 5,
+  "timeTracking": {
+    "estimated": 6,
+    "actual": 0,
+    "remaining": 6
+  },
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "analysis",
+  "aiMetadata": {
+    "confidence": 0.95,
+    "reasoning": "Generated from Critical Claude project analysis",
+    "suggestedEffort": 5,
+    "riskFactors": [
+      "timeline estimation",
+      "scope creep"
+    ]
+  },
+  "stateHistory": [
+    {
+      "id": "a9cfcd92-6103-42ec-9c2c-6050eae0cae9",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "critical-claude-analysis",
+      "changedAt": "2025-07-14T17:08:22.820Z",
+      "reason": "Task created from project analysis"
+    }
+  ],
+  "createdAt": "2025-07-14T17:08:22.820Z",
+  "updatedAt": "2025-07-14T17:08:22.820Z"
+}

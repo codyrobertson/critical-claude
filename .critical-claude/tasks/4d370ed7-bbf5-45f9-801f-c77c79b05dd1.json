@@ -1,0 +1,61 @@
+{
+  "id": "4d370ed7-bbf5-45f9-801f-c77c79b05dd1",
+  "title": "🔍 Add Directory/Path Mismatch Detection to Critical Claude",
+  "description": "Add detection for configuration/path mismatches like we just found where the UI was reading from root/.critical-claude/ while scripts operated on packages/backlog-integration/.critical-claude/. This type of issue causes confusing behavior where changes don't appear.",
+  "status": "todo",
+  "storyPoints": 3,
+  "priority": "medium",
+  "labels": [
+    "bug-detection",
+    "tooling",
+    "developer-experience"
+  ],
+  "acceptanceCriteria": [
+    {
+      "id": "e54063ec-36e6-4ee9-a31b-c61e2bad2bdf",
+      "description": "Add detection for multiple .critical-claude directories",
+      "verified": false
+    },
+    {
+      "id": "6a3952a2-e11a-4587-b4b4-d1b699a00a71",
+      "description": "Warn when task operations happen in different locations",
+      "verified": false
+    },
+    {
+      "id": "641baab9-2bde-4e56-bbda-d7e63a0bb22f",
+      "description": "Provide clear feedback about which directory is being used",
+      "verified": false
+    },
+    {
+      "id": "b861c536-3f7f-433f-b550-e48676aadedf",
+      "description": "Add validation to ensure UI and operations use same path",
+      "verified": false
+    },
+    {
+      "id": "06eab947-f3c1-4ce8-b5e7-175ad18186f6",
+      "description": "Create diagnostic command to check for path mismatches",
+      "verified": false
+    }
+  ],
+  "dependencies": [],
+  "notes": [],
+  "codeReferences": [],
+  "generatedBy": "manual",
+  "timeTracking": {
+    "estimated": 4,
+    "actual": 0,
+    "remaining": 4
+  },
+  "stateHistory": [
+    {
+      "id": "8b0aac7e-e077-49e7-a839-131e604b1753",
+      "fromState": null,
+      "toState": "todo",
+      "changedBy": "system",
+      "changedAt": "2025-07-14T17:29:19.107Z",
+      "reason": "Task created"
+    }
+  ],
+  "createdAt": "2025-07-14T17:29:19.107Z",
+  "updatedAt": "2025-07-14T17:29:19.107Z"
+}
