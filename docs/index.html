@@ -3,25 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Critical Claude - Battle-Tested Code Analysis</title>
+    <title>Critical Claude - AI-Powered Code Analysis</title>
     <meta name="description" content="AI-powered code analysis that catches what everyone else misses. Prevent production disasters with Critical Claude's security, performance, and architecture review tools.">
     <meta name="keywords" content="code review, security analysis, performance optimization, Claude AI, MCP server, development tools">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Critical Claude - Battle-Tested Code Analysis">
+    <meta property="og:title" content="Critical Claude - AI-Powered Code Analysis">
     <meta property="og:description" content="AI-powered code analysis that catches what everyone else misses. Prevent production disasters with Critical Claude's security, performance, and architecture review tools.">
     <meta property="og:image" content="https://codyrobertson.github.io/critical-claude/assets/critical-claude-hero.png">
     <meta property="og:url" content="https://codyrobertson.github.io/critical-claude/">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:title" content="Critical Claude - Battle-Tested Code Analysis">
+    <meta property="twitter:title" content="Critical Claude - AI-Powered Code Analysis">
     <meta property="twitter:description" content="AI-powered code analysis that catches what everyone else misses. Prevent production disasters with Critical Claude's security, performance, and architecture review tools.">
     <meta property="twitter:image" content="https://codyrobertson.github.io/critical-claude/assets/critical-claude-hero.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/@webtui/css@latest/webtui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
     <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
 </head>
@@ -29,227 +28,171 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <img src="assets/critical-claude-logo.svg" alt="Critical Claude" class="logo">
-                <span class="logo-text">Critical Claude</span>
-            </div>
+            <a href="#" class="nav-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 12l2 2 4-4"></path>
+                    <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z"></path>
+                </svg>
+                Critical Claude
+            </a>
             <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#features" class="nav-link">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#installation" class="nav-link">Installation</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#docs" class="nav-link">Documentation</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#examples" class="nav-link">Examples</a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://github.com/codyrobertson/critical-claude" class="nav-link nav-github" target="_blank">GitHub</a>
-                </li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#installation" class="nav-link">Get Started</a></li>
+                <li><a href="#examples" class="nav-link">Examples</a></li>
+                <li><a href="#docs" class="nav-link">Docs</a></li>
+                <li><a href="https://github.com/codyrobertson/critical-claude" class="nav-cta" target="_blank">GitHub</a></li>
             </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <div class="hero-container">
+        <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">
-                    <span class="hero-fire">🔥</span>
-                    Battle-Tested Code Analysis
-                    <span class="hero-subtitle">That Catches What Everyone Else Misses</span>
-                </h1>
-                <p class="hero-description">
-                    After 15+ years of debugging production disasters at 3 AM, Critical Claude prevents the next production outage before it happens. AI-powered security, performance, and architecture analysis for Claude Code, Cursor, Zed, and more.
+                <h1 class="hero-title">AI-powered code analysis that catches what everyone else misses</h1>
+                <p class="hero-subtitle">
+                    Prevent production disasters with Critical Claude's battle-tested security, performance, and architecture analysis. 
+                    Built for Claude Code, Cursor, Zed, and more.
                 </p>
-                <div class="hero-buttons">
-                    <button variant="primary" size="large" onclick="location.href='#installation'">Get Started</button>
-                    <button variant="secondary" size="large" onclick="location.href='#examples'">See Examples</button>
+                <div class="hero-actions">
+                    <a href="#installation" class="hero-cta">
+                        Get Started
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                    <a href="#examples" class="hero-secondary">
+                        View Examples
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h6v6M10 14L21 3M21 14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h7"></path>
+                        </svg>
+                    </a>
                 </div>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span class="stat-number">15+</span>
-                        <span class="stat-label">Years Experience</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">100K+</span>
-                        <span class="stat-label">Lines Analyzed</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-number">Zero</span>
-                        <span class="stat-label">Tolerance Policy</span>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-image">
-                <img src="assets/critical-claude-demo.png" alt="Critical Claude in action" class="demo-image">
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="features">
+    <section id="features" class="section features">
         <div class="container">
             <h2 class="section-title">Why Critical Claude?</h2>
-            <p class="section-subtitle">The problems we solve in production environments</p>
+            <p class="section-subtitle">
+                Battle-tested analysis that prevents the production disasters that keep developers up at night
+            </p>
             
             <div class="features-grid">
-                <div box-="card" class="feature">
-                    <div class="feature-icon">🛡️</div>
-                    <h3>Security Vulnerabilities</h3>
-                    <p>Detects SQL injection, XSS, authentication bypasses, and data exposure with real exploitation scenarios</p>
-                </div>
-                <div box-="card" class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Performance Bottlenecks</h3>
-                    <p>Identifies algorithmic complexity issues, memory leaks, and scaling problems that crash systems under load</p>
-                </div>
-                <div box-="card" class="feature">
-                    <div class="feature-icon">🏗️</div>
-                    <h3>Architecture Issues</h3>
-                    <p>Catches SOLID violations, tight coupling, and maintainability problems that create technical debt</p>
-                </div>
-                <div box-="card" class="feature">
-                    <div class="feature-icon">🎯</div>
-                    <h3>Production Readiness</h3>
-                    <p>Evaluates error handling, logging, monitoring, and recovery mechanisms for enterprise environments</p>
-                </div>
-                <div box-="card" class="feature">
-                    <div class="feature-icon">🔧</div>
-                    <h3>Working Code Fixes</h3>
-                    <p>Provides complete, executable solutions for every issue found - not just suggestions</p>
-                </div>
-                <div box-="card" class="feature">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Real-time Intelligence</h3>
-                    <p>Cross-checks against CVE databases and validates recommendations against current industry standards</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Analysis Framework -->
-    <section class="analysis-framework">
-        <div class="container">
-            <h2 class="section-title">Analysis Framework</h2>
-            <p class="section-subtitle">Weighted criteria based on production impact</p>
-            
-            <div class="framework-grid">
-                <div class="framework-item">
-                    <div class="framework-header">
-                        <span class="framework-percentage">30%</span>
-                        <h3>Security Analysis</h3>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
                     </div>
-                    <ul class="framework-list">
-                        <li>SQL injection vulnerabilities</li>
-                        <li>XSS attack vectors</li>
-                        <li>Authentication bypasses</li>
-                        <li>Data exposure risks</li>
-                        <li>Cryptographic weaknesses</li>
-                    </ul>
+                    <h3 class="feature-title">Security Vulnerabilities</h3>
+                    <p class="feature-description">
+                        Detects SQL injection, XSS, authentication bypasses, and data exposure with real exploitation scenarios and immediate fixes.
+                    </p>
                 </div>
-                <div class="framework-item">
-                    <div class="framework-header">
-                        <span class="framework-percentage">25%</span>
-                        <h3>Performance & Scalability</h3>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                        </svg>
                     </div>
-                    <ul class="framework-list">
-                        <li>Algorithmic complexity (O(n²) → O(n))</li>
-                        <li>Memory leaks and resource management</li>
-                        <li>Database query optimization</li>
-                        <li>Concurrency issues</li>
-                        <li>Network request patterns</li>
-                    </ul>
+                    <h3 class="feature-title">Performance Bottlenecks</h3>
+                    <p class="feature-description">
+                        Identifies algorithmic complexity issues, memory leaks, and scaling problems that crash systems under load.
+                    </p>
                 </div>
-                <div class="framework-item">
-                    <div class="framework-header">
-                        <span class="framework-percentage">20%</span>
-                        <h3>Architecture Assessment</h3>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 20h20M4 20V4M8 20V8M12 20V12M16 20V16M20 20V10"></path>
+                        </svg>
                     </div>
-                    <ul class="framework-list">
-                        <li>SOLID principle violations</li>
-                        <li>Tight coupling issues</li>
-                        <li>Code duplication (DRY)</li>
-                        <li>Design pattern misuse</li>
-                        <li>Maintainability concerns</li>
-                    </ul>
+                    <h3 class="feature-title">Architecture Review</h3>
+                    <p class="feature-description">
+                        Catches SOLID violations, tight coupling, and maintainability problems that create expensive technical debt.
+                    </p>
                 </div>
-                <div class="framework-item">
-                    <div class="framework-header">
-                        <span class="framework-percentage">15%</span>
-                        <h3>Code Quality</h3>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11H5a2 2 0 00-2 2v3a2 2 0 002 2h4m6-6h4a2 2 0 012 2v3a2 2 0 01-2 2h-4m-6-3a2 2 0 002-2V9a2 2 0 00-2-2H9a2 2 0 00-2 2v3a2 2 0 002 2z"></path>
+                        </svg>
                     </div>
-                    <ul class="framework-list">
-                        <li>Error handling gaps</li>
-                        <li>Naming conventions</li>
-                        <li>Code readability</li>
-                        <li>Technical debt accumulation</li>
-                        <li>Documentation quality</li>
-                    </ul>
+                    <h3 class="feature-title">Working Code Fixes</h3>
+                    <p class="feature-description">
+                        Provides complete, executable solutions for every issue found. Not just suggestions—actual working code.
+                    </p>
                 </div>
-                <div class="framework-item">
-                    <div class="framework-header">
-                        <span class="framework-percentage">10%</span>
-                        <h3>Testing Strategy</h3>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                        </svg>
                     </div>
-                    <ul class="framework-list">
-                        <li>Critical path coverage</li>
-                        <li>Edge case handling</li>
-                        <li>Test maintainability</li>
-                        <li>Integration testing</li>
-                        <li>Performance testing</li>
-                    </ul>
+                    <h3 class="feature-title">Production Ready</h3>
+                    <p class="feature-description">
+                        Evaluates error handling, logging, monitoring, and recovery mechanisms for enterprise environments.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 00-1-1.73L12 2 4 6.27A2 2 0 003 8v8a2 2 0 001 1.73L12 22l8-4.27A2 2 0 0021 16z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Real-time Intelligence</h3>
+                    <p class="feature-description">
+                        Cross-checks against CVE databases and validates recommendations against current industry standards.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Installation Section -->
-    <section id="installation" class="installation">
+    <section id="installation" class="section" style="background: var(--surface-secondary);">
         <div class="container">
-            <h2 class="section-title">Quick Installation</h2>
-            <p class="section-subtitle">Get up and running in under 5 minutes</p>
+            <h2 class="section-title">Get Started in Minutes</h2>
+            <p class="section-subtitle">
+                Choose your development environment and start analyzing code immediately
+            </p>
             
             <div class="installation-tabs">
                 <div class="tab-buttons">
-                    <button class="tab-btn active" data-tab="claude-code">Claude Code</button>
-                    <button class="tab-btn" data-tab="cursor">Cursor</button>
-                    <button class="tab-btn" data-tab="zed">Zed</button>
-                    <button class="tab-btn" data-tab="vscode">VS Code</button>
+                    <button class="tab-button active" data-tab="claude-code">Claude Code</button>
+                    <button class="tab-button" data-tab="cursor">Cursor</button>
+                    <button class="tab-button" data-tab="zed">Zed</button>
+                    <button class="tab-button" data-tab="vscode">VS Code</button>
                 </div>
                 
-                <div class="tab-content">
-                    <div class="tab-pane active" id="claude-code">
-                        <div class="installation-steps">
-                            <div class="step">
-                                <span class="step-number">1</span>
-                                <div class="step-content">
-                                    <h3>Clone Repository</h3>
-                                    <pre><code>git clone https://github.com/critical-claude/critical-claude.git
-cd critical-claude</code></pre>
-                                </div>
+                <div class="tab-content active" id="claude-code">
+                    <div class="installation-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Install Critical Claude</h3>
+                                <p>Clone the repository and set up the development environment</p>
+                                <div class="code-block" data-language="bash">
+git clone https://github.com/codyrobertson/critical-claude.git
+cd critical-claude
+npm run setup</div>
                             </div>
-                            <div class="step">
-                                <span class="step-number">2</span>
-                                <div class="step-content">
-                                    <h3>Build & Setup</h3>
-                                    <pre><code>npm run setup</code></pre>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <span class="step-number">3</span>
-                                <div class="step-content">
-                                    <h3>Configure Claude Code</h3>
-                                    <p>Add to your Claude Code settings:</p>
-                                    <pre><code>{
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Configure MCP Server</h3>
+                                <p>Add Critical Claude to your Claude Code MCP settings</p>
+                                <div class="code-block" data-language="json">
+{
   "mcpServers": {
     "critical-claude": {
       "command": "node",
@@ -257,40 +200,57 @@ cd critical-claude</code></pre>
       "cwd": "/path/to/critical-claude"
     }
   }
-}</code></pre>
-                                </div>
+}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Start analyzing code</h3>
+                                <p>Use Critical Claude tools directly in your Claude Code conversations</p>
+                                <div class="code-block" data-language="text">
+Use cc_crit_code to analyze this function for security vulnerabilities:
+
+function authenticateUser(username, password) {
+    return users.find(u => u.username === username && u.password === password);
+}</div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="tab-pane" id="cursor">
-                        <div class="installation-steps">
-                            <div class="step">
-                                <span class="step-number">1</span>
-                                <div class="step-content">
-                                    <h3>Add .cursorrules</h3>
-                                    <p>Copy the Critical Claude persona to your project:</p>
-                                    <pre><code>curl -o .cursorrules https://raw.githubusercontent.com/critical-claude/critical-claude/main/.cursorrules</code></pre>
-                                </div>
+                </div>
+                
+                <div class="tab-content" id="cursor">
+                    <div class="installation-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Add Critical Claude Rules</h3>
+                                <p>Copy the battle-tested persona to your project</p>
+                                <div class="code-block" data-language="bash">
+curl -o .cursorrules https://raw.githubusercontent.com/codyrobertson/critical-claude/main/.cursorrules</div>
                             </div>
-                            <div class="step">
-                                <span class="step-number">2</span>
-                                <div class="step-content">
-                                    <h3>Enable Battle-Tested Mode</h3>
-                                    <p>Cursor will automatically apply the Critical Claude persona to all code analysis</p>
-                                </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Enable Analysis Mode</h3>
+                                <p>Cursor will automatically apply Critical Claude's analysis framework to all code reviews</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="tab-pane" id="zed">
-                        <div class="installation-steps">
-                            <div class="step">
-                                <span class="step-number">1</span>
-                                <div class="step-content">
-                                    <h3>Configure Assistant</h3>
-                                    <p>Add to your Zed settings:</p>
-                                    <pre><code>{
+                </div>
+                
+                <div class="tab-content" id="zed">
+                    <div class="installation-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Configure Assistant</h3>
+                                <p>Set up Claude integration in your Zed settings</p>
+                                <div class="code-block" data-language="json">
+{
   "assistant": {
     "version": "2",
     "default_model": {
@@ -298,34 +258,35 @@ cd critical-claude</code></pre>
       "model": "claude-3-5-sonnet-20241022"
     }
   }
-}</code></pre>
-                                </div>
+}</div>
                             </div>
-                            <div class="step">
-                                <span class="step-number">2</span>
-                                <div class="step-content">
-                                    <h3>Import Critical Claude Context</h3>
-                                    <p>Use the assistant with Critical Claude instructions for code analysis</p>
-                                </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Import Critical Claude Context</h3>
+                                <p>Use the assistant with Critical Claude instructions for comprehensive code analysis</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="tab-pane" id="vscode">
-                        <div class="installation-steps">
-                            <div class="step">
-                                <span class="step-number">1</span>
-                                <div class="step-content">
-                                    <h3>Install Extension</h3>
-                                    <p>Search for "Critical Claude" in VS Code marketplace</p>
-                                </div>
+                </div>
+                
+                <div class="tab-content" id="vscode">
+                    <div class="installation-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Install Extension</h3>
+                                <p>Search for "Critical Claude" in the VS Code marketplace</p>
                             </div>
-                            <div class="step">
-                                <span class="step-number">2</span>
-                                <div class="step-content">
-                                    <h3>Configure Settings</h3>
-                                    <p>Enable battle-tested analysis in extension settings</p>
-                                </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Configure Settings</h3>
+                                <p>Enable battle-tested analysis in extension settings</p>
                             </div>
                         </div>
                     </div>
@@ -335,39 +296,52 @@ cd critical-claude</code></pre>
     </section>
 
     <!-- Examples Section -->
-    <section id="examples" class="examples">
+    <section id="examples" class="section">
         <div class="container">
             <h2 class="section-title">See It In Action</h2>
-            <p class="section-subtitle">Real analysis results that prevent production disasters</p>
+            <p class="section-subtitle">
+                Real analysis results that prevent production disasters
+            </p>
             
-            <div class="examples-grid">
-                <div class="example">
-                    <h3>🚨 Critical Security Issue</h3>
-                    <div class="example-before">
-                        <h4>Vulnerable Code</h4>
-                        <pre><code>app.get('/user/:id', (req, res) => {
+            <div class="grid grid-cols-1" style="gap: 3rem; margin-top: 3rem;">
+                <div class="example-card">
+                    <div class="example-header">
+                        <div class="severity-badge critical">🔴 Critical Security Issue</div>
+                        <h3>SQL Injection Vulnerability</h3>
+                    </div>
+                    <div class="example-content">
+                        <div class="example-code">
+                            <h4>Vulnerable Code</h4>
+                            <div class="code-block" data-language="javascript">
+app.get('/user/:id', (req, res) => {
   const query = `SELECT * FROM users WHERE id = ${req.params.id}`;
   db.query(query, (err, result) => {
     res.json(result);
   });
-});</code></pre>
-                    </div>
-                    <div class="example-after">
-                        <h4>Critical Claude Analysis</h4>
-                        <div class="analysis-result">
-                            <div class="severity critical">🔴 CRITICAL - DEPLOYMENT BLOCKED</div>
-                            <p><strong>Issue:</strong> SQL injection vulnerability via direct parameter interpolation</p>
-                            <p><strong>Production Risk:</strong> Complete database compromise via /user/1;DROP TABLE users--</p>
-                            <p><strong>Exploit Time:</strong> < 5 minutes for any attacker</p>
+});</div>
+                        </div>
+                        <div class="example-analysis">
+                            <h4>Critical Claude Analysis</h4>
+                            <div class="analysis-result">
+                                <p><strong>Issue:</strong> SQL injection vulnerability via direct parameter interpolation</p>
+                                <p><strong>Production Risk:</strong> Complete database compromise via <code>/user/1;DROP TABLE users--</code></p>
+                                <p><strong>Exploit Time:</strong> < 5 minutes for any attacker</p>
+                                <p><strong>Fix:</strong> Use parameterized queries immediately</p>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="example">
-                    <h3>⚡ Performance Bottleneck</h3>
-                    <div class="example-before">
-                        <h4>Inefficient Code</h4>
-                        <pre><code>function findDuplicates(arr) {
+                <div class="example-card">
+                    <div class="example-header">
+                        <div class="severity-badge high">🟠 Performance Bottleneck</div>
+                        <h3>O(n³) Algorithm Complexity</h3>
+                    </div>
+                    <div class="example-content">
+                        <div class="example-code">
+                            <h4>Inefficient Code</h4>
+                            <div class="code-block" data-language="javascript">
+function findDuplicates(arr) {
   const duplicates = [];
   for (let i = 0; i < arr.length; i++) {
     for (let j = i + 1; j < arr.length; j++) {
@@ -377,43 +351,16 @@ cd critical-claude</code></pre>
     }
   }
   return duplicates;
-}</code></pre>
-                    </div>
-                    <div class="example-after">
-                        <h4>Critical Claude Analysis</h4>
-                        <div class="analysis-result">
-                            <div class="severity high">🟠 HIGH PRIORITY - PERFORMANCE KILLER</div>
-                            <p><strong>Issue:</strong> O(n³) algorithm with nested loops and linear search</p>
-                            <p><strong>Production Risk:</strong> System timeout with 10,000+ items</p>
-                            <p><strong>Fix:</strong> Use Set for O(n) complexity reduction</p>
+}</div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="example">
-                    <h3>🏗️ Architecture Violation</h3>
-                    <div class="example-before">
-                        <h4>Coupled Code</h4>
-                        <pre><code>class OrderService {
-  processOrder(order) {
-    // Direct database access
-    const user = db.query('SELECT * FROM users WHERE id = ?', [order.userId]);
-    
-    // Direct email sending
-    emailService.send(user.email, 'Order confirmed');
-    
-    // Direct payment processing
-    paymentGateway.charge(order.amount, user.creditCard);
-  }
-}</code></pre>
-                    </div>
-                    <div class="example-after">
-                        <h4>Critical Claude Analysis</h4>
-                        <div class="analysis-result">
-                            <div class="severity medium">🟡 MEDIUM - ARCHITECTURAL DEBT</div>
-                            <p><strong>Issue:</strong> Tight coupling violates Single Responsibility Principle</p>
-                            <p><strong>Maintenance Risk:</strong> Changes cascade across multiple systems</p>
-                            <p><strong>Fix:</strong> Implement dependency injection and service abstraction</p>
+                        <div class="example-analysis">
+                            <h4>Critical Claude Analysis</h4>
+                            <div class="analysis-result">
+                                <p><strong>Issue:</strong> O(n³) algorithm with nested loops and linear search</p>
+                                <p><strong>Production Risk:</strong> System timeout with 10,000+ items</p>
+                                <p><strong>Performance Impact:</strong> 1M items = 1 trillion operations</p>
+                                <p><strong>Fix:</strong> Use Set for O(n) complexity reduction</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -422,61 +369,47 @@ cd critical-claude</code></pre>
     </section>
 
     <!-- Documentation Section -->
-    <section id="docs" class="documentation">
+    <section id="docs" class="section" style="background: var(--surface-secondary);">
         <div class="container">
             <h2 class="section-title">Documentation</h2>
-            <p class="section-subtitle">Comprehensive guides and API references</p>
-            
-            <div class="docs-grid">
-                <div class="doc-card">
-                    <h3>🚀 Quick Start Guide</h3>
-                    <p>Get up and running in 5 minutes with step-by-step installation for all editors</p>
-                    <a href="docs/quick-start.html" class="doc-link">Read Guide →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>🔧 MCP Tools Reference</h3>
-                    <p>Complete reference for all available Critical Claude tools and parameters</p>
-                    <a href="docs/mcp-tools.html" class="doc-link">View Reference →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>🛡️ Security Analysis</h3>
-                    <p>Deep dive into security vulnerability detection and prevention strategies</p>
-                    <a href="docs/security-analysis.html" class="doc-link">Learn More →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>⚡ Performance Optimization</h3>
-                    <p>Understanding performance bottlenecks and scaling optimization techniques</p>
-                    <a href="docs/performance-optimization.html" class="doc-link">Explore →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>📋 Project Planning</h3>
-                    <p>Reality-based project estimation and architectural planning tools</p>
-                    <a href="docs/project-planning.html" class="doc-link">Plan Better →</a>
-                </div>
-                <div class="doc-card">
-                    <h3>🔗 Hook System</h3>
-                    <p>Advanced integration with Claude Code hooks for real-time task management</p>
-                    <a href="docs/hook-system.html" class="doc-link">Integrate →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2 class="cta-title">Ready to Prevent Your Next Production Disaster?</h2>
-            <p class="cta-description">
-                Join thousands of developers who trust Critical Claude to catch what everyone else misses.
-                Because working code beats broken code every time.
+            <p class="section-subtitle">
+                Comprehensive guides and references for all Critical Claude features
             </p>
-            <div class="cta-buttons">
-                <a href="https://github.com/critical-claude/critical-claude" class="btn btn-primary btn-large">
-                    Get Started on GitHub
-                </a>
-                <a href="#installation" class="btn btn-secondary btn-large">
-                    View Installation Guide
-                </a>
+            
+            <div class="grid grid-cols-3" style="margin-top: 3rem;">
+                <div class="doc-card">
+                    <div class="doc-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></path>
+                        </svg>
+                    </div>
+                    <h3>Quick Start Guide</h3>
+                    <p>Get up and running in 5 minutes with step-by-step installation</p>
+                    <a href="docs/quick-start.html" class="btn btn-secondary">Read Guide</a>
+                </div>
+                
+                <div class="doc-card">
+                    <div class="doc-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 2v20M14 2v20M4 7h16M4 17h16"></path>
+                        </svg>
+                    </div>
+                    <h3>MCP Tools Reference</h3>
+                    <p>Complete reference for all available tools and parameters</p>
+                    <a href="docs/mcp-tools.html" class="btn btn-secondary">View Reference</a>
+                </div>
+                
+                <div class="doc-card">
+                    <div class="doc-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h3>Security Analysis</h3>
+                    <p>Deep dive into vulnerability detection and prevention</p>
+                    <a href="docs/security.html" class="btn btn-secondary">Learn More</a>
+                </div>
             </div>
         </div>
     </section>
@@ -487,48 +420,41 @@ cd critical-claude</code></pre>
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Critical Claude</h4>
-                    <p>Battle-tested code analysis that prevents production disasters.</p>
-                    <div class="social-links">
-                        <a href="https://github.com/critical-claude/critical-claude" target="_blank">GitHub</a>
-                        <a href="https://discord.gg/critical-claude" target="_blank">Discord</a>
-                        <a href="https://twitter.com/critical_claude" target="_blank">Twitter</a>
-                    </div>
+                    <p>AI-powered code analysis that prevents production disasters through battle-tested security, performance, and architecture review.</p>
                 </div>
                 <div class="footer-section">
-                    <h4>Documentation</h4>
+                    <h4>Resources</h4>
                     <ul>
                         <li><a href="docs/quick-start.html">Quick Start</a></li>
                         <li><a href="docs/mcp-tools.html">MCP Tools</a></li>
-                        <li><a href="docs/security-analysis.html">Security Analysis</a></li>
-                        <li><a href="docs/performance-optimization.html">Performance</a></li>
+                        <li><a href="docs/security.html">Security Guide</a></li>
+                        <li><a href="docs/examples.html">Examples</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Support</h4>
                     <ul>
-                        <li><a href="https://github.com/critical-claude/critical-claude/issues">Bug Reports</a></li>
+                        <li><a href="https://github.com/codyrobertson/critical-claude/issues">Bug Reports</a></li>
                         <li><a href="docs/troubleshooting.html">Troubleshooting</a></li>
-                        <li><a href="mailto:support@critical-claude.dev">Contact</a></li>
                         <li><a href="docs/contributing.html">Contributing</a></li>
+                        <li><a href="mailto:support@critical-claude.dev">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Tools</h4>
+                    <h4>Connect</h4>
                     <ul>
-                        <li><a href="docs/claude-code.html">Claude Code</a></li>
-                        <li><a href="docs/cursor.html">Cursor</a></li>
-                        <li><a href="docs/zed.html">Zed</a></li>
-                        <li><a href="docs/vscode.html">VS Code</a></li>
+                        <li><a href="https://github.com/codyrobertson/critical-claude">GitHub</a></li>
+                        <li><a href="https://discord.gg/critical-claude">Discord</a></li>
+                        <li><a href="https://twitter.com/critical_claude">Twitter</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Critical Claude. MIT License. Built with 🔥 by developers who've seen code fail spectacularly in production.</p>
+                <p>&copy; 2025 Critical Claude. MIT License. Built with ❤️ by developers who've debugged production at 3 AM.</p>
             </div>
         </div>
     </footer>
 
     <script src="assets/script.js"></script>
-    <script src="assets/webtui-setup.js"></script>
 </body>
 </html>
