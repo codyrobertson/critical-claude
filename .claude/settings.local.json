@@ -60,7 +60,8 @@
       "mcp__critical-claude__cc_data_flow_trace",
       "mcp__critical-claude__cc_crit_arch",
       "mcp__critical-claude__cc_plan_arch",
-      "Bash(/Users/Cody/code_projects/critical_claude/packages/backlog-integration/dist/cli/cc-main.js --help)"
+      "Bash(/Users/Cody/code_projects/critical_claude/packages/backlog-integration/dist/cli/cc-main.js --help)",
+      "Bash(git merge:*)"
     ],
     "deny": []
   }
