@@ -1,6 +1,6 @@
 {
   "name": "critical-claude",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Critical Claude MCP Services - A comprehensive code analysis and development toolkit",
   "private": false,
   "preferGlobal": true,
