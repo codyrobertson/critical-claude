@@ -34,7 +34,9 @@
     "@critical-claude/data-flow": "file:../packages/data-flow",
     "@critical-claude/system-design": "file:../packages/system-design",
     "@iarna/toml": "^2.2.5",
-    "@modelcontextprotocol/sdk": "0.6.0"
+    "@modelcontextprotocol/sdk": "0.6.0",
+    "@types/uuid": "^10.0.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",

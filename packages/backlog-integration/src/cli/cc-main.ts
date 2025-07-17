@@ -68,39 +68,43 @@ async function initializeCLI() {
     }
   });
 
-  // Register quick task command with natural language support
-  const taskCmd = program
-    .command('task <input>')
-    .alias('t')
-    .description('Create tasks with natural language parsing')
-    .option('-m, --mode <mode>', 'Creation mode (quick|interactive|bulk)', 'quick')
-    .option('-s, --sprint <sprintId>', 'Add to specific sprint')
-    .option('-e, --epic <epicId>', 'Add to specific epic')
-    .option('-p, --phase <phaseId>', 'Add to specific phase')
-    .option('--dry-run', 'Show what would be created without creating')
-    .option('--ai-enhance', 'Use AI to enhance task details')
-    .action(async (input, options) => {
+  // Natural task management commands
+  program
+    .command('create <title>')
+    .alias('c')
+    .description('Create a new task')
+    .option('-d, --description <desc>', 'Task description')
+    .option('-p, --priority <priority>', 'Task priority (critical|high|medium|low)', 'medium')
+    .option('-a, --assignee <assignee>', 'Task assignee')
+    .option('-s, --status <status>', 'Task status (To Do|In Progress|Done|Blocked)', 'To Do')
+    .option('--labels <labels...>', 'Task labels/tags')
+    .option('--draft', 'Create as draft')
+    .action(async (title, options) => {
       try {
-        const { registry, logger } = await loadHeavyDependencies();
-        const handler = await registry.getHandler('task');
-        await handler.execute('create', input, options);
+        const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+        const handler = new MCPTaskSimpleCommand();
+        await handler.execute('create', title, options);
       } catch (error) {
         console.error('❌ Task creation failed:', (error as Error).message);
         process.exit(1);
       }
     });
 
-  // Add task subcommands
-  taskCmd
+  program
     .command('list')
     .alias('ls')
     .description('List recent tasks')
     .option('-n, --count <count>', 'Number of tasks to show', parseInt, 10)
     .option('-f, --filter <filter>', 'Filter tasks')
+    .option('-s, --status <status>', 'Filter by status (To Do|In Progress|Done|Blocked)')
+    .option('-p, --priority <priority>', 'Task priority (critical|high|medium|low)')
+    .option('-a, --assignee <assignee>', 'Task assignee')
+    .option('--includeDrafts', 'Include drafts in list')
+    .option('--plain', 'Plain text output')
     .action(async (options) => {
       try {
-        const { registry } = await loadHeavyDependencies();
-        const handler = await registry.getHandler('task');
+        const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+        const handler = new MCPTaskSimpleCommand();
         await handler.execute('list', null, options);
       } catch (error) {
         console.error('❌ Task listing failed:', (error as Error).message);
@@ -108,32 +112,69 @@ async function initializeCLI() {
       }
     });
 
-  taskCmd
-    .command('focus <taskId>')
-    .alias('f')
-    .description('Focus on a specific task')
+  program
+    .command('view <taskId>')
+    .alias('show')
+    .description('View task details')
+    .option('--plain', 'Plain text output')
     .action(async (taskId, options) => {
       try {
-        const { registry } = await loadHeavyDependencies();
-        const handler = await registry.getHandler('task');
-        await handler.execute('focus', taskId, options);
+        const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+        const handler = new MCPTaskSimpleCommand();
+        await handler.execute('view', taskId, options);
       } catch (error) {
-        console.error('❌ Task focus failed:', (error as Error).message);
+        console.error('❌ Task view failed:', (error as Error).message);
         process.exit(1);
       }
     });
 
-  taskCmd
-    .command('ui')
-    .alias('browse')
-    .description('Launch interactive task management UI')
-    .action(async (options) => {
+  program
+    .command('edit <taskId>')
+    .alias('update')
+    .description('Edit a task')
+    .option('-t, --title <title>', 'Update task title')
+    .option('-d, --description <desc>', 'Update task description')
+    .option('-p, --priority <priority>', 'Update task priority')
+    .option('-a, --assignee <assignee>', 'Update task assignee')
+    .option('-s, --status <status>', 'Update task status')
+    .option('--labels <labels...>', 'Update task labels')
+    .action(async (taskId, options) => {
       try {
-        const { registry } = await loadHeavyDependencies();
-        const handler = await registry.getHandler('task-ui');
-        await handler.execute('ui', null, options);
+        const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+        const handler = new MCPTaskSimpleCommand();
+        await handler.execute('edit', taskId, options);
       } catch (error) {
-        console.error('❌ Task UI failed:', (error as Error).message);
+        console.error('❌ Task edit failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  program
+    .command('archive <taskId>')
+    .description('Archive a completed task')
+    .action(async (taskId, options) => {
+      try {
+        const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+        const handler = new MCPTaskSimpleCommand();
+        await handler.execute('archive', taskId, options);
+      } catch (error) {
+        console.error('❌ Task archive failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
+  program
+    .command('ai <text>')
+    .description('Create tasks from text using AI')
+    .option('--context <project>', 'Project context for AI')
+    .option('--expand <level>', 'AI expansion level (1-3)', parseInt, 2)
+    .action(async (text, options) => {
+      try {
+        const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+        const handler = new MCPTaskSimpleCommand();
+        await handler.execute('ai', text, options);
+      } catch (error) {
+        console.error('❌ AI task creation failed:', (error as Error).message);
         process.exit(1);
       }
     });
@@ -435,24 +476,27 @@ async function initializeCLI() {
     const { chalk } = await loadHeavyDependencies();
     console.log('');
     console.log(chalk.cyan('Quick Start Examples:'));
-    console.log('  $ cc task "fix login bug"                    # Create task');
-    console.log('  $ cc task "add auth @high #security 5pts"   # Natural language');
-    console.log('  $ cc task-ui                                # Interactive task UI');
-    console.log('  $ cc simple create "update docs" @high       # Simple task');
-    console.log('  $ cc live                                   # Live monitor');
-    console.log('  $ cc status                                 # Project overview');
+    console.log('  $ cc create "Fix login bug"                 # Create task');
+    console.log('  $ cc list                                   # List tasks');
+    console.log('  $ cc view <task-id>                         # View task details');
+    console.log('  $ cc edit <task-id> --status "In Progress"  # Update task');
+    console.log('  $ cc ai "Build user authentication system"  # AI generates tasks');
     console.log('');
-    console.log(chalk.cyan('Natural Language Task Examples:'));
-    console.log('  $ cc task "fix login bug @high #auth due:friday"');
-    console.log('  $ cc task "implement user profile 8pts for:@alice"');
+    console.log(chalk.cyan('Task Management:'));
+    console.log('  $ cc create "Fix bug" --priority high --assignee alice');
+    console.log('  $ cc list --status "In Progress" --assignee bob');
+    console.log('  $ cc archive <task-id>                      # Archive completed task');
+    console.log('');
+    console.log(chalk.cyan('AI-Powered Features:'));
+    console.log('  $ cc ai "Implement OAuth2 login system"     # Generate multiple tasks');
+    console.log('  $ cc ai ./requirements.md --context "web-app"  # Tasks from file');
+    console.log('');
+    console.log(chalk.cyan('Monitor & Sync:'));
+    console.log('  $ cc monitor                                # Launch task monitor');
     console.log('  $ cc sync-claude-code                       # Sync with Claude Code');
+    console.log('  $ cc task-ui                                # Interactive UI');
     console.log('');
-    console.log(chalk.cyan('Monitor & Hooks:'));
-    console.log('  $ cc monitor                                # Launch Electron GUI monitor');
-    console.log('  $ cc monitor --terminal                     # Terminal-based monitor');
-    console.log('  $ cc sync-claude-code --setup-hooks         # Setup automatic sync');
-    console.log('');
-    console.log(chalk.gray('For more commands: cc --help'));
+    console.log(chalk.gray('For detailed help: cc <command> --help'));
   });
 
   // Error handling

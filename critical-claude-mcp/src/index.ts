@@ -30,13 +30,26 @@ import { ErrorHandler } from './error-handler.js';
 import { WebSearchTool } from './tools/web-search.js';
 import { InitWizard } from './tools/init-wizard.js';
 import { PromptManager } from './tools/prompt-manager.js';
+import { SetupWizard } from './tools/setup-wizard.js';
+import { TaskManager } from './tools/task-manager.js';
+import { ProjectInitializer } from './tools/project-initializer.js';
+import { GlobalInstaller } from './tools/global-installer.js';
+import { StatefulTaskQueue } from './tools/stateful-task-queue.js';
+import { EnhancedHookSystem } from './tools/enhanced-hook-system.js';
+import { MarkdownTaskManager } from './tools/markdown-task-manager.js';
+import { TaskCLI } from './tools/task-cli.js';
+import { AITaskEngine } from './tools/ai-task-engine.js';
 import { getConfig } from './config-loader.js';
 import fs from 'fs/promises';
 import path from 'path';
+import os from 'os';
 
 // Import new service packages
 import { SystemDesignServer } from '@critical-claude/system-design';
 import { DataFlowServer } from '@critical-claude/data-flow';
+
+// Backlog integration will be dynamically imported if available
+let BacklogIntegrationServer: any = null;
 
 /**
  * System context types
@@ -98,9 +111,21 @@ let pragmaticEngine: PragmaticCritiqueEngine;
 let webSearchTool: WebSearchTool;
 const codebaseExplorer = new CodebaseExplorer();
 
-// Initialize new service packages
+// Initialize service packages
 const systemDesignServer = new SystemDesignServer();
 const dataFlowServer = new DataFlowServer();
+let backlogServer: any = null;
+
+// Initialize new tools
+let setupWizard: SetupWizard;
+let taskManager: TaskManager;
+let projectInitializer: ProjectInitializer;
+let globalInstaller: GlobalInstaller;
+let mainTaskQueue: StatefulTaskQueue;
+let enhancedHookSystem: EnhancedHookSystem;
+let markdownTaskManager: MarkdownTaskManager;
+let taskCLI: TaskCLI;
+let aiTaskEngine: AITaskEngine;
 
 // Initialize tools with configuration
 async function initializeTools() {
@@ -116,8 +141,44 @@ async function initializeTools() {
     // Initialize pragmatic engine with web search tool
     pragmaticEngine = new PragmaticCritiqueEngine(webSearchTool);
     
+    // Initialize new tools
+    setupWizard = new SetupWizard(config);
+    taskManager = new TaskManager(config);
+    projectInitializer = new ProjectInitializer(config);
+    globalInstaller = new GlobalInstaller();
+    
+    // Initialize stateful task queue with Claude Code integration
+    mainTaskQueue = new StatefulTaskQueue('main', {
+      enableHooks: true,
+      syncWithClaudeCode: true,
+      autoSave: true
+    });
+    await mainTaskQueue.initialize();
+
+    // Initialize markdown task manager for Backlog.md-style task management
+    markdownTaskManager = new MarkdownTaskManager(process.cwd(), {
+      backlogDir: 'critical-claude',
+      autoCommit: false,
+      defaultStatus: 'To Do'
+    });
+    await markdownTaskManager.initialize();
+
+    // Initialize enhanced hook system with tight integration and AI capabilities
+    enhancedHookSystem = new EnhancedHookSystem(mainTaskQueue, markdownTaskManager);
+    await enhancedHookSystem.initialize();
+
+    // Initialize task CLI with markdown task manager
+    taskCLI = new TaskCLI(markdownTaskManager);
+
+    // Initialize AI task engine
+    aiTaskEngine = new AITaskEngine(markdownTaskManager);
+    
+    // Backlog integration is optional and will be loaded at runtime if available
+    // For now, leaving as null - will be implemented when backlog package is ready
+    
     logger.info('Tools initialized with configuration', {
-      webSearchEnabled: config.web_search?.enabled ?? false
+      webSearchEnabled: config.web_search?.enabled ?? false,
+      backlogIntegrationAvailable: !!BacklogIntegrationServer
     });
   } catch (error) {
     logger.warn('Failed to load config, using defaults', error as Error);
@@ -125,6 +186,9 @@ async function initializeTools() {
     // Initialize with defaults
     webSearchTool = new WebSearchTool({ enabled: false });
     pragmaticEngine = new PragmaticCritiqueEngine(webSearchTool);
+    setupWizard = new SetupWizard({});
+    taskManager = new TaskManager({});
+    projectInitializer = new ProjectInitializer({});
   }
 }
 
@@ -296,9 +360,10 @@ Remember: YAGNI - You Aren't Gonna Need It`;
  * Handler that lists available tools.
  */
 server.setRequestHandler(ListToolsRequestSchema, async () => {
-  // Get tools from new service packages
+  // Get tools from service packages
   const systemDesignTools = systemDesignServer.getTools();
   const dataFlowTools = dataFlowServer.getTools();
+  const backlogTools = backlogServer ? backlogServer.getTools() : [];
   
   return {
     tools: [
@@ -503,9 +568,480 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ['action'],
         },
       },
-      // Add tools from new service packages
+      {
+        name: 'cc_setup_wizard',
+        description: 'Automated setup wizard for Critical Claude + Claude Desktop integration',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            installationType: {
+              type: 'string',
+              enum: ['basic', 'advanced', 'development'],
+              description: 'Type of installation to perform',
+              default: 'basic'
+            },
+            claudeDesktopConfigPath: {
+              type: 'string',
+              description: 'Path to Claude Desktop config (auto-detected if not provided)'
+            },
+            projectPath: {
+              type: 'string',
+              description: 'Project path to configure (defaults to current directory)'
+            },
+            enableHooks: {
+              type: 'boolean',
+              description: 'Enable Claude Code hook integration (experimental)',
+              default: false
+            },
+            setupAliases: {
+              type: 'boolean',
+              description: 'Set up global command aliases',
+              default: true
+            }
+          },
+          required: []
+        }
+      },
+      {
+        name: 'cc_task_manage',
+        description: 'Advanced stateful task management with dependency tracking and Claude Code integration',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            action: {
+              type: 'string',
+              enum: ['list', 'create', 'update', 'delete', 'sync', 'status', 'comment', 'dependencies', 'stats'],
+              description: 'Task management action to perform'
+            },
+            taskData: {
+              type: 'object',
+              description: 'Task data for create/update operations',
+              properties: {
+                id: { type: 'string' },
+                title: { type: 'string' },
+                description: { type: 'string' },
+                priority: { type: 'string', enum: ['low', 'medium', 'high', 'critical'] },
+                status: { type: 'string', enum: ['pending', 'in_progress', 'completed', 'blocked'] },
+                assignee: { type: 'string' },
+                tags: { type: 'array', items: { type: 'string' } },
+                dueDate: { type: 'string' }
+              }
+            },
+            filters: {
+              type: 'object',
+              description: 'Filters for list operations',
+              properties: {
+                status: { type: 'string' },
+                priority: { type: 'string' },
+                assignee: { type: 'string' },
+                tags: { type: 'array', items: { type: 'string' } }
+              }
+            },
+            syncDirection: {
+              type: 'string',
+              enum: ['to_claude', 'from_claude', 'bidirectional'],
+              description: 'Direction for sync operations',
+              default: 'bidirectional'
+            }
+          },
+          required: ['action']
+        }
+      },
+      {
+        name: 'cc_project_setup',
+        description: 'Complete project setup with Critical Claude integration',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            projectType: {
+              type: 'string',
+              enum: ['web-app', 'api', 'cli', 'library', 'mobile-app', 'desktop-app'],
+              description: 'Type of project to set up'
+            },
+            framework: {
+              type: 'string',
+              description: 'Framework being used (React, Express, etc.)'
+            },
+            language: {
+              type: 'string',
+              enum: ['javascript', 'typescript', 'python', 'go', 'rust', 'java'],
+              description: 'Primary programming language'
+            },
+            includeTemplates: {
+              type: 'boolean',
+              description: 'Include code templates and examples',
+              default: true
+            },
+            setupCI: {
+              type: 'boolean',
+              description: 'Set up CI/CD configuration',
+              default: false
+            },
+            setupTesting: {
+              type: 'boolean',
+              description: 'Set up testing framework',
+              default: true
+            }
+          },
+          required: ['projectType']
+        }
+      },
+      {
+        name: 'cc_status_check',
+        description: 'System health and configuration verification',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            checkType: {
+              type: 'string',
+              enum: ['full', 'mcp', 'hooks', 'config', 'tasks'],
+              description: 'Type of status check to perform',
+              default: 'full'
+            },
+            verbose: {
+              type: 'boolean',
+              description: 'Show detailed information',
+              default: false
+            }
+          },
+          required: []
+        }
+      },
+      {
+        name: 'cc_hook_system',
+        description: 'Manage Enhanced Hook System for real-time editor integration',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            action: {
+              type: 'string',
+              enum: ['status', 'enable', 'disable', 'configure', 'test', 'logs', 'install_hooks', 'live_logs', 'export_logs', 'stream_logs'],
+              description: 'Action to perform on hook system'
+            },
+            hookType: {
+              type: 'string',
+              enum: ['claude_code', 'vscode', 'cursor', 'universal'],
+              description: 'Type of hook integration to configure'
+            },
+            config: {
+              type: 'object',
+              description: 'Hook configuration settings',
+              properties: {
+                enabled: { type: 'boolean' },
+                visual_feedback: { type: 'boolean' },
+                instant_sync: { type: 'boolean' },
+                response_timeout_ms: { type: 'number' }
+              }
+            },
+            logOptions: {
+              type: 'object',
+              description: 'Options for log operations',
+              properties: {
+                limit: { type: 'number' },
+                since: { type: 'string' },
+                toolFilter: { type: 'string' },
+                sessionFilter: { type: 'string' },
+                format: { type: 'string', enum: ['json', 'csv', 'markdown'] },
+                outputPath: { type: 'string' }
+              }
+            }
+          },
+          required: ['action']
+        }
+      },
+      {
+        name: 'cc_process_hook',
+        description: 'Process a hook event from Claude Code or other editors',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            tool_name: {
+              type: 'string',
+              description: 'Name of the tool that triggered the hook (e.g., TodoWrite, Edit)'
+            },
+            arguments: {
+              type: 'object',
+              description: 'Tool arguments that were passed'
+            },
+            file_path: {
+              type: 'string',
+              description: 'File path if applicable'
+            },
+            content: {
+              type: 'string',
+              description: 'File content or other relevant data'
+            },
+            session_id: {
+              type: 'string',
+              description: 'Session identifier for tracking'
+            }
+          },
+          required: ['tool_name']
+        }
+      },
+      {
+        name: 'cc_alias_setup',
+        description: 'Configure global command aliases and shortcuts',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            shell: {
+              type: 'string',
+              enum: ['bash', 'zsh', 'fish', 'auto'],
+              description: 'Target shell for alias setup',
+              default: 'auto'
+            },
+            aliases: {
+              type: 'object',
+              description: 'Custom aliases to set up',
+              additionalProperties: { type: 'string' }
+            },
+            global: {
+              type: 'boolean',
+              description: 'Set up global aliases vs project-specific',
+              default: true
+            }
+          },
+          required: []
+        }
+      },
+      {
+        name: 'cc_install_global',
+        description: 'Install Critical Claude globally with complete system integration',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            installLocation: {
+              type: 'string',
+              description: 'Custom installation location (optional)'
+            },
+            createGlobalCommand: {
+              type: 'boolean',
+              description: 'Create global "critical-claude" command',
+              default: true
+            },
+            setupClaudeDesktop: {
+              type: 'boolean',
+              description: 'Configure Claude Desktop MCP integration',
+              default: true
+            },
+            enableHooks: {
+              type: 'boolean',
+              description: 'Enable experimental hook system',
+              default: false
+            },
+            setupAliases: {
+              type: 'boolean',
+              description: 'Create shell aliases (cc, ccrit, etc.)',
+              default: true
+            },
+            verbose: {
+              type: 'boolean',
+              description: 'Show detailed installation progress',
+              default: false
+            }
+          },
+          required: []
+        }
+      },
+      {
+        name: 'cc_queue_advanced',
+        description: 'Advanced task queue operations with dependencies and state management',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            action: {
+              type: 'string',
+              enum: ['create_queue', 'list_queues', 'queue_stats', 'dependency_graph', 'bulk_update', 'export', 'import'],
+              description: 'Advanced queue operation to perform'
+            },
+            queueName: {
+              type: 'string',
+              description: 'Name of the queue to operate on'
+            },
+            taskIds: {
+              type: 'array',
+              items: { type: 'string' },
+              description: 'Array of task IDs for bulk operations'
+            },
+            updates: {
+              type: 'object',
+              description: 'Updates to apply in bulk operations'
+            },
+            exportFormat: {
+              type: 'string',
+              enum: ['json', 'csv', 'markdown'],
+              description: 'Export format for queue data',
+              default: 'json'
+            }
+          },
+          required: ['action']
+        }
+      },
+      {
+        name: 'cc_hook_system',
+        description: 'Manage Critical Claude hook system for real-time integrations',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            action: {
+              type: 'string',
+              enum: ['status', 'enable', 'disable', 'configure', 'test', 'logs'],
+              description: 'Hook system action to perform'
+            },
+            hookType: {
+              type: 'string',
+              enum: ['claude_code', 'vscode', 'cursor', 'universal'],
+              description: 'Type of hook to manage'
+            },
+            config: {
+              type: 'object',
+              description: 'Hook configuration data',
+              properties: {
+                events: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'Events to listen for'
+                },
+                actions: {
+                  type: 'array',
+                  items: { type: 'string' },
+                  description: 'Actions to trigger'
+                },
+                visualFeedback: {
+                  type: 'boolean',
+                  description: 'Show visual feedback for hook events'
+                }
+              }
+            }
+          },
+          required: ['action']
+        }
+      },
+      {
+        name: 'cc_task',
+        description: 'AI-powered task management with markdown files, automatic dependencies, and intelligent task generation',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            command: {
+              type: 'string',
+              enum: [
+                'init', 'task.create', 'task.list', 'task.view', 'task.edit', 'task.archive', 
+                'board.view', 'board.export', 'ai.create', 'ai.expand', 'ai.dependencies', 
+                'ai.from-file', 'ai.from-text', 'plan.generate'
+              ],
+              description: 'Task management command to execute'
+            },
+            title: {
+              type: 'string',
+              description: 'Task title (for task.create)'
+            },
+            description: {
+              type: 'string',
+              description: 'Task description'
+            },
+            status: {
+              type: 'string',
+              enum: ['To Do', 'In Progress', 'Done', 'Blocked'],
+              description: 'Task status'
+            },
+            priority: {
+              type: 'string',
+              enum: ['low', 'medium', 'high', 'critical'],
+              description: 'Task priority'
+            },
+            assignee: {
+              type: 'string',
+              description: 'Task assignee'
+            },
+            labels: {
+              type: 'string',
+              description: 'Comma-separated labels'
+            },
+            parent: {
+              type: 'string',
+              description: 'Parent task ID'
+            },
+            dependencies: {
+              type: 'string',
+              description: 'Comma-separated dependency task IDs'
+            },
+            plan: {
+              type: 'string',
+              description: 'Implementation plan'
+            },
+            acceptanceCriteria: {
+              type: 'string',
+              description: 'Comma-separated acceptance criteria'
+            },
+            notes: {
+              type: 'string',
+              description: 'Additional notes'
+            },
+            draft: {
+              type: 'boolean',
+              description: 'Create as draft task'
+            },
+            id: {
+              type: 'string',
+              description: 'Task ID (for view, edit, archive)'
+            },
+            plain: {
+              type: 'boolean',
+              description: 'Plain text output for AI processing',
+              default: false
+            },
+            outputPath: {
+              type: 'string',
+              description: 'Output path for board export'
+            },
+            force: {
+              type: 'boolean',
+              description: 'Force overwrite for board export'
+            },
+            includeDrafts: {
+              type: 'boolean',
+              description: 'Include draft tasks in list'
+            },
+            filePath: {
+              type: 'string',
+              description: 'Path to file for ai.from-file command (PRD, requirements, etc.)'
+            },
+            text: {
+              type: 'string', 
+              description: 'Text content for ai.from-text or ai.create commands'
+            },
+            prompt: {
+              type: 'string',
+              description: 'AI prompt for task generation or expansion'
+            },
+            parentId: {
+              type: 'string',
+              description: 'Parent task ID for subtask creation'
+            },
+            autoGenerateDependencies: {
+              type: 'boolean',
+              description: 'Automatically detect and create task dependencies',
+              default: true
+            },
+            expandLevel: {
+              type: 'number',
+              description: 'Depth level for subtask expansion (1-3)',
+              default: 2
+            },
+            projectContext: {
+              type: 'string',
+              description: 'Project context for AI task generation'
+            }
+          },
+          required: ['command']
+        }
+      },
+      // Add tools from service packages
       ...systemDesignTools,
       ...dataFlowTools,
+      ...backlogTools,
     ],
   };
 });
@@ -1108,7 +1644,800 @@ Run 'cc crit explore' to analyze your codebase structure.`,
     case 'cc_data_flow_diagram':
       return await dataFlowServer.handleToolCall(request.params.name, request.params.arguments);
 
+    case 'cc_setup_wizard': {
+      const installationType = String(request.params.arguments?.installationType || 'basic');
+      const claudeDesktopConfigPath = request.params.arguments?.claudeDesktopConfigPath as string;
+      const projectPath = String(request.params.arguments?.projectPath || process.cwd());
+      const enableHooks = Boolean(request.params.arguments?.enableHooks);
+      const setupAliases = Boolean(request.params.arguments?.setupAliases ?? true);
+
+      logger.info('Running setup wizard', {
+        installationType,
+        projectPath,
+        enableHooks,
+        setupAliases
+      });
+
+      try {
+        const result = await setupWizard.run({
+          installationType: installationType as 'basic' | 'advanced' | 'development',
+          claudeDesktopConfigPath,
+          projectPath,
+          enableHooks,
+          setupAliases
+        });
+
+        let output = '🚀 CRITICAL CLAUDE SETUP COMPLETE! 🚀\n';
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        if (result.success) {
+          output += '✅ Setup completed successfully!\n\n';
+          
+          if (result.claudeConfigUpdated) {
+            output += `📝 Claude Desktop config updated: ${result.claudeConfigPath}\n`;
+          }
+          
+          if (result.aliasesSetup) {
+            output += '🔗 Global aliases configured:\n';
+            result.aliases?.forEach(alias => {
+              output += `   ${alias.command} -> ${alias.target}\n`;
+            });
+            output += '\n';
+          }
+          
+          if (result.hooksEnabled) {
+            output += '🪝 Claude Code hooks enabled (experimental)\n';
+          }
+          
+          output += '\n🎯 Next Steps:\n';
+          output += '1. Restart Claude Desktop to load new configuration\n';
+          output += '2. Run "cc status" to verify installation\n';
+          output += '3. Try "cc crit explore" to analyze a codebase\n';
+          
+          if (result.projectConfigured) {
+            output += '4. Project-specific configuration saved to .critical-claude/\n';
+          }
+        } else {
+          output += '❌ Setup encountered issues:\n';
+          result.errors?.forEach((error: any) => {
+            output += `   • ${error}\n`;
+          });
+          output += '\n💡 Run with installationType="advanced" for more options\n';
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Setup wizard failed', error as Error);
+        throw new Error(`Setup failed: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_task_manage': {
+      const action = String(request.params.arguments?.action || '');
+      const taskData = request.params.arguments?.taskData as any;
+      const filters = request.params.arguments?.filters as any;
+      const syncDirection = String(request.params.arguments?.syncDirection || 'bidirectional');
+
+      if (!action) {
+        throw new Error('Action is required for task management');
+      }
+
+      logger.info('Managing tasks', { action, syncDirection });
+
+      try {
+        const result = await taskManager.handleAction({
+          action: action as any,
+          taskData,
+          filters,
+          syncDirection: syncDirection as any
+        });
+
+        let output = `📋 TASK MANAGEMENT: ${action.toUpperCase()}\n`;
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+        switch (action) {
+          case 'list':
+            if (result.tasks && result.tasks.length > 0) {
+              result.tasks.forEach((task: any) => {
+                const priority = task.priority === 'critical' ? '🔴' : 
+                                task.priority === 'high' ? '🟠' : 
+                                task.priority === 'medium' ? '🟡' : '🟢';
+                const status = task.status === 'completed' ? '✅' : 
+                              task.status === 'in_progress' ? '🔄' : 
+                              task.status === 'blocked' ? '🚫' : '⭕';
+                
+                output += `${priority} ${status} ${task.title}\n`;
+                if (task.description) {
+                  output += `   ${task.description}\n`;
+                }
+                if (task.assignee) {
+                  output += `   👤 ${task.assignee}`;
+                }
+                if (task.dueDate) {
+                  output += ` | 📅 ${task.dueDate}`;
+                }
+                output += '\n\n';
+              });
+            } else {
+              output += 'No tasks found.\n';
+            }
+            break;
+            
+          case 'create':
+            output += `✅ Created task: ${result.task?.title || 'New Task'}\n`;
+            output += `📝 ID: ${result.task?.id}\n`;
+            break;
+            
+          case 'update':
+            output += `✅ Updated task: ${result.task?.title}\n`;
+            break;
+            
+          case 'delete':
+            output += `✅ Deleted task: ${taskData?.id || 'Unknown'}\n`;
+            break;
+            
+          case 'sync':
+            output += `✅ Sync completed: ${result.syncedCount || 0} tasks\n`;
+            if (result.conflicts) {
+              output += `⚠️  Conflicts resolved: ${result.conflicts}\n`;
+            }
+            break;
+            
+          case 'status':
+            output += `📊 Total tasks: ${result.totalTasks || 0}\n`;
+            output += `✅ Completed: ${result.completedTasks || 0}\n`;
+            output += `🔄 In progress: ${result.inProgressTasks || 0}\n`;
+            output += `⭕ Pending: ${result.pendingTasks || 0}\n`;
+            break;
+        }
+
+        if (result.claudeCodeSynced) {
+          output += '\n🔄 Synced with Claude Code todo system\n';
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Task management failed', { action }, error as Error);
+        throw new Error(`Task management failed: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_project_setup': {
+      const projectType = String(request.params.arguments?.projectType || '');
+      const framework = request.params.arguments?.framework as string;
+      const language = String(request.params.arguments?.language || 'javascript');
+      const includeTemplates = Boolean(request.params.arguments?.includeTemplates ?? true);
+      const setupCI = Boolean(request.params.arguments?.setupCI);
+      const setupTesting = Boolean(request.params.arguments?.setupTesting ?? true);
+
+      if (!projectType) {
+        throw new Error('Project type is required for project setup');
+      }
+
+      logger.info('Setting up project', {
+        projectType,
+        framework,
+        language,
+        includeTemplates,
+        setupCI,
+        setupTesting
+      });
+
+      try {
+        const result = await projectInitializer.setupProject({
+          projectType: projectType as any,
+          framework,
+          language: language as any,
+          includeTemplates,
+          setupCI,
+          setupTesting
+        });
+
+        let output = `🏗️  PROJECT SETUP COMPLETE: ${projectType.toUpperCase()}\n`;
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        if (result.success) {
+          output += '✅ Project configured successfully!\n\n';
+          
+          output += '📁 Files created:\n';
+          result.filesCreated?.forEach(file => {
+            output += `   📄 ${file}\n`;
+          });
+          
+          if (result.templatesAdded) {
+            output += '\n📋 Templates added:\n';
+            result.templates?.forEach(template => {
+              output += `   📝 ${template}\n`;
+            });
+          }
+          
+          if (result.ciConfigured) {
+            output += '\n🔄 CI/CD configuration added\n';
+          }
+          
+          if (result.testingSetup) {
+            output += '\n🧪 Testing framework configured\n';
+          }
+          
+          output += '\n🎯 Next Steps:\n';
+          output += '1. Review generated configuration files\n';
+          output += '2. Install dependencies if needed\n';
+          output += '3. Run "cc crit explore" to analyze your setup\n';
+          output += '4. Use "cc task create" to start tracking work\n';
+        } else {
+          output += '❌ Project setup encountered issues:\n';
+          result.errors?.forEach((error: any) => {
+            output += `   • ${error}\n`;
+          });
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Project setup failed', error as Error);
+        throw new Error(`Project setup failed: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_status_check': {
+      const checkType = String(request.params.arguments?.checkType || 'full');
+      const verbose = Boolean(request.params.arguments?.verbose);
+
+      logger.info('Running status check', { checkType, verbose });
+
+      try {
+        // Perform status checks
+        const claudeDesktopConfig = await checkClaudeDesktopConfig();
+        const mcpServerStatus = await checkMcpServerStatus();
+        const hooksStatus = await checkHooksStatus();
+        const taskSystemStatus = await checkTaskSystemStatus();
+        
+        let output = '🔍 CRITICAL CLAUDE STATUS CHECK\n';
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        // Claude Desktop Configuration
+        output += '📱 Claude Desktop Integration:\n';
+        if (claudeDesktopConfig.found) {
+          output += `   ✅ Config found: ${claudeDesktopConfig.path}\n`;
+          output += `   ✅ MCP server configured: ${claudeDesktopConfig.mcpConfigured ? 'Yes' : 'No'}\n`;
+        } else {
+          output += '   ❌ Claude Desktop config not found\n';
+          output += '   💡 Run "cc setup" to configure\n';
+        }
+        
+        // MCP Server Status
+        output += '\n🔌 MCP Server Status:\n';
+        output += `   ${mcpServerStatus.running ? '✅' : '❌'} Server: ${mcpServerStatus.running ? 'Running' : 'Not running'}\n`;
+        output += `   ✅ Tools available: ${mcpServerStatus.toolCount}\n`;
+        
+        if (checkType === 'full' || checkType === 'hooks') {
+          // Hooks Status
+          output += '\n🪝 Claude Code Hooks:\n';
+          output += `   ${hooksStatus.enabled ? '✅' : '⚠️'} Status: ${hooksStatus.enabled ? 'Enabled' : 'Disabled (Experimental)'}\n`;
+          if (hooksStatus.enabled && hooksStatus.hookFile) {
+            output += `   📄 Hook file: ${hooksStatus.hookFile}\n`;
+          }
+        }
+        
+        if (checkType === 'full' || checkType === 'tasks') {
+          // Task System Status
+          output += '\n📋 Task Management:\n';
+          output += `   ${taskSystemStatus.available ? '✅' : '❌'} System: ${taskSystemStatus.available ? 'Available' : 'Not available'}\n`;
+          if (taskSystemStatus.available) {
+            output += `   📊 Active tasks: ${taskSystemStatus.taskCount || 0}\n`;
+            output += `   🔄 Sync status: ${taskSystemStatus.syncEnabled ? 'Enabled' : 'Disabled'}\n`;
+          }
+        }
+        
+        // Overall Health
+        const overallHealth = claudeDesktopConfig.mcpConfigured && mcpServerStatus.running;
+        output += `\n🎯 Overall Health: ${overallHealth ? '✅ Good' : '⚠️ Needs attention'}\n`;
+        
+        if (!overallHealth) {
+          output += '\n💡 Recommended Actions:\n';
+          if (!claudeDesktopConfig.found) {
+            output += '   1. Run "cc setup" to configure Claude Desktop\n';
+          }
+          if (!mcpServerStatus.running) {
+            output += '   2. Restart Claude Desktop to load MCP server\n';
+          }
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Status check failed', error as Error);
+        throw new Error(`Status check failed: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_hook_system': {
+      const action = String(request.params.arguments?.action || '');
+      const hookType = String(request.params.arguments?.hookType || 'universal');
+      const config = request.params.arguments?.config as any;
+      const logOptions = request.params.arguments?.logOptions as any;
+
+      logger.info('Managing hook system', { action, hookType });
+
+      if (!enhancedHookSystem) {
+        throw new Error('Enhanced hook system not initialized');
+      }
+
+      try {
+        let output = '🪝 ENHANCED HOOK SYSTEM\n';
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+        switch (action) {
+          case 'status': {
+            const stats = await enhancedHookSystem.getHookStats();
+            output += `🔧 Status: ${stats.enabled ? '✅ Enabled' : '❌ Disabled'}\n`;
+            output += `📊 Processed events: ${stats.processed_events}\n`;
+            output += `⏱️  Average response time: ${stats.avg_response_time}ms\n`;
+            output += `🛠️  Supported tools: ${stats.supported_tools.join(', ')}\n`;
+            output += `🔄 Sync status: ${stats.sync_status}\n`;
+            break;
+          }
+
+          case 'install_hooks': {
+            await enhancedHookSystem.initialize();
+            output += '✅ Hook scripts installed successfully!\n\n';
+            output += '🏗️  Created:\n';
+            output += '   • ~/.critical-claude/hooks/ultimate-hook.sh\n';
+            output += '   • ~/.critical-claude/hooks/install-hooks.sh\n\n';
+            output += '🎯 Next step: Run the installer to configure Claude Code:\n';
+            output += '   bash ~/.critical-claude/hooks/install-hooks.sh\n';
+            break;
+          }
+
+          case 'test': {
+            const testEvent = {
+              timestamp: new Date().toISOString(),
+              tool_name: 'TodoWrite',
+              arguments: {
+                todos: [{
+                  id: 'test-' + Date.now(),
+                  content: 'Test hook integration',
+                  status: 'pending',
+                  priority: 'medium'
+                }]
+              },
+              session_id: 'test-session'
+            };
+
+            const response = await enhancedHookSystem.processHookEvent(testEvent);
+            output += `🧪 Test hook processed in ${response.response_time_ms}ms\n`;
+            output += `📊 Tasks updated: ${response.tasks_updated || 0}\n`;
+            output += `✅ Sync status: ${response.sync_status}\n`;
+            if (response.visual_feedback) {
+              output += `💬 Visual feedback: ${response.visual_feedback}\n`;
+            }
+            break;
+          }
+
+          case 'live_logs': {
+            const logs = await enhancedHookSystem.getLiveLogs(logOptions || {});
+            output += `📊 Live Hook Logs (${logs.length} events)\n`;
+            output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            
+            if (logs.length === 0) {
+              output += 'No hook events found.\n';
+            } else {
+              logs.slice(0, 20).forEach(log => {
+                const time = new Date(log.timestamp).toLocaleTimeString();
+                const status = log.sync_status === 'success' ? '✅' : 
+                              log.sync_status === 'failed' ? '❌' : 
+                              log.sync_status === 'partial' ? '⚠️' : '🔄';
+                
+                output += `${status} ${time} | ${log.tool_name}`;
+                if (log.session_id) output += ` | Session: ${log.session_id.substring(0, 8)}...`;
+                if (log.response_time_ms) output += ` | ${log.response_time_ms}ms`;
+                if (log.tasks_updated) output += ` | ${log.tasks_updated} tasks`;
+                output += '\n';
+                
+                if (log.file_path) {
+                  output += `    📄 ${log.file_path}\n`;
+                }
+                if (log.actions_triggered && log.actions_triggered.length > 0) {
+                  output += `    🎯 ${log.actions_triggered.join(', ')}\n`;
+                }
+                output += '\n';
+              });
+
+              if (logs.length > 20) {
+                output += `... and ${logs.length - 20} more events\n`;
+                output += `💡 Use logOptions.limit to see more\n`;
+              }
+            }
+            break;
+          }
+
+          case 'export_logs': {
+            if (!logOptions?.outputPath) {
+              throw new Error('outputPath is required for export_logs action');
+            }
+            
+            const format = logOptions.format || 'json';
+            await enhancedHookSystem.exportHookLogs({
+              format,
+              outputPath: logOptions.outputPath,
+              since: logOptions.since,
+              toolFilter: logOptions.toolFilter
+            });
+            
+            output += `✅ Hook logs exported successfully!\n`;
+            output += `📄 File: ${logOptions.outputPath}\n`;
+            output += `📊 Format: ${format}\n`;
+            if (logOptions.since) output += `📅 Since: ${logOptions.since}\n`;
+            if (logOptions.toolFilter) output += `🔧 Tool filter: ${logOptions.toolFilter}\n`;
+            break;
+          }
+
+          case 'stream_logs': {
+            // For streaming, we provide instructions since this is not a real-time interface
+            output += `🌊 Live Log Streaming Setup\n`;
+            output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+            output += `📡 Stream file location:\n`;
+            output += `   ~/.critical-claude/hooks/live-stream.json\n\n`;
+            output += `🔄 Auto-updates every hook event\n`;
+            output += `📊 Contains last 50 events + stats\n\n`;
+            output += `💡 Monitor with:\n`;
+            output += `   watch -n 1 'cat ~/.critical-claude/hooks/live-stream.json | jq .stats'\n`;
+            output += `   tail -f ~/.critical-claude/hooks/live-monitor.jsonl\n`;
+            break;
+          }
+
+          default:
+            throw new Error(`Unknown hook action: ${action}`);
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Hook system operation failed', error as Error);
+        throw new Error(`Hook system operation failed: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_process_hook': {
+      const hookEvent = {
+        timestamp: new Date().toISOString(),
+        tool_name: String(request.params.arguments?.tool_name || ''),
+        arguments: request.params.arguments?.arguments,
+        file_path: String(request.params.arguments?.file_path || ''),
+        content: String(request.params.arguments?.content || ''),
+        session_id: String(request.params.arguments?.session_id || '')
+      };
+
+      logger.info('Processing hook event', { tool: hookEvent.tool_name });
+
+      if (!enhancedHookSystem) {
+        throw new Error('Enhanced hook system not initialized');
+      }
+
+      try {
+        const response = await enhancedHookSystem.processHookEvent(hookEvent);
+
+        let output = `🔄 Hook Event Processed: ${hookEvent.tool_name}\n`;
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        output += `⚡ Response time: ${response.response_time_ms}ms\n`;
+        output += `📊 Tasks updated: ${response.tasks_updated || 0}\n`;
+        output += `✅ Sync status: ${response.sync_status}\n`;
+        
+        if (response.actions_triggered && response.actions_triggered.length > 0) {
+          output += `🎯 Actions triggered: ${response.actions_triggered.join(', ')}\n`;
+        }
+        
+        if (response.visual_feedback) {
+          output += `\n💬 ${response.visual_feedback}\n`;
+        }
+
+        output += '\n🔄 Real-time sync with Critical Claude task queue completed!';
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Hook processing failed', error as Error);
+        throw new Error(`Hook processing failed: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_alias_setup': {
+      const shell = String(request.params.arguments?.shell || 'auto');
+      const aliases = request.params.arguments?.aliases as Record<string, string> || {};
+      const global = Boolean(request.params.arguments?.global ?? true);
+
+      logger.info('Setting up aliases', { shell, global, customAliases: Object.keys(aliases).length });
+
+      try {
+        const result = await setupGlobalAliases({ shell: shell as any, aliases, global });
+
+        let output = '🔗 COMMAND ALIAS SETUP\n';
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+        
+        if (result.success) {
+          output += '✅ Aliases configured successfully!\n\n';
+          
+          output += `🐚 Shell: ${result.detectedShell}\n`;
+          output += `📄 Config file: ${result.configFile}\n\n`;
+          
+          output += '🔗 Available aliases:\n';
+          result.aliases?.forEach((alias: any) => {
+            output += `   ${alias.command} → ${alias.description}\n`;
+          });
+          
+          output += '\n🎯 Usage:\n';
+          output += '   cc crit explore /path/to/project\n';
+          output += '   cc task create "New feature"\n';
+          output += '   cc setup wizard\n';
+          
+          output += '\n💡 Restart your terminal or run "source ~/.bashrc" to use aliases\n';
+        } else {
+          output += '❌ Alias setup encountered issues:\n';
+          result.errors?.forEach((error: any) => {
+            output += `   • ${error}\n`;
+          });
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Alias setup failed', error as Error);
+        throw new Error(`Alias setup failed: ${(error as Error).message}`);
+      }
+    }
+
+    case 'cc_task': {
+      const command = String(request.params.arguments?.command || '');
+      
+      logger.info('Executing markdown task command', { command });
+
+      if (!taskCLI || !aiTaskEngine) {
+        throw new Error('Task management system not initialized');
+      }
+
+      try {
+        // Extract all possible arguments
+        const args = {
+          title: request.params.arguments?.title,
+          description: request.params.arguments?.description,
+          status: request.params.arguments?.status,
+          priority: request.params.arguments?.priority,
+          assignee: request.params.arguments?.assignee,
+          labels: request.params.arguments?.labels,
+          parent: request.params.arguments?.parent,
+          dependencies: request.params.arguments?.dependencies,
+          plan: request.params.arguments?.plan,
+          acceptanceCriteria: request.params.arguments?.acceptanceCriteria,
+          notes: request.params.arguments?.notes,
+          draft: request.params.arguments?.draft,
+          id: request.params.arguments?.id,
+          plain: request.params.arguments?.plain || false,
+          outputPath: request.params.arguments?.outputPath,
+          force: request.params.arguments?.force,
+          includeDrafts: request.params.arguments?.includeDrafts,
+          filePath: request.params.arguments?.filePath,
+          text: request.params.arguments?.text,
+          prompt: request.params.arguments?.prompt,
+          parentId: request.params.arguments?.parentId,
+          autoGenerateDependencies: request.params.arguments?.autoGenerateDependencies !== false,
+          expandLevel: request.params.arguments?.expandLevel || 2,
+          projectContext: request.params.arguments?.projectContext
+        };
+
+        let result: any;
+        let output = '🤖 AI-POWERED TASK MANAGEMENT\n';
+        output += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n';
+
+        // Handle AI commands
+        if (command.startsWith('ai.') || command === 'plan.generate') {
+          switch (command) {
+            case 'ai.from-file':
+              if (!args.filePath) {
+                throw new Error('filePath is required for ai.from-file command');
+              }
+              result = await aiTaskEngine.generateTasksFromFile(String(args.filePath), {
+                context: String(args.projectContext || ''),
+                expandLevel: Number(args.expandLevel || 2),
+                autoGenerateDependencies: Boolean(args.autoGenerateDependencies)
+              });
+              break;
+
+            case 'ai.from-text':
+              if (!args.text) {
+                throw new Error('text is required for ai.from-text command');
+              }
+              result = await aiTaskEngine.generateTasksFromText(String(args.text), {
+                context: String(args.projectContext || ''),
+                expandLevel: Number(args.expandLevel || 2),
+                autoGenerateDependencies: Boolean(args.autoGenerateDependencies)
+              });
+              break;
+
+            case 'ai.expand':
+              if (!args.parentId) {
+                throw new Error('parentId is required for ai.expand command');
+              }
+              result = await aiTaskEngine.expandTaskIntoSubtasks(String(args.parentId), {
+                context: String(args.projectContext || ''),
+                expandLevel: Number(args.expandLevel || 2)
+              });
+              break;
+
+            case 'ai.dependencies':
+              const analyses = await aiTaskEngine.analyzeAndSuggestDependencies(
+                args.id ? [String(args.id)] : undefined
+              );
+              result = {
+                success: true,
+                message: `Analyzed ${analyses.length} tasks for dependencies`,
+                data: analyses
+              };
+              break;
+
+            case 'ai.create':
+              if (!args.prompt && !args.text) {
+                throw new Error('prompt or text is required for ai.create command');
+              }
+              result = await aiTaskEngine.generateTasksFromText(String(args.prompt || args.text || ''), {
+                context: String(args.projectContext || ''),
+                expandLevel: Number(args.expandLevel || 2),
+                autoGenerateDependencies: Boolean(args.autoGenerateDependencies)
+              });
+              break;
+
+            case 'plan.generate':
+              // Agentic planning loop
+              const planText = args.text || args.prompt;
+              if (!planText) {
+                throw new Error('text or prompt is required for plan.generate command');
+              }
+              
+              // Generate tasks from plan
+              const planResult = await aiTaskEngine.generateTasksFromText(String(planText), {
+                context: String(args.projectContext || 'project planning'),
+                expandLevel: 3, // Higher expansion for planning
+                autoGenerateDependencies: true
+              });
+
+              // Auto-expand high-level tasks into subtasks
+              const allTasks = [...planResult.tasks];
+              for (const task of planResult.tasks) {
+                if (task.title.toLowerCase().includes('implement') || 
+                    task.title.toLowerCase().includes('build') ||
+                    task.title.toLowerCase().includes('feature')) {
+                  const subtaskResult = await aiTaskEngine.expandTaskIntoSubtasks(task.id, {
+                    context: String(args.projectContext || ''),
+                    expandLevel: 2
+                  });
+                  allTasks.push(...subtaskResult.tasks);
+                }
+              }
+
+              result = {
+                success: true,
+                tasks: allTasks,
+                message: `Generated ${allTasks.length} tasks from plan (${planResult.tasks.length} main tasks + ${allTasks.length - planResult.tasks.length} subtasks)`
+              };
+              break;
+
+            default:
+              throw new Error(`Unknown AI command: ${command}`);
+          }
+
+          // Format AI command results
+          if (result.success) {
+            output += `✅ ${result.message}\n\n`;
+            
+            if (result.tasks && result.tasks.length > 0) {
+              output += `📋 Generated Tasks:\n`;
+              result.tasks.forEach((task: any, index: number) => {
+                const priorityIcon = task.priority === 'high' ? '🔴' : 
+                                   task.priority === 'medium' ? '🟡' : '🟢';
+                output += `${priorityIcon} **task-${task.id}** - ${task.title}\n`;
+                if (task.description && !args.plain) {
+                  output += `   ${task.description.substring(0, 100)}${task.description.length > 100 ? '...' : ''}\n`;
+                }
+                if (task.parent) {
+                  output += `   └─ Subtask of: task-${task.parent}\n`;
+                }
+                output += '\n';
+              });
+            }
+
+            if (result.dependencies) {
+              output += `\n🔗 Dependencies Auto-Generated:\n`;
+              Object.entries(result.dependencies).forEach(([taskId, deps]: [string, any]) => {
+                if (deps.length > 0) {
+                  output += `   task-${taskId} depends on: ${deps.map((d: string) => `task-${d}`).join(', ')}\n`;
+                }
+              });
+            }
+
+            if (result.data && command === 'ai.dependencies') {
+              output += `\n🧠 Dependency Analysis:\n`;
+              result.data.forEach((analysis: any) => {
+                if (analysis.dependencies.length > 0) {
+                  output += `   task-${analysis.taskId}: ${analysis.reasoning} (confidence: ${Math.round(analysis.confidence * 100)}%)\n`;
+                }
+              });
+            }
+          } else {
+            output += `❌ ${result.message}\n`;
+          }
+
+        } else {
+          // Handle regular CLI commands
+          result = await taskCLI.executeCommand(command, args);
+          
+          if (result.success) {
+            if (result.output) {
+              output += result.output;
+            } else {
+              output += `✅ ${result.message}\n`;
+            }
+            
+            // Add task data if available
+            if (result.data && !args.plain) {
+              output += '\n📊 Result data available for further processing.\n';
+            }
+          } else {
+            output += `❌ ${result.message}\n`;
+          }
+        }
+
+        return {
+          content: [{
+            type: 'text',
+            text: output
+          }]
+        };
+      } catch (error) {
+        logger.error('Task command failed', error as Error);
+        throw new Error(`Task command failed: ${(error as Error).message}`);
+      }
+    }
+
+    // Handle backlog integration tools if available
     default:
+      if (backlogServer && request.params.name.startsWith('cc_')) {
+        try {
+          return await backlogServer.handleToolCall(request.params.name, request.params.arguments);
+        } catch (error) {
+          // Fall through to unknown tool error
+        }
+      }
+      
       throw new Error(`Unknown tool: ${request.params.name}`);
   }
 });
@@ -1119,6 +2448,161 @@ Run 'cc crit explore' to analyze your codebase structure.`,
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
+}
+
+// Helper functions for status checks
+async function checkClaudeDesktopConfig(): Promise<{ found: boolean; path?: string; mcpConfigured: boolean }> {
+  const platform = os.platform();
+  const homeDir = os.homedir();
+  
+  const possiblePaths = [
+    path.join(homeDir, 'Library', 'Application Support', 'Claude', 'claude_desktop_config.json'), // macOS
+    path.join(homeDir, 'AppData', 'Roaming', 'Claude', 'claude_desktop_config.json'), // Windows
+    path.join(homeDir, '.config', 'Claude', 'claude_desktop_config.json'), // Linux
+  ];
+
+  for (const configPath of possiblePaths) {
+    try {
+      const content = await fs.readFile(configPath, 'utf8');
+      const config = JSON.parse(content);
+      const mcpConfigured = config.mcpServers && config.mcpServers['critical-claude'];
+      
+      return {
+        found: true,
+        path: configPath,
+        mcpConfigured: !!mcpConfigured
+      };
+    } catch {
+      continue;
+    }
+  }
+
+  return { found: false, mcpConfigured: false };
+}
+
+async function checkMcpServerStatus(): Promise<{ running: boolean; toolCount: number }> {
+  // Since we're running inside the MCP server, we know it's running
+  // Count available tools
+  const systemDesignTools = systemDesignServer.getTools();
+  const dataFlowTools = dataFlowServer.getTools();
+  const backlogTools = backlogServer ? backlogServer.getTools() : [];
+  
+  const totalTools = 11 + systemDesignTools.length + dataFlowTools.length + backlogTools.length; // 11 core tools
+  
+  return {
+    running: true,
+    toolCount: totalTools
+  };
+}
+
+async function checkHooksStatus(): Promise<{ enabled: boolean; hookFile?: string }> {
+  try {
+    const claudeDir = path.join(os.homedir(), '.claude');
+    const hooksDir = path.join(claudeDir, 'hooks');
+    const hookFile = path.join(hooksDir, 'critical-claude-sync.sh');
+    
+    await fs.access(hookFile);
+    return {
+      enabled: true,
+      hookFile
+    };
+  } catch {
+    return { enabled: false };
+  }
+}
+
+async function checkTaskSystemStatus(): Promise<{ available: boolean; taskCount?: number; syncEnabled: boolean }> {
+  try {
+    const tasksDir = path.join(os.homedir(), '.critical-claude', 'tasks');
+    const files = await fs.readdir(tasksDir);
+    const taskFiles = files.filter(f => f.endsWith('.json'));
+    
+    // Check if Claude Code sync is available
+    const claudeDir = path.join(os.homedir(), '.claude');
+    let syncEnabled = false;
+    try {
+      await fs.access(claudeDir);
+      syncEnabled = true;
+    } catch {
+      syncEnabled = false;
+    }
+    
+    return {
+      available: true,
+      taskCount: taskFiles.length,
+      syncEnabled
+    };
+  } catch {
+    return {
+      available: false,
+      syncEnabled: false
+    };
+  }
+}
+
+async function setupGlobalAliases(options: { shell: 'bash' | 'zsh' | 'fish' | 'auto'; aliases: Record<string, string>; global: boolean }): Promise<any> {
+  const shell = options.shell === 'auto' ? path.basename(process.env.SHELL || 'bash') : options.shell;
+  
+  const defaultAliases = [
+    { command: 'cc', target: 'critical-claude', description: 'Main Critical Claude command' },
+    { command: 'ccrit', target: 'critical-claude crit', description: 'Code critique commands' },
+    { command: 'cctask', target: 'critical-claude task', description: 'Task management commands' },
+  ];
+  
+  // Merge with custom aliases
+  const allAliases = [...defaultAliases];
+  Object.entries(options.aliases).forEach(([cmd, target]) => {
+    allAliases.push({ command: cmd, target, description: `Custom alias for ${target}` });
+  });
+  
+  let rcFile: string;
+  switch (shell) {
+    case 'zsh':
+      rcFile = path.join(os.homedir(), '.zshrc');
+      break;
+    case 'fish':
+      rcFile = path.join(os.homedir(), '.config', 'fish', 'config.fish');
+      break;
+    default:
+      rcFile = path.join(os.homedir(), '.bashrc');
+  }
+  
+  try {
+    let rcContent = '';
+    try {
+      rcContent = await fs.readFile(rcFile, 'utf8');
+    } catch {
+      // File doesn't exist, will be created
+    }
+    
+    // Check if aliases already exist
+    const aliasSection = '# Critical Claude aliases';
+    if (!rcContent.includes(aliasSection)) {
+      let aliasContent = `\n${aliasSection}\n`;
+      for (const alias of allAliases) {
+        if (shell === 'fish') {
+          aliasContent += `alias ${alias.command} '${alias.target}'\n`;
+        } else {
+          aliasContent += `alias ${alias.command}='${alias.target}'\n`;
+        }
+      }
+      aliasContent += '# End Critical Claude aliases\n';
+      
+      await fs.writeFile(rcFile, rcContent + aliasContent);
+    }
+    
+    return {
+      success: true,
+      detectedShell: shell,
+      configFile: rcFile,
+      aliases: allAliases
+    };
+  } catch (error) {
+    return {
+      success: false,
+      errors: [(error as Error).message]
+    };
+  }
 }
 
 main().catch((error) => {

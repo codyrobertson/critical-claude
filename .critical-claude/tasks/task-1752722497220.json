@@ -1,0 +1,11 @@
+{
+  "id": "task-1752722497220",
+  "title": "Implement user registration system",
+  "description": "Add complete user registration with email verification",
+  "status": "In Progress",
+  "priority": "high",
+  "assignee": "alice",
+  "labels": [],
+  "createdAt": "2025-07-17T03:21:37.220Z",
+  "updatedAt": "2025-07-17T03:22:58.247Z"
+}

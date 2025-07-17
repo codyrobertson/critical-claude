@@ -101,7 +101,21 @@
       "Bash(git pull:*)",
       "Bash(./bin/cc.js:*)",
       "Bash(npm:*)",
-      "Bash(critical-claude:*)"
+      "Bash(critical-claude:*)",
+      "WebFetch(domain:codyrobertson.github.io)",
+      "WebFetch(domain:www.anthropic.com)",
+      "Bash(./build/index.js --help)",
+      "Bash(true)",
+      "Bash(./cc task list)",
+      "Bash(./cc task create \"Fix login bug with authentication system\")",
+      "Bash(./cc task \"Fix login bug with authentication system\")",
+      "Bash(./cc task view task-1752721376306)",
+      "Bash(./cc simple list)",
+      "Bash(./cc simple view task-1752721376306)",
+      "Bash(./cc list)",
+      "Bash(./cc create:*)",
+      "Bash(./cc view task-1752722497220)",
+      "Bash(./cc edit:*)"
     ],
     "deny": []
   }

@@ -36,22 +36,25 @@ export class CommandRegistry {
             const handler = new QuickTaskCommand();
             await handler.execute('default', description || [], options);
         });
-        // Simple task management for small teams
+        // AI-powered task management via MCP server
         program
             .command('simple [action] [args...]')
             .alias('s')
-            .description('Simplified task management for small teams (shorthand: s)')
-            .option('-s, --status <status>', 'Filter by status (todo|in-progress|blocked|done|archived)')
+            .description('AI-powered task management via MCP server (shorthand: s)')
+            .option('-s, --status <status>', 'Filter by status (To Do|In Progress|Done|Blocked)')
             .option('-p, --priority <priority>', 'Task priority (critical|high|medium|low)')
             .option('-a, --assignee <assignee>', 'Task assignee')
-            .option('--points <points>', 'Story points (1-13)')
-            .option('--due <date>', 'Due date (YYYY-MM-DD)')
             .option('--labels <labels...>', 'Task labels/tags')
             .option('--description <desc>', 'Task description')
+            .option('--context <project>', 'Project context for AI')
+            .option('--expand <level>', 'AI expansion level (1-3)')
+            .option('--plain', 'Plain text output')
+            .option('--draft', 'Create as draft')
+            .option('--includeDrafts', 'Include drafts in list')
             .option('-v, --verbose', 'Show detailed information')
             .action(async (action, args, options) => {
-            const { SimpleTaskCommand } = await import('./commands/simple-task.js');
-            const handler = new SimpleTaskCommand();
+            const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+            const handler = new MCPTaskSimpleCommand();
             await handler.execute(action || 'list', args || [], options);
         });
         // Register all other commands
@@ -118,10 +121,10 @@ export class CommandRegistry {
     registerDefaultCommands() {
         this.register({
             name: 'task',
-            description: 'Quick task creation with natural language parsing',
+            description: 'AI-powered task management via MCP server',
             loader: async () => {
-                const { QuickTaskCommand } = await import('./commands/quick-task.js');
-                return new QuickTaskCommand();
+                const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+                return new MCPTaskSimpleCommand();
             }
         });
         this.register({
@@ -150,10 +153,10 @@ export class CommandRegistry {
         });
         this.register({
             name: 'simple',
-            description: 'Simplified task management for small teams',
+            description: 'AI-powered task management via MCP server (legacy alias)',
             loader: async () => {
-                const { SimpleTaskCommand } = await import('./commands/simple-task.js');
-                return new SimpleTaskCommand();
+                const { MCPTaskSimpleCommand } = await import('./commands/mcp-task-simple.js');
+                return new MCPTaskSimpleCommand();
             }
         });
         this.register({
