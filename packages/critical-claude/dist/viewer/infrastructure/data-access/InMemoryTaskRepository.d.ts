@@ -3,9 +3,9 @@
  * Simple in-memory implementation for development and testing
  */
 import { ITaskRepository, TaskFilter, TaskSort, PaginationOptions, PaginatedResult } from '../../domain/repositories/ITaskRepository';
-import { Task } from '../../domain/entities/Task';
-import { TaskId } from '../../domain/value-objects/TaskId';
-import { TaskStatus } from '../../domain/value-objects/TaskStatus';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
+import { TaskStatus } from '../../domain/value-objects/TaskStatus.js';
 export declare class InMemoryTaskRepository implements ITaskRepository {
     private tasks;
     private transactionTasks;

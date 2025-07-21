@@ -3,9 +3,9 @@
  * Transforms domain entities for presentation layer
  */
 
-import { Task } from '../../domain/entities/Task';
-import { TaskStatus } from '../../domain/value-objects/TaskStatus';
-import { TaskPriority } from '../../domain/value-objects/TaskPriority';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskStatus } from '../../domain/value-objects/TaskStatus.js';
+import { TaskPriority } from '../../domain/value-objects/TaskPriority.js';
 
 export interface TaskViewModel {
   id: string;

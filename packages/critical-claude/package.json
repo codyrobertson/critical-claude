@@ -23,7 +23,8 @@
     "test:simple": "npm run build && node dist/cli/simple-test.js",
     "lint": "eslint src/**/*.ts",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "viewer": "cd ../.. && node packages/critical-claude/dist/viewer/index.js"
   },
   "dependencies": {
     "@critical-claude/core": "file:../core",
@@ -40,9 +41,11 @@
     "date-fns": "^2.30.0",
     "figlet": "^1.7.0",
     "glob": "^10.3.10",
+    "ink": "^6.0.1",
     "inquirer": "^9.2.12",
     "nanospinner": "^1.1.0",
     "ora": "^7.0.1",
+    "react": "^19.1.0",
     "toml": "^3.0.0",
     "uuid": "^9.0.1",
     "yaml": "^2.3.4"

@@ -2,10 +2,10 @@
  * Task List View
  * Main view for displaying tasks in a list format
  */
-import { BaseView, KeyModifiers } from './IView';
-import { ITerminalUI } from '../../application/ports/ITerminalUI';
-import { TaskViewModel } from '../view-models/TaskViewModel';
-import { ILogger } from '../../application/ports/ILogger';
+import { BaseView, KeyModifiers } from './IView.js';
+import { ITerminalUI } from '../../application/ports/ITerminalUI.js';
+import { TaskViewModel } from '../view-models/TaskViewModel.js';
+import { ILogger } from '../../application/ports/ILogger.js';
 export interface TaskListViewOptions {
     showLineNumbers: boolean;
     showPriority: boolean;
@@ -43,5 +43,6 @@ export declare class TaskListView extends BaseView {
     private ensureVisible;
     private openSelectedTask;
     private truncate;
+    private toggleTaskStatus;
 }
 //# sourceMappingURL=TaskListView.d.ts.map

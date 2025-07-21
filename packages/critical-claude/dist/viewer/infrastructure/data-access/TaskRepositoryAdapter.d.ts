@@ -2,10 +2,10 @@
  * Task Repository Adapter
  * Adapts between Critical Claude storage and viewer domain model
  */
-import { ITaskRepository, TaskFilter, TaskSort, PaginationOptions, PaginatedResult } from '../../domain/repositories/ITaskRepository';
-import { Task } from '../../domain/entities/Task';
-import { TaskId } from '../../domain/value-objects/TaskId';
-import { TaskStatus } from '../../domain/value-objects/TaskStatus';
+import { ITaskRepository, TaskFilter, TaskSort, PaginationOptions, PaginatedResult } from '../../domain/repositories/ITaskRepository.js';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
+import { TaskStatus } from '../../domain/value-objects/TaskStatus.js';
 export declare class TaskRepositoryAdapter implements ITaskRepository {
     private storage;
     private initialized;

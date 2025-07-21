@@ -3,7 +3,7 @@
  * Helpers for measuring and optimizing performance
  */
 
-import { PerformanceMetrics } from '../types';
+import { PerformanceMetrics } from '../types/index.js';
 
 export class PerformanceMonitor {
   private metrics: Map<string, PerformanceMetrics[]> = new Map();

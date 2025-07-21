@@ -2,7 +2,7 @@
  * Vim Keybindings
  * Implements vim-style keyboard navigation and commands
  */
-import { KeyModifiers } from '../views/IView';
+import { KeyModifiers } from '../views/IView.js';
 export type VimMode = 'normal' | 'insert' | 'visual' | 'command';
 export interface VimCommand {
     keys: string[];

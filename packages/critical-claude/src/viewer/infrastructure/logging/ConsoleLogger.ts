@@ -3,10 +3,10 @@
  * Simple console-based logger for development
  */
 
-import { ILogger, LogLevel, LogContext } from '../../application/ports/ILogger';
+import { ILogger, LogLevel, LogContext } from '../../application/ports/ILogger.js';
 
 // Re-export LogLevel for external use
-export { LogLevel } from '../../application/ports/ILogger';
+export { LogLevel } from '../../application/ports/ILogger.js';
 
 export class ConsoleLogger implements ILogger {
   private level: LogLevel = LogLevel.INFO;

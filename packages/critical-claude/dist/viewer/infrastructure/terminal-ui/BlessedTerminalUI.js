@@ -2,7 +2,7 @@
  * Blessed Terminal UI Implementation
  * Concrete implementation using the blessed library
  */
-import * as blessed from 'blessed';
+import blessed from 'blessed';
 export class BlessedTerminalUI {
     screen;
     activeBuffer = null;
@@ -77,18 +77,23 @@ export class BlessedTerminalUI {
         this.write(text + '\n', position, style);
     }
     drawBox(position, width, height, style) {
-        const box = blessed.box({
-            top: position.y,
-            left: position.x,
-            width: width,
-            height: height,
-            border: {
-                type: 'line'
-            },
-            style: this.convertStyle(style)
-        });
-        this.screen.append(box);
-        box.render();
+        try {
+            const box = blessed.box({
+                top: position.y,
+                left: position.x,
+                width: width,
+                height: height,
+                border: {
+                    type: 'line'
+                },
+                style: this.convertStyle(style),
+                parent: this.screen
+            });
+            this.screen.render();
+        }
+        catch (error) {
+            console.error('Error rendering box:', error);
+        }
     }
     onKeyPress(handler) {
         this.keyHandlers.push(handler);

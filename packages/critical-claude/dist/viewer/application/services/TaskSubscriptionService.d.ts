@@ -2,12 +2,12 @@
  * Task Subscription Service
  * Manages real-time task updates and subscriptions
  */
-import { IEventBus } from '../ports/IEventBus';
-import { ITaskRepository } from '../../domain/repositories/ITaskRepository';
-import { TaskEvent } from '../../domain/events/DomainEvent';
-import { TaskId } from '../../domain/value-objects/TaskId';
-import { Task } from '../../domain/entities/Task';
-import { ILogger } from '../ports/ILogger';
+import { IEventBus } from '../ports/IEventBus.js';
+import { ITaskRepository } from '../../domain/repositories/ITaskRepository.js';
+import { TaskEvent } from '../../domain/events/DomainEvent.js';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
+import { Task } from '../../domain/entities/Task.js';
+import { ILogger } from '../ports/ILogger.js';
 export type TaskChangeHandler = (task: Task, event: TaskEvent) => void;
 export type TaskListChangeHandler = (tasks: Task[]) => void;
 export interface ITaskSubscriptionService {

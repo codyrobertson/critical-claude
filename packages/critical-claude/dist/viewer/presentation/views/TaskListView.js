@@ -2,7 +2,7 @@
  * Task List View
  * Main view for displaying tasks in a list format
  */
-import { BaseView } from './IView';
+import { BaseView } from './IView.js';
 export class TaskListView extends BaseView {
     terminalUI;
     logger;
@@ -83,16 +83,29 @@ export class TaskListView extends BaseView {
                 }
                 return true;
             case 'PageDown':
-            case 'ctrl+f':
                 this.pageDown();
                 return true;
+            case 'f':
+                if (modifiers.ctrl) {
+                    this.pageDown();
+                    return true;
+                }
+                return false;
             case 'PageUp':
-            case 'ctrl+b':
                 this.pageUp();
                 return true;
+            case 'b':
+                if (modifiers.ctrl) {
+                    this.pageUp();
+                    return true;
+                }
+                return false;
             case 'Enter':
             case 'o':
                 this.openSelectedTask();
+                return true;
+            case 'Space':
+                this.toggleTaskStatus();
                 return true;
             default:
                 return false;
@@ -244,6 +257,14 @@ export class TaskListView extends BaseView {
         if (text.length <= maxLength)
             return text;
         return text.substring(0, maxLength - 3) + '...';
+    }
+    toggleTaskStatus() {
+        const task = this.getSelectedTask();
+        if (task) {
+            this.logger.info('Toggling task status', { taskId: task.id });
+            // TODO: Emit event to toggle status
+            // For now, just log
+        }
     }
 }
 //# sourceMappingURL=TaskListView.js.map

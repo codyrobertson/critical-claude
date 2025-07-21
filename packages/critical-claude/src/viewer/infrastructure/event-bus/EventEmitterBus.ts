@@ -4,9 +4,9 @@
  */
 
 import { EventEmitter } from 'events';
-import { IEventBus, EventHandler } from '../../application/ports/IEventBus';
-import { DomainEvent } from '../../domain/events/DomainEvent';
-import { ILogger } from '../../application/ports/ILogger';
+import { IEventBus, EventHandler } from '../../application/ports/IEventBus.js';
+import { DomainEvent } from '../../domain/events/DomainEvent.js';
+import { ILogger } from '../../application/ports/ILogger.js';
 
 export class EventEmitterBus implements IEventBus {
   private emitter: EventEmitter;

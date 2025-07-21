@@ -3,14 +3,14 @@
  * Adapts between Critical Claude storage and viewer domain model
  */
 
-import { ITaskRepository, TaskFilter, TaskSort, PaginationOptions, PaginatedResult } from '../../domain/repositories/ITaskRepository';
-import { Task } from '../../domain/entities/Task';
-import { TaskId } from '../../domain/value-objects/TaskId';
-import { TaskStatus } from '../../domain/value-objects/TaskStatus';
-import { TaskPriority } from '../../domain/value-objects/TaskPriority';
-import { TaskMetadata } from '../../domain/value-objects/TaskMetadata';
-import { UnifiedStorageManager } from '../../../core/unified-storage';
-import { CommonTask, TaskListOptions, TaskFilter as StorageFilter } from '../../../types/common-task';
+import { ITaskRepository, TaskFilter, TaskSort, PaginationOptions, PaginatedResult } from '../../domain/repositories/ITaskRepository.js';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
+import { TaskStatus } from '../../domain/value-objects/TaskStatus.js';
+import { TaskPriority } from '../../domain/value-objects/TaskPriority.js';
+import { TaskMetadata } from '../../domain/value-objects/TaskMetadata.js';
+import { UnifiedStorageManager } from '../../../core/unified-storage.js';
+import { CommonTask, TaskListOptions, TaskFilter as StorageFilter } from '../../../types/common-task.js';
 
 export class TaskRepositoryAdapter implements ITaskRepository {
   private storage: UnifiedStorageManager;

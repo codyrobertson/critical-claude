@@ -3,7 +3,7 @@
  * Concrete implementation using the blessed library
  */
 
-import * as blessed from 'blessed';
+import blessed from 'blessed';
 import {
   ITerminalUI,
   ITerminalBuffer,
@@ -104,19 +104,23 @@ export class BlessedTerminalUI implements ITerminalUI {
   }
 
   drawBox(position: Position, width: number, height: number, style?: Style): void {
-    const box = blessed.box({
-      top: position.y,
-      left: position.x,
-      width: width,
-      height: height,
-      border: {
-        type: 'line'
-      },
-      style: this.convertStyle(style)
-    });
+    try {
+      const box = blessed.box({
+        top: position.y,
+        left: position.x,
+        width: width,
+        height: height,
+        border: {
+          type: 'line'
+        },
+        style: this.convertStyle(style),
+        parent: this.screen
+      });
 
-    this.screen.append(box);
-    box.render();
+      this.screen.render();
+    } catch (error) {
+      console.error('Error rendering box:', error);
+    }
   }
 
   onKeyPress(handler: (key: string, modifiers: KeyModifiers) => void): () => void {

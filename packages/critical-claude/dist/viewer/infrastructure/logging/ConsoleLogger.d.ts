@@ -2,8 +2,8 @@
  * Console Logger Implementation
  * Simple console-based logger for development
  */
-import { ILogger, LogLevel, LogContext } from '../../application/ports/ILogger';
-export { LogLevel } from '../../application/ports/ILogger';
+import { ILogger, LogLevel, LogContext } from '../../application/ports/ILogger.js';
+export { LogLevel } from '../../application/ports/ILogger.js';
 export declare class ConsoleLogger implements ILogger {
     private level;
     private context;

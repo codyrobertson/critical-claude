@@ -4,6 +4,7 @@
  */
 
 import fs from 'fs/promises';
+import fsSync from 'fs';
 import path from 'path';
 import { CommonTask, CreateTaskInput, UpdateTaskInput, TaskFilter, TaskListOptions } from '../types/common-task.js';
 
@@ -19,8 +20,28 @@ export class UnifiedStorageManager {
   private initialized = false;
   
   constructor(config?: Partial<UnifiedStorageConfig>) {
+    // Find the project root by looking for .critical-claude directory
+    let basePath = process.cwd();
+    let searchPath = basePath;
+    
+    // Search up to 5 levels for .critical-claude directory
+    for (let i = 0; i < 5; i++) {
+      const candidatePath = path.join(searchPath, '.critical-claude');
+      try {
+        const stats = fsSync.statSync(candidatePath);
+        if (stats.isDirectory()) {
+          basePath = searchPath;
+          break;
+        }
+      } catch {}
+      
+      const parentPath = path.dirname(searchPath);
+      if (parentPath === searchPath) break; // Reached root
+      searchPath = parentPath;
+    }
+    
     this.config = {
-      basePath: path.join(process.cwd(), '.critical-claude'),
+      basePath: path.join(basePath, '.critical-claude'),
       migrationEnabled: true,
       backupEnabled: true,
       autoCleanup: false,

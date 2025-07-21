@@ -2,10 +2,10 @@
  * Update Task Use Case
  * Handles task updates with domain logic
  */
-import { Task } from '../../domain/entities/Task';
-import { TaskId } from '../../domain/value-objects/TaskId';
-import { TaskStatus } from '../../domain/value-objects/TaskStatus';
-import { TaskPriority } from '../../domain/value-objects/TaskPriority';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
+import { TaskStatus } from '../../domain/value-objects/TaskStatus.js';
+import { TaskPriority } from '../../domain/value-objects/TaskPriority.js';
 export class UpdateTaskUseCase {
     taskRepository;
     eventBus;

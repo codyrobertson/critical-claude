@@ -3,10 +3,10 @@
  * Follows Repository pattern and Dependency Inversion Principle
  */
 
-import { Task } from '../entities/Task';
-import { TaskId } from '../value-objects/TaskId';
-import { TaskStatus } from '../value-objects/TaskStatus';
-import { TaskPriority } from '../value-objects/TaskPriority';
+import { Task } from '../entities/Task.js';
+import { TaskId } from '../value-objects/TaskId.js';
+import { TaskStatus } from '../value-objects/TaskStatus.js';
+import { TaskPriority } from '../value-objects/TaskPriority.js';
 
 export interface TaskFilter {
   status?: TaskStatus[];

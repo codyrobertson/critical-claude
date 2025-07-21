@@ -2,11 +2,11 @@
  * Task Entity - Core business logic for tasks
  * Following Domain-Driven Design principles
  */
-import { TaskId } from '../value-objects/TaskId';
-import { TaskStatus } from '../value-objects/TaskStatus';
-import { TaskPriority } from '../value-objects/TaskPriority';
-import { TaskMetadata } from '../value-objects/TaskMetadata';
-import { DomainEvent } from '../events/DomainEvent';
+import { TaskId } from '../value-objects/TaskId.js';
+import { TaskStatus } from '../value-objects/TaskStatus.js';
+import { TaskPriority } from '../value-objects/TaskPriority.js';
+import { TaskMetadata } from '../value-objects/TaskMetadata.js';
+import { DomainEvent } from '../events/DomainEvent.js';
 export interface ITask {
     readonly id: TaskId;
     readonly title: string;

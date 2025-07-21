@@ -2,10 +2,10 @@
  * View Tasks Use Case
  * Implements the business logic for viewing and filtering tasks
  */
-import { ITaskRepository, TaskFilter, TaskSort } from '../../domain/repositories/ITaskRepository';
-import { Task } from '../../domain/entities/Task';
-import { IEventBus } from '../ports/IEventBus';
-import { ILogger } from '../ports/ILogger';
+import { ITaskRepository, TaskFilter, TaskSort } from '../../domain/repositories/ITaskRepository.js';
+import { Task } from '../../domain/entities/Task.js';
+import { IEventBus } from '../ports/IEventBus.js';
+import { ILogger } from '../ports/ILogger.js';
 export interface ViewTasksRequest {
     filter?: TaskFilter;
     sort?: TaskSort;

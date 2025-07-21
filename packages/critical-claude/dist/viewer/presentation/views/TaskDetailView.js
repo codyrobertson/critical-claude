@@ -2,7 +2,7 @@
  * Task Detail View
  * Displays detailed information about a single task
  */
-import { BaseView } from './IView';
+import { BaseView } from './IView.js';
 export class TaskDetailView extends BaseView {
     terminalUI;
     logger;

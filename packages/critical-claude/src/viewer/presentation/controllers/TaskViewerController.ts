@@ -3,18 +3,18 @@
  * Orchestrates the interaction between views and use cases
  */
 
-import { IViewTasksUseCase } from '../../application/use-cases/ViewTasksUseCase';
-import { ISearchTasksUseCase } from '../../application/use-cases/SearchTasksUseCase';
-import { IUpdateTaskUseCase } from '../../application/use-cases/UpdateTaskUseCase';
-import { ITaskSubscriptionService } from '../../application/services/TaskSubscriptionService';
-import { TaskListView } from '../views/TaskListView';
-import { TaskDetailView } from '../views/TaskDetailView';
-import { SearchView, SearchResult } from '../views/SearchView';
-import { TaskViewModelMapper } from '../view-models/TaskViewModel';
-import { ITerminalUI, Dimensions } from '../../application/ports/ITerminalUI';
-import { ILogger } from '../../application/ports/ILogger';
-import { Task } from '../../domain/entities/Task';
-import { TaskFilter, TaskSort } from '../../domain/repositories/ITaskRepository';
+import { IViewTasksUseCase } from '../../application/use-cases/ViewTasksUseCase.js';
+import { ISearchTasksUseCase } from '../../application/use-cases/SearchTasksUseCase.js';
+import { IUpdateTaskUseCase } from '../../application/use-cases/UpdateTaskUseCase.js';
+import { ITaskSubscriptionService } from '../../application/services/TaskSubscriptionService.js';
+import { TaskListView } from '../views/TaskListView.js';
+import { TaskDetailView } from '../views/TaskDetailView.js';
+import { SearchView, SearchResult } from '../views/SearchView.js';
+import { TaskViewModelMapper } from '../view-models/TaskViewModel.js';
+import { ITerminalUI, Dimensions } from '../../application/ports/ITerminalUI.js';
+import { ILogger } from '../../application/ports/ILogger.js';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskFilter, TaskSort } from '../../domain/repositories/ITaskRepository.js';
 
 export interface ViewLayout {
   type: 'single' | 'split-horizontal' | 'split-vertical';
@@ -135,6 +135,9 @@ export class TaskViewerController {
   }
 
   private handleGlobalKeyPress(key: string, modifiers: any): void {
+    // Debug logging
+    this.logger.debug('Global key press', { key, modifiers });
+    
     // Let focused view handle the key first
     const focusedView = this.getFocusedView();
     if (focusedView && focusedView.onKeyPress(key, modifiers)) {
@@ -266,7 +269,8 @@ export class TaskViewerController {
   }
 
   render(): void {
-    if (this.taskListView.getState().needsRedraw) {
+    const listState = this.taskListView.getState();
+    if (listState.needsRedraw) {
       this.taskListView.render();
     }
     

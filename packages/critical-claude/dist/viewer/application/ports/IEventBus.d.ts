@@ -2,7 +2,7 @@
  * Event Bus Port Interface
  * Defines contract for event publishing and subscription
  */
-import { DomainEvent } from '../../domain/events/DomainEvent';
+import { DomainEvent } from '../../domain/events/DomainEvent.js';
 export type EventHandler<T extends DomainEvent> = (event: T) => Promise<void> | void;
 export interface IEventBus {
     publish(event: DomainEvent): Promise<void>;

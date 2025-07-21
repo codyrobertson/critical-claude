@@ -3,10 +3,10 @@
  * Main view for displaying tasks in a list format
  */
 
-import { BaseView, KeyModifiers } from './IView';
-import { ITerminalUI, Style } from '../../application/ports/ITerminalUI';
-import { TaskViewModel } from '../view-models/TaskViewModel';
-import { ILogger } from '../../application/ports/ILogger';
+import { BaseView, KeyModifiers } from './IView.js';
+import { ITerminalUI, Style } from '../../application/ports/ITerminalUI.js';
+import { TaskViewModel } from '../view-models/TaskViewModel.js';
+import { ILogger } from '../../application/ports/ILogger.js';
 
 export interface TaskListViewOptions {
   showLineNumbers: boolean;
@@ -113,18 +113,34 @@ export class TaskListView extends BaseView {
         return true;
       
       case 'PageDown':
-      case 'ctrl+f':
         this.pageDown();
         return true;
+        
+      case 'f':
+        if (modifiers.ctrl) {
+          this.pageDown();
+          return true;
+        }
+        return false;
       
       case 'PageUp':
-      case 'ctrl+b':
         this.pageUp();
         return true;
+        
+      case 'b':
+        if (modifiers.ctrl) {
+          this.pageUp();
+          return true;
+        }
+        return false;
       
       case 'Enter':
       case 'o':
         this.openSelectedTask();
+        return true;
+        
+      case 'Space':
+        this.toggleTaskStatus();
         return true;
       
       default:
@@ -342,5 +358,14 @@ export class TaskListView extends BaseView {
   private truncate(text: string, maxLength: number): string {
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength - 3) + '...';
+  }
+  
+  private toggleTaskStatus(): void {
+    const task = this.getSelectedTask();
+    if (task) {
+      this.logger.info('Toggling task status', { taskId: task.id });
+      // TODO: Emit event to toggle status
+      // For now, just log
+    }
   }
 }

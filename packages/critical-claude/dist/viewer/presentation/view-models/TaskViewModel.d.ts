@@ -2,7 +2,7 @@
  * Task View Model
  * Transforms domain entities for presentation layer
  */
-import { Task } from '../../domain/entities/Task';
+import { Task } from '../../domain/entities/Task.js';
 export interface TaskViewModel {
     id: string;
     title: string;

@@ -2,12 +2,12 @@
  * Task Viewer Controller
  * Orchestrates the interaction between views and use cases
  */
-import { IViewTasksUseCase } from '../../application/use-cases/ViewTasksUseCase';
-import { ISearchTasksUseCase } from '../../application/use-cases/SearchTasksUseCase';
-import { IUpdateTaskUseCase } from '../../application/use-cases/UpdateTaskUseCase';
-import { ITaskSubscriptionService } from '../../application/services/TaskSubscriptionService';
-import { ITerminalUI } from '../../application/ports/ITerminalUI';
-import { ILogger } from '../../application/ports/ILogger';
+import { IViewTasksUseCase } from '../../application/use-cases/ViewTasksUseCase.js';
+import { ISearchTasksUseCase } from '../../application/use-cases/SearchTasksUseCase.js';
+import { IUpdateTaskUseCase } from '../../application/use-cases/UpdateTaskUseCase.js';
+import { ITaskSubscriptionService } from '../../application/services/TaskSubscriptionService.js';
+import { ITerminalUI } from '../../application/ports/ITerminalUI.js';
+import { ILogger } from '../../application/ports/ILogger.js';
 export interface ViewLayout {
     type: 'single' | 'split-horizontal' | 'split-vertical';
     activePane: 'left' | 'right' | 'top' | 'bottom';

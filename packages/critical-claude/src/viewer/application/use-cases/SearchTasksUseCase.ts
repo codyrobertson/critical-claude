@@ -3,9 +3,9 @@
  * Implements fuzzy search functionality for tasks
  */
 
-import { ITaskRepository } from '../../domain/repositories/ITaskRepository';
-import { Task } from '../../domain/entities/Task';
-import { ILogger } from '../ports/ILogger';
+import { ITaskRepository } from '../../domain/repositories/ITaskRepository.js';
+import { Task } from '../../domain/entities/Task.js';
+import { ILogger } from '../ports/ILogger.js';
 
 export interface SearchTasksRequest {
   query: string;

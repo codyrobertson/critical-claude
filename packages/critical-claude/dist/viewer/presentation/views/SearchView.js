@@ -2,7 +2,7 @@
  * Search View
  * Provides fuzzy search interface for tasks
  */
-import { BaseView } from './IView';
+import { BaseView } from './IView.js';
 export class SearchView extends BaseView {
     terminalUI;
     logger;

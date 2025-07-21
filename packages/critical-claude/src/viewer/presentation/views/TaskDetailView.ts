@@ -3,10 +3,10 @@
  * Displays detailed information about a single task
  */
 
-import { BaseView, KeyModifiers } from './IView';
-import { ITerminalUI, Style } from '../../application/ports/ITerminalUI';
-import { TaskViewModel } from '../view-models/TaskViewModel';
-import { ILogger } from '../../application/ports/ILogger';
+import { BaseView, KeyModifiers } from './IView.js';
+import { ITerminalUI, Style } from '../../application/ports/ITerminalUI.js';
+import { TaskViewModel } from '../view-models/TaskViewModel.js';
+import { ILogger } from '../../application/ports/ILogger.js';
 
 export class TaskDetailView extends BaseView {
   private task: TaskViewModel | null = null;

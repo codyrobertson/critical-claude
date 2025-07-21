@@ -2,7 +2,7 @@
  * Task Entity - Core business logic for tasks
  * Following Domain-Driven Design principles
  */
-import { TaskStatus } from '../value-objects/TaskStatus';
+import { TaskStatus } from '../value-objects/TaskStatus.js';
 export class Task {
     id;
     title;

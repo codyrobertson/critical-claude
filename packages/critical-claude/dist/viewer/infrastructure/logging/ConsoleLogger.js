@@ -2,9 +2,9 @@
  * Console Logger Implementation
  * Simple console-based logger for development
  */
-import { LogLevel } from '../../application/ports/ILogger';
+import { LogLevel } from '../../application/ports/ILogger.js';
 // Re-export LogLevel for external use
-export { LogLevel } from '../../application/ports/ILogger';
+export { LogLevel } from '../../application/ports/ILogger.js';
 export class ConsoleLogger {
     level = LogLevel.INFO;
     context = {};

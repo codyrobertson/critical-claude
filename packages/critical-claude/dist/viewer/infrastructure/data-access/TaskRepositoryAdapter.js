@@ -2,12 +2,12 @@
  * Task Repository Adapter
  * Adapts between Critical Claude storage and viewer domain model
  */
-import { Task } from '../../domain/entities/Task';
-import { TaskId } from '../../domain/value-objects/TaskId';
-import { TaskStatus } from '../../domain/value-objects/TaskStatus';
-import { TaskPriority } from '../../domain/value-objects/TaskPriority';
-import { TaskMetadata } from '../../domain/value-objects/TaskMetadata';
-import { UnifiedStorageManager } from '../../../core/unified-storage';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
+import { TaskStatus } from '../../domain/value-objects/TaskStatus.js';
+import { TaskPriority } from '../../domain/value-objects/TaskPriority.js';
+import { TaskMetadata } from '../../domain/value-objects/TaskMetadata.js';
+import { UnifiedStorageManager } from '../../../core/unified-storage.js';
 export class TaskRepositoryAdapter {
     storage;
     initialized = false;

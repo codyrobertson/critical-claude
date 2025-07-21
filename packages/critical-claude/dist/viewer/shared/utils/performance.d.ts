@@ -2,7 +2,7 @@
  * Performance Utilities
  * Helpers for measuring and optimizing performance
  */
-import { PerformanceMetrics } from '../types';
+import { PerformanceMetrics } from '../types/index.js';
 export declare class PerformanceMonitor {
     private metrics;
     private activeTimers;

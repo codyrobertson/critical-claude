@@ -2,7 +2,7 @@
  * Task Subscription Service
  * Manages real-time task updates and subscriptions
  */
-import { TaskId } from '../../domain/value-objects/TaskId';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
 export class TaskSubscriptionService {
     eventBus;
     taskRepository;

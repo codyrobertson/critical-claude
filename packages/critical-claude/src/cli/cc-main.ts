@@ -68,6 +68,65 @@ export async function initializeCLI() {
     }
   });
 
+  // Init command
+  program
+    .command('init')
+    .description('Initialize Critical Claude in your project')
+    .option('--name <name>', 'Project name')
+    .option('--template <template>', 'Initial template to load')
+    .option('--team-size <size>', 'Team size', parseInt, 3)
+    .action(async (options) => {
+      try {
+        const { UnifiedStorageManager } = await import('../core/unified-storage.js');
+        const { AIService } = await import('../core/ai-service.js');
+        const fs = await import('fs/promises');
+        const path = await import('path');
+        
+        console.log('🚀 Initializing Critical Claude...');
+        
+        // Initialize storage
+        const storage = new UnifiedStorageManager();
+        await storage.initialize();
+        
+        // Create cc.env from template if it doesn't exist
+        const envPath = path.join(process.cwd(), 'cc.env');
+        const templatePath = path.join(path.dirname(new URL(import.meta.url).pathname), '../../../cc.env.template');
+        
+        try {
+          await fs.access(envPath);
+          console.log('✅ cc.env already exists');
+        } catch {
+          try {
+            const templateContent = await fs.readFile(templatePath, 'utf-8');
+            await fs.writeFile(envPath, templateContent);
+            console.log('✅ Created cc.env from template');
+            console.log('⚠️  Please configure your API keys in cc.env');
+          } catch (err) {
+            console.log('⚠️  Could not create cc.env - please create it manually');
+          }
+        }
+        
+        // Load initial template if specified
+        if (options.template) {
+          const { TemplateCommand } = await import('./commands/template.js');
+          const templateHandler = new TemplateCommand();
+          console.log(`\n📋 Loading template: ${options.template}...`);
+          await templateHandler.execute('load', [options.template], {});
+        }
+        
+        console.log('\n✨ Critical Claude initialized successfully!');
+        console.log('\nNext steps:');
+        console.log('  1. Configure your API keys in cc.env');
+        console.log('  2. Run "cc task ai <description>" to generate tasks');
+        console.log('  3. Run "cc task list" to see your tasks');
+        console.log('  4. Run "cc --help" for more commands');
+        
+      } catch (error) {
+        console.error('❌ Initialization failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
   // Unified task management - ONLY task command needed
   program
     .command('task [action] [args...]')
@@ -183,6 +242,24 @@ export async function initializeCLI() {
       }
     });
 
+  // MCP Server command for Claude Desktop integration
+  program
+    .command('mcp-server')
+    .description('Start MCP server for Claude Desktop integration')
+    .option('-p, --port <port>', 'Server port', parseInt, 3000)
+    .option('--log-level <level>', 'Log level (error|warn|info|debug)', 'info')
+    .action(async (options) => {
+      try {
+        // Import and run the MCP server
+        const serverModule = await import('../mcp-server.js');
+        console.log('🚀 Starting MCP server for Claude Desktop...');
+        // The mcp-server.js handles its own initialization
+      } catch (error) {
+        console.error('❌ MCP server failed:', (error as Error).message);
+        process.exit(1);
+      }
+    });
+
 
   // Help enhancements - only load when needed
   program.on('--help', async () => {
@@ -190,8 +267,12 @@ export async function initializeCLI() {
     console.log('');
     console.log(chalk.cyan('✨ Critical Claude - Unified Task Management'));
     console.log('');
+    console.log(chalk.cyan('Getting Started:'));
+    console.log('  $ cc init                                   # Initialize in your project');
+    console.log('  $ cc init --template webapp                 # Init with a template');
+    console.log('');
     console.log(chalk.cyan('Quick Examples:'));
-    console.log('  $ cc task create "Fix login bug"             # Create task');
+    console.log('  $ cc task create "Fix login bug"            # Create task');
     console.log('  $ cc task list                              # List tasks');
     console.log('  $ cc task view <task-id>                    # View task details');
     console.log('  $ cc task edit <task-id> --status done     # Update task');
@@ -206,9 +287,8 @@ export async function initializeCLI() {
     console.log('  $ cc task delete <task-id>                  # Delete task');
     console.log('  $ cc task archive <task-id>                 # Archive task');
     console.log('');
-    console.log(chalk.cyan('Claude Code Integration:'));
-    console.log('  $ cc sync-claude-code --execute            # Sync with Claude Code');
-    console.log('  $ cc sync-claude-code --status             # Check sync status');
+    console.log(chalk.cyan('Claude Desktop Integration:'));
+    console.log('  $ cc mcp-server                            # Start MCP server');
     console.log('');
     console.log(chalk.gray('📖 Everything goes through: cc task [action]'));
     console.log(chalk.gray('   Actions: create|list|view|edit|delete|archive|ai|stats'));

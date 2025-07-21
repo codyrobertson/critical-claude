@@ -2,9 +2,9 @@
  * Event Emitter Bus Implementation
  * Uses Node.js EventEmitter for event handling
  */
-import { IEventBus, EventHandler } from '../../application/ports/IEventBus';
-import { DomainEvent } from '../../domain/events/DomainEvent';
-import { ILogger } from '../../application/ports/ILogger';
+import { IEventBus, EventHandler } from '../../application/ports/IEventBus.js';
+import { DomainEvent } from '../../domain/events/DomainEvent.js';
+import { ILogger } from '../../application/ports/ILogger.js';
 export declare class EventEmitterBus implements IEventBus {
     private logger;
     private emitter;

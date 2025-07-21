@@ -2,10 +2,10 @@
  * Task Viewer Controller
  * Orchestrates the interaction between views and use cases
  */
-import { TaskListView } from '../views/TaskListView';
-import { TaskDetailView } from '../views/TaskDetailView';
-import { SearchView } from '../views/SearchView';
-import { TaskViewModelMapper } from '../view-models/TaskViewModel';
+import { TaskListView } from '../views/TaskListView.js';
+import { TaskDetailView } from '../views/TaskDetailView.js';
+import { SearchView } from '../views/SearchView.js';
+import { TaskViewModelMapper } from '../view-models/TaskViewModel.js';
 export class TaskViewerController {
     viewTasksUseCase;
     searchTasksUseCase;
@@ -110,6 +110,8 @@ export class TaskViewerController {
         }
     }
     handleGlobalKeyPress(key, modifiers) {
+        // Debug logging
+        this.logger.debug('Global key press', { key, modifiers });
         // Let focused view handle the key first
         const focusedView = this.getFocusedView();
         if (focusedView && focusedView.onKeyPress(key, modifiers)) {
@@ -222,7 +224,8 @@ export class TaskViewerController {
         this.searchView.setDimensions({ width: searchWidth, height: searchHeight });
     }
     render() {
-        if (this.taskListView.getState().needsRedraw) {
+        const listState = this.taskListView.getState();
+        if (listState.needsRedraw) {
             this.taskListView.render();
         }
         if (this.taskDetailView.getState().isVisible &&

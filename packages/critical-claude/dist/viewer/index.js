@@ -2,30 +2,30 @@
  * Task Viewer Entry Point
  * Main entry point for the terminal task viewer application
  */
-import { TaskViewerController } from './presentation/controllers/TaskViewerController';
-import { ViewTasksUseCase } from './application/use-cases/ViewTasksUseCase';
-import { SearchTasksUseCase } from './application/use-cases/SearchTasksUseCase';
-import { UpdateTaskUseCase } from './application/use-cases/UpdateTaskUseCase';
-import { TaskSubscriptionService } from './application/services/TaskSubscriptionService';
-import { TaskRepositoryAdapter } from './infrastructure/data-access/TaskRepositoryAdapter';
-import { EventEmitterBus } from './infrastructure/event-bus/EventEmitterBus';
-import { BlessedTerminalUI } from './infrastructure/terminal-ui/BlessedTerminalUI';
-import { ConsoleLogger, LogLevel } from './infrastructure/logging/ConsoleLogger';
-import { Task } from './domain/entities/Task';
-import { TaskId } from './domain/value-objects/TaskId';
-import { TaskStatus } from './domain/value-objects/TaskStatus';
-import { TaskPriority } from './domain/value-objects/TaskPriority';
-import { TaskMetadata } from './domain/value-objects/TaskMetadata';
+import { TaskViewerController } from './presentation/controllers/TaskViewerController.js';
+import { ViewTasksUseCase } from './application/use-cases/ViewTasksUseCase.js';
+import { SearchTasksUseCase } from './application/use-cases/SearchTasksUseCase.js';
+import { UpdateTaskUseCase } from './application/use-cases/UpdateTaskUseCase.js';
+import { TaskSubscriptionService } from './application/services/TaskSubscriptionService.js';
+import { TaskRepositoryAdapter } from './infrastructure/data-access/TaskRepositoryAdapter.js';
+import { EventEmitterBus } from './infrastructure/event-bus/EventEmitterBus.js';
+import { DirectTerminalUI } from './infrastructure/terminal-ui/DirectTerminalUI.js';
+import { ConsoleLogger, LogLevel } from './infrastructure/logging/ConsoleLogger.js';
+import { Task } from './domain/entities/Task.js';
+import { TaskId } from './domain/value-objects/TaskId.js';
+import { TaskStatus } from './domain/value-objects/TaskStatus.js';
+import { TaskPriority } from './domain/value-objects/TaskPriority.js';
+import { TaskMetadata } from './domain/value-objects/TaskMetadata.js';
 // Export main types and interfaces for external use
-export * from './domain/entities/Task';
-export * from './domain/value-objects/TaskId';
-export * from './domain/value-objects/TaskStatus';
-export * from './domain/value-objects/TaskPriority';
-export * from './domain/value-objects/TaskMetadata';
-export * from './domain/repositories/ITaskRepository';
-export * from './application/ports/IEventBus';
-export * from './application/ports/ILogger';
-export * from './application/ports/ITerminalUI';
+export * from './domain/entities/Task.js';
+export * from './domain/value-objects/TaskId.js';
+export * from './domain/value-objects/TaskStatus.js';
+export * from './domain/value-objects/TaskPriority.js';
+export * from './domain/value-objects/TaskMetadata.js';
+export * from './domain/repositories/ITaskRepository.js';
+export * from './application/ports/IEventBus.js';
+export * from './application/ports/ILogger.js';
+export * from './application/ports/ITerminalUI.js';
 // Main application class
 export class TaskViewerApplication {
     controller = null;
@@ -41,7 +41,7 @@ export class TaskViewerApplication {
             const taskRepository = new TaskRepositoryAdapter();
             await taskRepository.initialize();
             const eventBus = new EventEmitterBus(this.logger);
-            this.terminalUI = new BlessedTerminalUI();
+            this.terminalUI = new DirectTerminalUI();
             // Initialize use cases
             const viewTasksUseCase = new ViewTasksUseCase(taskRepository, eventBus, this.logger);
             const searchTasksUseCase = new SearchTasksUseCase(taskRepository, this.logger);
@@ -77,8 +77,9 @@ export class TaskViewerApplication {
     }
     startRenderLoop() {
         const render = () => {
-            if (this.controller) {
+            if (this.controller && this.terminalUI) {
                 this.controller.render();
+                this.terminalUI.refresh(); // Make sure content is displayed
                 setImmediate(render); // Use setImmediate for better performance
             }
         };
@@ -100,8 +101,8 @@ export class TaskViewerApplication {
         // Repository doesn't support seed - using existing tasks
     }
 }
-// CLI entry point
-if (require.main === module) {
+// CLI entry point  
+if (import.meta.url === `file://${process.argv[1]}`) {
     const app = new TaskViewerApplication();
     // Handle graceful shutdown
     process.on('SIGINT', () => {

@@ -3,7 +3,7 @@
  * Base interface for all views in the presentation layer
  */
 
-import { Position, Dimensions } from '../../application/ports/ITerminalUI';
+import { Position, Dimensions } from '../../application/ports/ITerminalUI.js';
 
 export interface ViewState {
   isVisible: boolean;

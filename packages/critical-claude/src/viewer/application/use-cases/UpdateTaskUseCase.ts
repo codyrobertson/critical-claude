@@ -3,13 +3,13 @@
  * Handles task updates with domain logic
  */
 
-import { ITaskRepository } from '../../domain/repositories/ITaskRepository';
-import { Task } from '../../domain/entities/Task';
-import { TaskId } from '../../domain/value-objects/TaskId';
-import { TaskStatus } from '../../domain/value-objects/TaskStatus';
-import { TaskPriority } from '../../domain/value-objects/TaskPriority';
-import { IEventBus } from '../ports/IEventBus';
-import { ILogger } from '../ports/ILogger';
+import { ITaskRepository } from '../../domain/repositories/ITaskRepository.js';
+import { Task } from '../../domain/entities/Task.js';
+import { TaskId } from '../../domain/value-objects/TaskId.js';
+import { TaskStatus } from '../../domain/value-objects/TaskStatus.js';
+import { TaskPriority } from '../../domain/value-objects/TaskPriority.js';
+import { IEventBus } from '../ports/IEventBus.js';
+import { ILogger } from '../ports/ILogger.js';
 
 export interface UpdateTaskRequest {
   taskId: string;
