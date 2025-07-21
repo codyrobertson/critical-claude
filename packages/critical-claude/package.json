@@ -1,6 +1,6 @@
 {
   "name": "critical-claude",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Enterprise-grade task management CLI with AI-powered automation. Features task templates, multi-agent research, dependency management, and Claude Desktop integration via MCP.",
   "type": "module",
   "main": "dist/index.js",
