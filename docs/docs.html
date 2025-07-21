@@ -111,19 +111,23 @@
         }
         
         .warning {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid var(--accent-secondary);
             padding: 1rem;
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             margin: 1rem 0;
+            color: var(--text);
+            backdrop-filter: blur(10px);
         }
         
         .info {
-            background: #dbeafe;
+            background: rgba(0, 204, 136, 0.1);
             border: 1px solid var(--accent);
             padding: 1rem;
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             margin: 1rem 0;
+            color: var(--text);
+            backdrop-filter: blur(10px);
         }
         
         @media (max-width: 768px) {
@@ -174,28 +178,28 @@
     <div class="doc-content">
         <!-- Installation -->
         <div id="installation" class="doc-section">
-            <h2>Installation</h2>
+            <h2>Get It Running 🚀</h2>
             
-            <h3>Global Installation (Recommended)</h3>
+            <h3>The Easy Way (Recommended) ✨</h3>
             <div class="command-example">npm install -g critical-claude</div>
             
             <h3>Verify Installation</h3>
             <div class="command-example">cc --version</div>
             
-            <h3>Local Development</h3>
+            <h3>I Want to Hack on It 🛠️</h3>
             <div class="code-block">git clone https://github.com/codyrobertson/critical-claude.git
 cd critical-claude
 npm install
 npm run build</div>
             
             <div class="info">
-                <strong>Note:</strong> Node.js 18+ is required for optimal performance.
+                <strong>Heads up:</strong> You'll need Node.js 18+. If you're still on 16, it's time to upgrade anyway! 😉
             </div>
         </div>
         
         <!-- Configuration -->
         <div id="configuration" class="doc-section">
-            <h2>Configuration</h2>
+            <h2>Make It Yours ⚙️</h2>
             
             <h3>Environment Setup</h3>
             <p>Create a <code>cc.env</code> file in your project root:</p>
@@ -227,13 +231,13 @@ CC_EXPERIENCE_LEVEL=senior</div>
 }</div>
             
             <div class="warning">
-                <strong>Security Note:</strong> Never commit API keys to version control. Add <code>cc.env</code> to your <code>.gitignore</code>.
+                <strong>Don't be that person:</strong> Never commit API keys to git. Seriously. Add <code>cc.env</code> to your <code>.gitignore</code> right now. 🔒
             </div>
         </div>
         
         <!-- Basic Usage -->
         <div id="basic-usage" class="doc-section">
-            <h2>Basic Usage</h2>
+            <h2>The Good Stuff 🎯</h2>
             
             <h3>Initialize Project</h3>
             <div class="command-example">cc init</div>

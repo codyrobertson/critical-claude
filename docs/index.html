@@ -53,6 +53,19 @@
         .features {
             padding: 6rem 0;
             background: var(--surface);
+            position: relative;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
         
         .feature-grid {
@@ -63,18 +76,31 @@
         
         .feature {
             text-align: center;
+            position: relative;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            background: rgba(26, 26, 46, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 204, 136, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover), var(--neon-glow);
         }
         
         .feature-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1rem;
-            background: var(--text);
-            border-radius: var(--radius);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--bg);
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+            display: block;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
         }
         
         .feature h3 {
@@ -100,14 +126,36 @@
         
         .template-card {
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             padding: 2rem;
-            transition: all 0.2s;
+            background: rgba(26, 26, 46, 0.3);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .template-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .template-card:hover::before {
+            transform: scaleX(1);
         }
         
         .template-card:hover {
-            border-color: var(--text);
-            transform: translateY(-2px);
+            border-color: var(--accent);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            background: rgba(26, 26, 46, 0.6);
         }
         
         .template-header {
@@ -232,22 +280,38 @@
         .step {
             text-align: center;
             padding: 2rem;
-            border-radius: var(--radius);
-            background: var(--bg);
-            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: rgba(26, 26, 46, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 204, 136, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .step:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow);
         }
         
         .step-number {
-            width: 48px;
-            height: 48px;
-            background: var(--accent);
-            color: white;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-accent);
+            color: #000;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 800;
+            font-size: 1.5rem;
             margin: 0 auto 1rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .step:hover .step-number {
+            transform: scale(1.1) rotate(10deg);
         }
         
         .integration-grid {
@@ -312,18 +376,18 @@
     
     <!-- Hero Section -->
     <section class="hero container">
-        <h1>Task Management<br>Made Intelligent</h1>
+        <h1>Ship Code<br>Not Chaos 🚀</h1>
         <p class="subtitle">
-            Enterprise-grade CLI with AI-powered automation, project templates, 
-            and dependency management for modern development teams.
+            The AI-powered CLI that turns your messy project ideas into organized, 
+            actionable tasks. Stop procrastinating, start shipping. ✨
         </p>
         
         <div class="hero-actions">
             <a href="https://github.com/codyrobertson/critical-claude" class="btn btn-primary">
-                Get Started →
+                🔥 Get Started
             </a>
             <a href="#features" class="btn btn-secondary">
-                Learn More
+                ✨ See the Magic
             </a>
         </div>
         
@@ -346,43 +410,43 @@
     <!-- Features Section -->
     <section id="features" class="features">
         <div class="container">
-            <h2>Built for Modern Development</h2>
+            <h2>Why Developers Love It 💜</h2>
             
             <div class="feature-grid">
                 <div class="feature">
-                    <div class="feature-icon">🤖</div>
-                    <h3>AI-Powered</h3>
-                    <p>Generate comprehensive task breakdowns from natural language descriptions</p>
+                    <div class="feature-icon">🧠</div>
+                    <h3>AI That Actually Helps</h3>
+                    <p>Just tell it "build a chat app" and watch it create 12 perfectly organized tasks with dependencies. Mind = blown.</p>
                 </div>
                 
                 <div class="feature">
-                    <div class="feature-icon">📋</div>
-                    <h3>Project Templates</h3>
-                    <p>Pre-built templates for web apps, APIs, mobile apps, and ML projects</p>
+                    <div class="feature-icon">⚡</div>
+                    <h3>Zero-to-Hero Templates</h3>
+                    <p>Skip the "where do I even start?" phase. Load a template and you're already 80% planned.</p>
                 </div>
                 
                 <div class="feature">
-                    <div class="feature-icon">🔗</div>
-                    <h3>Dependency Management</h3>
-                    <p>Smart validation with guard rules and critical path analysis</p>
+                    <div class="feature-icon">🔒</div>
+                    <h3>No More "Wait, What?"</h3>
+                    <p>It stops you from marking tasks done when their dependencies aren't finished. Your future self will thank you.</p>
                 </div>
                 
                 <div class="feature">
-                    <div class="feature-icon">🔬</div>
-                    <h3>Multi-Agent Research</h3>
-                    <p>Research system with specialized agents for comprehensive analysis</p>
+                    <div class="feature-icon">🔍</div>
+                    <h3>Research Squad</h3>
+                    <p>4 AI agents team up to research your problem, analyze complexity, and create actionable tasks. It's like having senior devs on speed dial.</p>
                 </div>
                 
                 <div class="feature">
-                    <div class="feature-icon">📊</div>
-                    <h3>Visual Tracking</h3>
-                    <p>Status icons and progress visualization for better team coordination</p>
+                    <div class="feature-icon">👀</div>
+                    <h3>Actually See Progress</h3>
+                    <p>Pretty status icons (📝🔄✅) and real-time updates so you know exactly where things stand.</p>
                 </div>
                 
                 <div class="feature">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Claude Desktop</h3>
-                    <p>Native integration with Claude Desktop via MCP protocol</p>
+                    <div class="feature-icon">🤝</div>
+                    <h3>Plays Nice</h3>
+                    <p>Works with Claude Desktop, OpenAI, Anthropic. Use whatever AI you like - we're not picky.</p>
                 </div>
             </div>
         </div>
@@ -390,7 +454,7 @@
     
     <!-- Templates Section -->
     <section id="templates" class="templates container">
-        <h2>Start with Professional Templates</h2>
+        <h2>Templates That Don't Suck 🎯</h2>
         
         <div class="template-grid">
             <div class="template-card">
@@ -476,14 +540,14 @@
     <!-- Examples Section -->
     <section id="examples" class="examples">
         <div class="container">
-            <h2>See It In Action</h2>
+            <h2>Watch the Magic Happen ✨</h2>
             
             <div class="example-grid">
                 <div class="example">
                     <div class="example-content">
-                        <h3>AI Task Generation</h3>
-                        <p>Transform high-level descriptions into actionable tasks with dependencies</p>
-                        <p>The AI analyzes your request and creates a comprehensive task breakdown with proper sequencing and effort estimates.</p>
+                        <h3>"Build me an auth system"</h3>
+                        <p>You: Types one sentence</p>
+                        <p>Critical Claude: Creates 8 perfectly organized tasks with OAuth setup, JWT handling, middleware, tests, and even remembers the database schema. Like magic, but better.</p>
                     </div>
                     <div class="example-code code-block">
 $ cc task ai "Build user authentication with OAuth2"
@@ -505,9 +569,9 @@ $ cc task ai "Build user authentication with OAuth2"
                 
                 <div class="example">
                     <div class="example-content">
-                        <h3>Dependency Management</h3>
-                        <p>Smart validation prevents invalid status changes</p>
-                        <p>Tasks respect dependency chains and warn when trying to complete tasks with unfinished dependencies.</p>
+                        <h3>"Hold up, friend..."</h3>
+                        <p>Try to mark a task done when its dependencies aren't finished?</p>
+                        <p>Critical Claude politely stops you from creating chaos. It's like having a really smart rubber duck that actually prevents bugs.</p>
                     </div>
                     <div class="example-code code-block">
 $ cc task edit task-123 --status done
@@ -528,9 +592,9 @@ because these dependencies are not complete:
                 
                 <div class="example">
                     <div class="example-content">
-                        <h3>Multi-Agent Research</h3>
-                        <p>Comprehensive analysis with specialized agents</p>
-                        <p>Four specialized agents work together to research, analyze, and plan your implementation strategy.</p>
+                        <h3>The AI Dream Team</h3>
+                        <p>Need to implement WebSockets? The research squad springs into action:</p>
+                        <p>🎯 Planner breaks it down, 📚 Researcher finds best practices, 📈 Analyst estimates complexity, ✍️ Writer creates tasks. It's like Stack Overflow, but it actually helps.</p>
                     </div>
                     <div class="example-code code-block">
 $ cc task research "Real-time notifications"
@@ -555,26 +619,26 @@ Use "cc task list" to see all tasks
     <!-- Installation Section -->
     <section class="installation">
         <div class="container">
-            <h2>Get Started in Minutes</h2>
+            <h2>Get Started in 30 Seconds ⏱️</h2>
             <div class="step-grid">
                 <div class="step">
                     <div class="step-number">1</div>
-                    <h3>Install</h3>
+                    <h3>Grab It</h3>
                     <div class="code-block">npm install -g critical-claude</div>
                 </div>
                 <div class="step">
                     <div class="step-number">2</div>
-                    <h3>Initialize</h3>
+                    <h3>Init</h3>
                     <div class="code-block">cc init</div>
                 </div>
                 <div class="step">
                     <div class="step-number">3</div>
-                    <h3>Create Tasks</h3>
+                    <h3>Ask AI</h3>
                     <div class="code-block">cc task ai "Build REST API"</div>
                 </div>
                 <div class="step">
                     <div class="step-number">4</div>
-                    <h3>Track Progress</h3>
+                    <h3>Ship It</h3>
                     <div class="code-block">cc task list</div>
                 </div>
             </div>
@@ -584,27 +648,27 @@ Use "cc task list" to see all tasks
     <!-- Integration Section -->
     <section class="integration">
         <div class="container">
-            <h2>Seamless Integration</h2>
+            <h2>Plays Well With Others 🤝</h2>
             <div class="integration-grid">
                 <div class="integration-card">
                     <div class="integration-icon">🖥️</div>
                     <h3>Claude Desktop</h3>
-                    <p>Native MCP integration for direct Claude Desktop access</p>
+                    <p>Talk to your tasks in plain English through Claude. "Show me what's blocking deployment" just works.</p>
                 </div>
                 <div class="integration-card">
                     <div class="integration-icon">🤖</div>
-                    <h3>OpenAI API</h3>
-                    <p>Full GPT-4 integration for task generation and analysis</p>
+                    <h3>OpenAI GPT-4</h3>
+                    <p>The gold standard for task generation. Bring your own API key and watch it work its magic.</p>
                 </div>
                 <div class="integration-card">
                     <div class="integration-icon">🧠</div>
                     <h3>Anthropic Claude</h3>
-                    <p>Direct Claude API integration for advanced reasoning</p>
+                    <p>When you need that extra reasoning power for complex project planning. Claude's got your back.</p>
                 </div>
                 <div class="integration-card">
                     <div class="integration-icon">📊</div>
-                    <h3>Version Control</h3>
-                    <p>Git integration for task history and collaboration</p>
+                    <h3>Your Workflow</h3>
+                    <p>Works with git, your IDE, your team. We fit into your process, not the other way around.</p>
                 </div>
             </div>
         </div>
