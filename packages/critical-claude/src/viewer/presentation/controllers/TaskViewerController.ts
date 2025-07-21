@@ -135,9 +135,6 @@ export class TaskViewerController {
   }
 
   private handleGlobalKeyPress(key: string, modifiers: any): void {
-    // Debug logging
-    this.logger.debug('Global key press', { key, modifiers });
-    
     // Let focused view handle the key first
     const focusedView = this.getFocusedView();
     if (focusedView && focusedView.onKeyPress(key, modifiers)) {

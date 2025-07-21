@@ -90,19 +90,87 @@ export async function initializeCLI() {
         
         // Create cc.env from template if it doesn't exist
         const envPath = path.join(process.cwd(), 'cc.env');
-        const templatePath = path.join(path.dirname(new URL(import.meta.url).pathname), '../../../cc.env.template');
+        // Fix path calculation for both development and production
+        const fileUrl = new URL(import.meta.url);
+        const dirname = path.dirname(fileUrl.pathname);
+        // Remove leading slash on Windows
+        const normalizedDirname = process.platform === 'win32' && dirname.startsWith('/') 
+          ? dirname.substring(1) 
+          : dirname;
+        const templatePath = path.join(normalizedDirname, '../../cc.env.template');
         
         try {
           await fs.access(envPath);
           console.log('✅ cc.env already exists');
         } catch {
           try {
-            const templateContent = await fs.readFile(templatePath, 'utf-8');
+            let templateContent: string;
+            try {
+              // Try to read from template file first
+              templateContent = await fs.readFile(templatePath, 'utf-8');
+            } catch {
+              // Fallback to embedded template
+              templateContent = `# Critical Claude Environment Configuration
+# Copy this file to cc.env and configure your AI provider
+
+# =============================================================================
+# AI PROVIDER CONFIGURATION
+# Choose ONE of the following providers:
+# =============================================================================
+
+# Option 1: OpenAI (Recommended for most users)
+# Get your API key from: https://platform.openai.com/api-keys
+# OPENAI_API_KEY=sk-your-openai-api-key-here
+
+# Option 2: Anthropic Claude API
+# Get your API key from: https://console.anthropic.com/
+# ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
+
+# Option 3: Claude Code CLI (Auto-detected if installed)
+# Install with: npm install -g @anthropic-ai/claude-code
+# Then authenticate with: claude auth login
+# No additional environment variables needed
+
+# =============================================================================
+# CRITICAL CLAUDE CONFIGURATION
+# =============================================================================
+
+# Project name (used for task prefixes and organization)
+CC_PROJECT_NAME=my-project
+
+# Default team size for AI estimations
+CC_TEAM_SIZE=3
+
+# Team experience level (junior|intermediate|senior)
+CC_EXPERIENCE_LEVEL=intermediate
+
+# Enable verbose logging for debugging
+# CC_LOG_LEVEL=DEBUG
+
+# =============================================================================
+# TASK MANAGEMENT SETTINGS
+# =============================================================================
+
+# Maximum number of AI-generated tasks per request
+CC_MAX_TASKS=8
+
+# Enable automatic dependency detection
+CC_AUTO_DEPS=true
+
+# Default task status for new tasks
+CC_DEFAULT_STATUS=todo
+`;
+            }
+            
             await fs.writeFile(envPath, templateContent);
             console.log('✅ Created cc.env from template');
             console.log('⚠️  Please configure your API keys in cc.env');
           } catch (err) {
             console.log('⚠️  Could not create cc.env - please create it manually');
+            if (process.env.CC_DEBUG) {
+              console.error('Template path:', templatePath);
+              console.error('Error:', err);
+            }
           }
         }
         

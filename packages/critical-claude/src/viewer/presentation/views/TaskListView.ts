@@ -363,9 +363,8 @@ export class TaskListView extends BaseView {
   private toggleTaskStatus(): void {
     const task = this.getSelectedTask();
     if (task) {
-      this.logger.info('Toggling task status', { taskId: task.id });
       // TODO: Emit event to toggle status
-      // For now, just log
+      // For now, do nothing to avoid logging
     }
   }
 }

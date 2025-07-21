@@ -10,7 +10,8 @@ import { TaskSubscriptionService } from './application/services/TaskSubscription
 import { TaskRepositoryAdapter } from './infrastructure/data-access/TaskRepositoryAdapter.js';
 import { EventEmitterBus } from './infrastructure/event-bus/EventEmitterBus.js';
 import { DirectTerminalUI } from './infrastructure/terminal-ui/DirectTerminalUI.js';
-import { ConsoleLogger, LogLevel } from './infrastructure/logging/ConsoleLogger.js';
+import { SilentLogger } from './infrastructure/logging/SilentLogger.js';
+import { LogLevel } from './infrastructure/logging/ConsoleLogger.js';
 import { Task } from './domain/entities/Task.js';
 import { TaskId } from './domain/value-objects/TaskId.js';
 import { TaskStatus } from './domain/value-objects/TaskStatus.js';
@@ -32,7 +33,7 @@ export class TaskViewerApplication {
     logger;
     terminalUI = null;
     constructor(logLevel = LogLevel.INFO) {
-        this.logger = new ConsoleLogger(logLevel);
+        this.logger = new SilentLogger(logLevel);
     }
     async start() {
         try {
