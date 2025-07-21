@@ -241,7 +241,21 @@ CC_EXPERIENCE_LEVEL=senior</div>
             <h2>The Good Stuff 🎯</h2>
             
             <h3>Initialize Project</h3>
-            <div class="command-example">cc init</div>
+            <div class="command-example"># Basic initialization
+cc init
+
+# Initialize with a template
+cc init --template webapp
+
+# Initialize with custom settings
+cc init --name "My Project" --team-size 5</div>
+            <p>The <code>cc init</code> command will:</p>
+            <ul>
+                <li>Create a <code>cc.env</code> file from the template</li>
+                <li>Initialize the task storage system</li>
+                <li>Optionally load a project template</li>
+                <li>Set up your project for Critical Claude</li>
+            </ul>
             
             <h3>Create Tasks</h3>
             <div class="command-example">cc task create "Implement user authentication"</div>
@@ -406,7 +420,12 @@ cc task edit task-123 --remove-dependencies task-456</div>
             <p>Critical Claude provides native Model Context Protocol (MCP) integration:</p>
             
             <div class="command-example"># Start MCP server
-cc mcp-server</div>
+cc mcp-server
+
+# Start with custom options
+cc mcp-server -p 3001 --log-level debug</div>
+            
+            <p>The MCP server enables direct integration with Claude Desktop, allowing you to manage tasks through natural language conversations.</p>
             
             <h3>Available MCP Tools</h3>
             <ul>
