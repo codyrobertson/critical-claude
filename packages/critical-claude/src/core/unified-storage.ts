@@ -1,0 +1,487 @@
+/**
+ * Unified Storage Manager - Single source of truth for all task data
+ * Unified storage system replacing all fragmented task storage systems
+ */
+
+import fs from 'fs/promises';
+import path from 'path';
+import { CommonTask, CreateTaskInput, UpdateTaskInput, TaskFilter, TaskListOptions } from '../types/common-task.js';
+
+export interface UnifiedStorageConfig {
+  basePath: string;
+  migrationEnabled: boolean;
+  backupEnabled: boolean;
+  autoCleanup: boolean;
+}
+
+export class UnifiedStorageManager {
+  private config: UnifiedStorageConfig;
+  private initialized = false;
+  
+  constructor(config?: Partial<UnifiedStorageConfig>) {
+    this.config = {
+      basePath: path.join(process.cwd(), '.critical-claude'),
+      migrationEnabled: true,
+      backupEnabled: true,
+      autoCleanup: false,
+      ...config
+    };
+  }
+  
+  async initialize(): Promise<void> {
+    if (this.initialized) return;
+    
+    await this.ensureDirectories();
+    
+    if (this.config.migrationEnabled) {
+      await this.migrateFromFragmentedStorage();
+    }
+    
+    this.initialized = true;
+  }
+  
+  private async ensureDirectories(): Promise<void> {
+    const directories = [
+      'tasks',
+      'phases', 
+      'epics',
+      'sprints',
+      'archive',
+      'backup',
+      'temp'
+    ];
+    
+    for (const dir of directories) {
+      await fs.mkdir(path.join(this.config.basePath, dir), { recursive: true });
+    }
+  }
+  
+  private async migrateFromFragmentedStorage(): Promise<void> {
+    const migrationSources = [
+      // SimpleTaskManager storage
+      path.join(process.cwd(), '.critical-claude-simple', 'tasks'),
+      // Additional MCP simple storage paths that might exist
+      path.join(process.cwd(), '.critical-claude', 'temp-tasks'),
+    ];
+    
+    for (const sourcePath of migrationSources) {
+      await this.migrateTasks(sourcePath);
+    }
+    
+    // Clean up old directories after successful migration
+    if (this.config.autoCleanup) {
+      await this.cleanupOldDirectories();
+    }
+  }
+  
+  private async migrateTasks(sourcePath: string): Promise<void> {
+    try {
+      const files = await fs.readdir(sourcePath);
+      const targetPath = path.join(this.config.basePath, 'tasks');
+      let migratedCount = 0;
+      
+      for (const file of files) {
+        if (file.endsWith('.json')) {
+          const sourceFile = path.join(sourcePath, file);
+          const targetFile = path.join(targetPath, file);
+          
+          // Check if target exists to avoid conflicts
+          try {
+            await fs.access(targetFile);
+            console.warn(`Task conflict: ${file} exists in both locations - skipping migration`);
+            continue;
+          } catch {
+            // File doesn't exist, safe to migrate
+          }
+          
+          // Read and validate task before migration
+          try {
+            const taskData = await fs.readFile(sourceFile, 'utf-8');
+            const task = JSON.parse(taskData);
+            
+            // Basic validation
+            if (!task.id || !task.title) {
+              console.warn(`Invalid task in ${file} - skipping migration`);
+              continue;
+            }
+            
+            await fs.copyFile(sourceFile, targetFile);
+            migratedCount++;
+          } catch (error) {
+            console.warn(`Failed to migrate ${file}: ${(error as Error).message}`);
+          }
+        }
+      }
+      
+      if (migratedCount > 0) {
+        console.log(`Migrated ${migratedCount} tasks from ${sourcePath}`);
+      }
+    } catch (error) {
+      // Source path doesn't exist, skip migration
+    }
+  }
+  
+  private async cleanupOldDirectories(): Promise<void> {
+    const oldDirectories = [
+      path.join(process.cwd(), '.critical-claude-simple'),
+    ];
+    
+    for (const dir of oldDirectories) {
+      try {
+        await fs.rm(dir, { recursive: true, force: true });
+        console.log(`Cleaned up old directory: ${dir}`);
+      } catch {
+        // Directory doesn't exist or can't be removed
+      }
+    }
+  }
+  
+  // Task CRUD Operations
+  async createTask(input: CreateTaskInput): Promise<CommonTask> {
+    await this.initialize();
+    
+    const taskId = this.generateTaskId();
+    const now = new Date().toISOString();
+    
+    const task: CommonTask = {
+      id: taskId,
+      title: input.title,
+      description: input.description || '',
+      status: input.status || 'todo',
+      priority: input.priority || 'medium',
+      assignee: input.assignee,
+      labels: input.labels || [],
+      createdAt: now,
+      updatedAt: now,
+      sprintId: input.sprintId,
+      epicId: input.epicId,
+      phaseId: input.phaseId,
+      storyPoints: input.storyPoints,
+      estimatedHours: input.estimatedHours,
+      dependencies: input.dependencies || [],
+      draft: input.draft || false,
+      aiGenerated: input.aiGenerated || false,
+      source: input.source || 'manual'
+    };
+    
+    await this.saveTask(task);
+    return task;
+  }
+  
+  async getTask(taskId: string): Promise<CommonTask | null> {
+    await this.initialize();
+    
+    try {
+      const taskPath = this.getTaskPath(taskId);
+      const content = await fs.readFile(taskPath, 'utf-8');
+      return JSON.parse(content) as CommonTask;
+    } catch {
+      return null;
+    }
+  }
+  
+  async updateTask(input: UpdateTaskInput): Promise<CommonTask | null> {
+    await this.initialize();
+    
+    const existingTask = await this.getTask(input.id);
+    if (!existingTask) {
+      return null;
+    }
+    
+    const updatedTask: CommonTask = {
+      ...existingTask,
+      ...input,
+      updatedAt: new Date().toISOString()
+    };
+    
+    await this.saveTask(updatedTask);
+    return updatedTask;
+  }
+  
+  async deleteTask(taskId: string): Promise<boolean> {
+    await this.initialize();
+    
+    try {
+      const taskPath = this.getTaskPath(taskId);
+      await fs.unlink(taskPath);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  
+  async archiveTask(taskId: string): Promise<CommonTask | null> {
+    await this.initialize();
+    
+    const task = await this.getTask(taskId);
+    if (!task) {
+      return null;
+    }
+    
+    const archivedTask: CommonTask = {
+      ...task,
+      status: 'archived',
+      archivedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    // Move to archive directory
+    const archivePath = path.join(this.config.basePath, 'archive', `${taskId}.json`);
+    await fs.writeFile(archivePath, JSON.stringify(archivedTask, null, 2));
+    
+    // Remove from active tasks
+    await this.deleteTask(taskId);
+    
+    return archivedTask;
+  }
+  
+  async listTasks(options: TaskListOptions = {}): Promise<CommonTask[]> {
+    await this.initialize();
+    
+    const tasksDir = path.join(this.config.basePath, 'tasks');
+    
+    try {
+      const files = await fs.readdir(tasksDir);
+      const taskFiles = files.filter(f => f.endsWith('.json'));
+      
+      const tasks: CommonTask[] = [];
+      
+      for (const file of taskFiles) {
+        try {
+          const content = await fs.readFile(path.join(tasksDir, file), 'utf-8');
+          const task = JSON.parse(content) as CommonTask;
+          
+          if (this.matchesFilter(task, options.filter)) {
+            tasks.push(task);
+          }
+        } catch {
+          // Skip invalid task files
+        }
+      }
+      
+      // Include archived tasks if requested
+      if (options.filter?.includeArchived) {
+        const archivedTasks = await this.getArchivedTasks(options.filter);
+        tasks.push(...archivedTasks);
+      }
+      
+      // Sort tasks
+      this.sortTasks(tasks, options.sortBy || 'updatedAt', options.sortOrder || 'desc');
+      
+      // Apply pagination
+      const offset = options.offset || 0;
+      const limit = options.limit || tasks.length;
+      
+      return tasks.slice(offset, offset + limit);
+    } catch {
+      return [];
+    }
+  }
+  
+  private async getArchivedTasks(filter?: TaskFilter): Promise<CommonTask[]> {
+    const archiveDir = path.join(this.config.basePath, 'archive');
+    
+    try {
+      const files = await fs.readdir(archiveDir);
+      const taskFiles = files.filter(f => f.endsWith('.json'));
+      
+      const tasks: CommonTask[] = [];
+      
+      for (const file of taskFiles) {
+        try {
+          const content = await fs.readFile(path.join(archiveDir, file), 'utf-8');
+          const task = JSON.parse(content) as CommonTask;
+          
+          if (this.matchesFilter(task, filter)) {
+            tasks.push(task);
+          }
+        } catch {
+          // Skip invalid task files
+        }
+      }
+      
+      return tasks;
+    } catch {
+      return [];
+    }
+  }
+  
+  private matchesFilter(task: CommonTask, filter?: TaskFilter): boolean {
+    if (!filter) return true;
+    
+    // Status filter
+    if (filter.status) {
+      const statuses = Array.isArray(filter.status) ? filter.status : [filter.status];
+      if (!statuses.includes(task.status)) return false;
+    }
+    
+    // Priority filter
+    if (filter.priority) {
+      const priorities = Array.isArray(filter.priority) ? filter.priority : [filter.priority];
+      if (!priorities.includes(task.priority)) return false;
+    }
+    
+    // Assignee filter
+    if (filter.assignee && task.assignee !== filter.assignee) {
+      return false;
+    }
+    
+    // Labels filter
+    if (filter.labels && filter.labels.length > 0) {
+      const hasMatchingLabel = filter.labels.some(label => task.labels.includes(label));
+      if (!hasMatchingLabel) return false;
+    }
+    
+    // Sprint filter
+    if (filter.sprintId && task.sprintId !== filter.sprintId) {
+      return false;
+    }
+    
+    // Epic filter
+    if (filter.epicId && task.epicId !== filter.epicId) {
+      return false;
+    }
+    
+    // Phase filter
+    if (filter.phaseId && task.phaseId !== filter.phaseId) {
+      return false;
+    }
+    
+    // Draft filter
+    if (!filter.includeDrafts && task.draft) {
+      return false;
+    }
+    
+    // AI generated filter
+    if (filter.aiGenerated !== undefined && task.aiGenerated !== filter.aiGenerated) {
+      return false;
+    }
+    
+    // Claude Code sync filter
+    if (filter.claudeCodeSynced !== undefined && task.claudeCodeSynced !== filter.claudeCodeSynced) {
+      return false;
+    }
+    
+    return true;
+  }
+  
+  private sortTasks(tasks: CommonTask[], sortBy: string, sortOrder: 'asc' | 'desc'): void {
+    tasks.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'createdAt':
+          comparison = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+          break;
+        case 'updatedAt':
+          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+          break;
+        case 'priority':
+          const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
+          comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
+          break;
+        case 'title':
+          comparison = a.title.localeCompare(b.title);
+          break;
+        case 'status':
+          comparison = a.status.localeCompare(b.status);
+          break;
+        default:
+          comparison = 0;
+      }
+      
+      return sortOrder === 'desc' ? -comparison : comparison;
+    });
+  }
+  
+  private async saveTask(task: CommonTask): Promise<void> {
+    const taskPath = this.getTaskPath(task.id);
+    await fs.writeFile(taskPath, JSON.stringify(task, null, 2));
+  }
+  
+  private generateTaskId(): string {
+    return `task-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+  
+  // Path utilities
+  getTaskPath(taskId: string): string {
+    return path.join(this.config.basePath, 'tasks', `${taskId}.json`);
+  }
+  
+  getSprintPath(sprintId: string): string {
+    return path.join(this.config.basePath, 'sprints', `${sprintId}.json`);
+  }
+  
+  getEpicPath(epicId: string): string {
+    return path.join(this.config.basePath, 'epics', `${epicId}.json`);
+  }
+  
+  getPhasePath(phaseId: string): string {
+    return path.join(this.config.basePath, 'phases', `${phaseId}.json`);
+  }
+  
+  // Utility methods
+  async getStats(): Promise<{
+    totalTasks: number;
+    tasksByStatus: Record<string, number>;
+    tasksByPriority: Record<string, number>;
+    archivedTasks: number;
+  }> {
+    await this.initialize();
+    
+    const allTasks = await this.listTasks({ filter: { includeArchived: true } });
+    
+    const stats = {
+      totalTasks: allTasks.filter(t => t.status !== 'archived').length,
+      tasksByStatus: {} as Record<string, number>,
+      tasksByPriority: {} as Record<string, number>,
+      archivedTasks: allTasks.filter(t => t.status === 'archived').length
+    };
+    
+    for (const task of allTasks) {
+      if (task.status !== 'archived') {
+        stats.tasksByStatus[task.status] = (stats.tasksByStatus[task.status] || 0) + 1;
+        stats.tasksByPriority[task.priority] = (stats.tasksByPriority[task.priority] || 0) + 1;
+      }
+    }
+    
+    return stats;
+  }
+  
+  async backup(): Promise<string> {
+    await this.initialize();
+    
+    if (!this.config.backupEnabled) {
+      throw new Error('Backup is disabled in configuration');
+    }
+    
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const backupDir = path.join(this.config.basePath, 'backup', `backup-${timestamp}`);
+    
+    await fs.mkdir(backupDir, { recursive: true });
+    
+    // Copy all data directories
+    const directories = ['tasks', 'phases', 'epics', 'sprints', 'archive'];
+    
+    for (const dir of directories) {
+      const sourceDir = path.join(this.config.basePath, dir);
+      const targetDir = path.join(backupDir, dir);
+      
+      try {
+        await fs.mkdir(targetDir, { recursive: true });
+        const files = await fs.readdir(sourceDir);
+        
+        for (const file of files) {
+          await fs.copyFile(
+            path.join(sourceDir, file),
+            path.join(targetDir, file)
+          );
+        }
+      } catch {
+        // Directory doesn't exist, skip
+      }
+    }
+    
+    return backupDir;
+  }
+}
