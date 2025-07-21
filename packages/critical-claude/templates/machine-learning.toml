@@ -1,0 +1,183 @@
+# Machine Learning Project Template
+[metadata]
+name = "machine-learning"
+description = "Machine learning project with data pipeline, training, and deployment"
+version = "1.0.0"
+difficulty = "advanced"
+estimated_weeks = 8
+team_size = 3
+tags = ["ml", "ai", "data-science", "python"]
+
+[variables]
+project_name = "ml-model"
+ml_framework = "pytorch"
+model_type = "classification"
+deployment_target = "api"
+use_gpu = true
+
+[phases]
+exploration = "Data Exploration & Analysis"
+preprocessing = "Data Preprocessing & Feature Engineering"
+modeling = "Model Development & Training"
+deployment = "Model Deployment & Monitoring"
+
+[tasks]
+
+[[tasks.exploration]]
+title = "Set up ML development environment"
+description = "Configure Python environment, {{ml_framework}}, and Jupyter notebooks"
+priority = "critical"
+labels = ["setup", "ml", "environment"]
+phase = "exploration"
+story_points = 3
+estimated_hours = 5
+
+[[tasks.exploration]]
+title = "Collect and analyze dataset"
+description = "Gather data, perform EDA, and document data characteristics"
+priority = "critical"
+labels = ["data", "analysis", "eda"]
+phase = "exploration"
+story_points = 5
+estimated_hours = 8
+dependencies = ["exploration-1"]
+
+[[tasks.exploration]]
+title = "Define evaluation metrics"
+description = "Establish success criteria and performance benchmarks"
+priority = "high"
+labels = ["metrics", "evaluation", "planning"]
+phase = "exploration"
+story_points = 2
+estimated_hours = 3
+dependencies = ["exploration-2"]
+
+[[tasks.exploration]]
+title = "Create data quality report"
+description = "Document data issues, biases, and limitations"
+priority = "medium"
+labels = ["documentation", "data-quality"]
+phase = "exploration"
+story_points = 3
+estimated_hours = 5
+dependencies = ["exploration-2"]
+
+[[tasks.preprocessing]]
+title = "Build data preprocessing pipeline"
+description = "Create reproducible data cleaning and transformation pipeline"
+priority = "critical"
+labels = ["pipeline", "preprocessing", "etl"]
+phase = "preprocessing"
+story_points = 5
+estimated_hours = 8
+dependencies = ["exploration-2"]
+
+[[tasks.preprocessing]]
+title = "Implement feature engineering"
+description = "Create meaningful features for {{model_type}} task"
+priority = "high"
+labels = ["features", "engineering", "ml"]
+phase = "preprocessing"
+story_points = 8
+estimated_hours = 12
+dependencies = ["preprocessing-1"]
+
+[[tasks.preprocessing]]
+title = "Create train/validation/test splits"
+description = "Split data with proper stratification and temporal awareness"
+priority = "high"
+labels = ["data-split", "validation"]
+phase = "preprocessing"
+story_points = 2
+estimated_hours = 3
+dependencies = ["preprocessing-2"]
+
+[[tasks.modeling]]
+title = "Implement baseline model"
+description = "Create simple baseline for performance comparison"
+priority = "high"
+labels = ["modeling", "baseline", "ml"]
+phase = "modeling"
+story_points = 3
+estimated_hours = 5
+dependencies = ["preprocessing-3"]
+
+[[tasks.modeling]]
+title = "Develop {{ml_framework}} model architecture"
+description = "Design and implement main model architecture"
+priority = "critical"
+labels = ["modeling", "architecture", "ml"]
+phase = "modeling"
+story_points = 8
+estimated_hours = 12
+dependencies = ["modeling-1"]
+
+[[tasks.modeling]]
+title = "Implement training pipeline"
+description = "Create training loop with logging, checkpointing, and early stopping"
+priority = "critical"
+labels = ["training", "pipeline", "ml"]
+phase = "modeling"
+story_points = 5
+estimated_hours = 8
+dependencies = ["modeling-2"]
+
+[[tasks.modeling]]
+title = "Perform hyperparameter tuning"
+description = "Optimize model hyperparameters using grid/random search or Bayesian optimization"
+priority = "high"
+labels = ["optimization", "hyperparameters", "ml"]
+phase = "modeling"
+story_points = 5
+estimated_hours = 8
+dependencies = ["modeling-3"]
+
+[[tasks.modeling]]
+title = "Analyze model performance"
+description = "Evaluate model on test set, analyze errors, and create performance report"
+priority = "high"
+labels = ["evaluation", "analysis", "ml"]
+phase = "modeling"
+story_points = 3
+estimated_hours = 5
+dependencies = ["modeling-4"]
+
+[[tasks.deployment]]
+title = "Convert model for production"
+description = "Optimize model for inference (quantization, pruning, ONNX conversion)"
+priority = "high"
+labels = ["deployment", "optimization", "production"]
+phase = "deployment"
+story_points = 5
+estimated_hours = 8
+dependencies = ["modeling-5"]
+
+[[tasks.deployment]]
+title = "Create model serving {{deployment_target}}"
+description = "Build API/service for model inference with proper error handling"
+priority = "critical"
+labels = ["deployment", "api", "serving"]
+phase = "deployment"
+story_points = 5
+estimated_hours = 8
+dependencies = ["deployment-1"]
+
+[[tasks.deployment]]
+title = "Implement monitoring and logging"
+description = "Setup model performance monitoring, drift detection, and logging"
+priority = "high"
+labels = ["monitoring", "mlops", "production"]
+phase = "deployment"
+story_points = 5
+estimated_hours = 8
+dependencies = ["deployment-2"]
+
+[[tasks.deployment]]
+title = "Create documentation and model card"
+description = "Document model capabilities, limitations, and ethical considerations"
+priority = "medium"
+labels = ["documentation", "ethics", "ml"]
+phase = "deployment"
+story_points = 3
+estimated_hours = 5
+dependencies = ["deployment-3"]

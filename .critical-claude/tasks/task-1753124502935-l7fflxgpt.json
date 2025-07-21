@@ -1,0 +1,32 @@
+{
+  "id": "task-1753124502935-l7fflxgpt",
+  "title": "Configure postgres database and ORM",
+  "description": "Setup database connection, create schemas, and configure ORM/query builder",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "database",
+    "backend",
+    "setup",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.935Z",
+  "updatedAt": "2025-07-21T19:08:14.595Z",
+  "storyPoints": 3,
+  "estimatedHours": 4,
+  "dependencies": [
+    "task-1753124502933-r64ss50g6"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

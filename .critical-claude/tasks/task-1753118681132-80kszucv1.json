@@ -1,0 +1,38 @@
+{
+  "id": "task-1753118681132-80kszucv1",
+  "title": "Research Command Implementation",
+  "description": "Develop research command to gather relevant information and references",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "feature",
+    "AI",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:24:41.132Z",
+  "updatedAt": "2025-07-21T19:08:14.593Z",
+  "storyPoints": 8,
+  "estimatedHours": "16",
+  "dependencies": [
+    "task-1753118681132-y0oehfyl3"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

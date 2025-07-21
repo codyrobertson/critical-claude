@@ -1,0 +1,30 @@
+{
+  "id": "task-1753124502936-7egp3hul4",
+  "title": "Create documentation",
+  "description": "API docs, setup guide, architecture docs, and user manual",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "documentation",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.936Z",
+  "updatedAt": "2025-07-21T19:08:14.597Z",
+  "storyPoints": 3,
+  "estimatedHours": 5,
+  "dependencies": [
+    "task-1753124502936-gmk8gwh5n"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

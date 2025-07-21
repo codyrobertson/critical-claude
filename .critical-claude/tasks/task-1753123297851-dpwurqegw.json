@@ -1,0 +1,33 @@
+{
+  "id": "task-1753123297851-dpwurqegw",
+  "title": "Split Pane Implementation",
+  "description": "Create flexible pane management system with resizing and navigation capabilities",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "ui",
+    "layout",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:37.851Z",
+  "updatedAt": "2025-07-21T19:08:14.596Z",
+  "storyPoints": 5,
+  "estimatedHours": "25",
+  "dependencies": [
+    "task-1753123297851-adbhtaafk"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

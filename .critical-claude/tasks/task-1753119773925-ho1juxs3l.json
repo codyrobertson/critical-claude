@@ -1,0 +1,38 @@
+{
+  "id": "task-1753119773925-ho1juxs3l",
+  "title": "Component Testing",
+  "description": "Write unit and integration tests for all component functionality",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "testing",
+    "quality",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:42:53.925Z",
+  "updatedAt": "2025-07-21T19:08:14.594Z",
+  "storyPoints": 5,
+  "estimatedHours": "10",
+  "dependencies": [
+    "task-1753119773925-9ldeqadt3"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

@@ -1,0 +1,32 @@
+{
+  "id": "task-1753124502935-hovgazhpl",
+  "title": "Build RESTful API endpoints",
+  "description": "Implement CRUD operations, business logic, and API documentation",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "api",
+    "backend",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.935Z",
+  "updatedAt": "2025-07-21T19:08:14.598Z",
+  "storyPoints": 8,
+  "estimatedHours": 12,
+  "dependencies": [
+    "task-1753124502935-ukbqm8niv",
+    "task-1753124502935-hie5hwsdg"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

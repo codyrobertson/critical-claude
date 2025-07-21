@@ -1,0 +1,39 @@
+{
+  "id": "task-1753119792553-qosrjbcvw",
+  "title": "Implement Drag-and-Drop Zone",
+  "description": "Create drag-and-drop functionality with visual feedback for hover and drop states",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "frontend",
+    "interaction",
+    "ai-expanded",
+    "parent:task-1753119773924-mg2icu3wv",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:43:12.553Z",
+  "updatedAt": "2025-07-21T19:08:14.595Z",
+  "storyPoints": 3,
+  "estimatedHours": "6",
+  "dependencies": [
+    "task-1753119792552-g3fxqkcgq"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-expansion"
+}

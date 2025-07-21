@@ -1,0 +1,17 @@
+{
+  "id": "task-1753125114423-dnm2d7l5u",
+  "title": "Configure ESLint and Prettier",
+  "description": "",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "tooling",
+    "setup"
+  ],
+  "createdAt": "2025-07-21T19:11:54.423Z",
+  "updatedAt": "2025-07-21T19:11:54.423Z",
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

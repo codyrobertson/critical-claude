@@ -1,0 +1,18 @@
+{
+  "id": "task-1753125114421-8aceht56h",
+  "title": "Project Setup",
+  "description": "Initialize project structure and dependencies",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "setup",
+    "infrastructure"
+  ],
+  "createdAt": "2025-07-21T19:11:54.421Z",
+  "updatedAt": "2025-07-21T19:11:54.421Z",
+  "storyPoints": 3,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

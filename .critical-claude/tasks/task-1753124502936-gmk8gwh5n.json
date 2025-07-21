@@ -1,0 +1,32 @@
+{
+  "id": "task-1753124502936-gmk8gwh5n",
+  "title": "Write comprehensive tests",
+  "description": "Unit tests, integration tests, and E2E test coverage",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "testing",
+    "quality",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.936Z",
+  "updatedAt": "2025-07-21T19:08:14.596Z",
+  "storyPoints": 5,
+  "estimatedHours": 8,
+  "dependencies": [
+    "task-1753124502935-hovgazhpl",
+    "task-1753124502935-qo5my53pk"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

@@ -1,0 +1,29 @@
+{
+  "id": "task-1753123271113-pbywjw9zb",
+  "title": "Build a hyper-performant terminal-based task vi...",
+  "description": "Build a hyper-performant terminal-based task viewer like lf file manager with vim keybindings, split pane view, fuzzy search, real-time updates, and SOLID architecture following DDD principles",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "ui",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:11.113Z",
+  "updatedAt": "2025-07-21T19:08:14.589Z",
+  "storyPoints": 2,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai"
+}

@@ -132,6 +132,9 @@ export class AITaskManager {
   async generateTasks(description: string, options: AITaskGenerationOptions = {}): Promise<CommonTask[]> {
     logger.info(`Generating tasks with AI from: ${description.substring(0, 50)}...`);
 
+    // Ensure AI service is initialized
+    await this.aiService.initialize();
+
     // Use AI service for intelligent task generation
     const aiTasks = await this.aiService.generateProjectTasks(description, {
       maxTasks: options.maxTasks || 8,

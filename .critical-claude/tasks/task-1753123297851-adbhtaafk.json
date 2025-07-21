@@ -1,0 +1,33 @@
+{
+  "id": "task-1753123297851-adbhtaafk",
+  "title": "Terminal Interface Foundation",
+  "description": "Implement basic terminal rendering engine and event handling system with vim-style keybinding support",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "ui",
+    "core",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:37.851Z",
+  "updatedAt": "2025-07-21T19:08:14.589Z",
+  "storyPoints": 8,
+  "estimatedHours": "30",
+  "dependencies": [
+    "task-1753123297849-6dms0pfao"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

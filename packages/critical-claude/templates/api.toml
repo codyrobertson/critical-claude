@@ -1,0 +1,87 @@
+# RESTful API Service Template
+[metadata]
+name = "api"
+description = "RESTful API service with authentication and database"
+version = "1.0.0"
+difficulty = "intermediate"
+estimated_weeks = 2
+team_size = 2
+tags = ["api", "backend", "rest", "microservice"]
+
+[variables]
+service_name = "api-service"
+framework = "express"
+database = "postgres"
+auth_method = "jwt"
+api_version = "v1"
+
+[[tasks.default]]
+title = "Initialize {{framework}} API project"
+description = "Setup project structure, dependencies, and development environment"
+priority = "critical"
+labels = ["setup", "backend"]
+story_points = 2
+estimated_hours = 3
+
+[[tasks.default]]
+title = "Setup {{database}} connection and migrations"
+description = "Configure database connection, setup migration system"
+priority = "high"
+labels = ["database", "backend"]
+story_points = 3
+estimated_hours = 4
+dependencies = ["1"]
+
+[[tasks.default]]
+title = "Implement {{auth_method}} authentication"
+description = "Create auth middleware, token generation, and validation"
+priority = "critical"
+labels = ["auth", "security"]
+story_points = 5
+estimated_hours = 8
+dependencies = ["2"]
+
+[[tasks.default]]
+title = "Design API routes and controllers"
+description = "Create RESTful endpoints following {{api_version}} specification"
+priority = "high"
+labels = ["api", "architecture"]
+story_points = 5
+estimated_hours = 8
+dependencies = ["3"]
+
+[[tasks.default]]
+title = "Implement data validation and error handling"
+description = "Add request validation, sanitization, and consistent error responses"
+priority = "high"
+labels = ["validation", "error-handling"]
+story_points = 3
+estimated_hours = 5
+dependencies = ["4"]
+
+[[tasks.default]]
+title = "Add API documentation"
+description = "Generate OpenAPI/Swagger documentation for all endpoints"
+priority = "medium"
+labels = ["documentation", "api"]
+story_points = 2
+estimated_hours = 3
+dependencies = ["5"]
+
+[[tasks.default]]
+title = "Write API tests"
+description = "Unit tests for controllers and integration tests for endpoints"
+priority = "high"
+labels = ["testing", "quality"]
+story_points = 5
+estimated_hours = 8
+dependencies = ["5"]
+
+[[tasks.default]]
+title = "Setup deployment configuration"
+description = "Docker configuration, environment variables, and deployment scripts"
+priority = "medium"
+labels = ["deployment", "devops"]
+story_points = 3
+estimated_hours = 5
+dependencies = ["7"]

@@ -1,0 +1,33 @@
+{
+  "id": "task-1753123297852-wrsi33f8g",
+  "title": "Task Data Model",
+  "description": "Implement task data structures, storage, and manipulation logic",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "data",
+    "model",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:37.852Z",
+  "updatedAt": "2025-07-21T19:08:14.590Z",
+  "storyPoints": 3,
+  "estimatedHours": "15",
+  "dependencies": [
+    "task-1753123297849-6dms0pfao"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

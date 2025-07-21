@@ -1,0 +1,17 @@
+{
+  "id": "task-1753125114423-0qx6log8l",
+  "title": "Setup Express server",
+  "description": "",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "express",
+    "backend"
+  ],
+  "createdAt": "2025-07-21T19:11:54.423Z",
+  "updatedAt": "2025-07-21T19:11:54.423Z",
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

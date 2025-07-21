@@ -1,0 +1,32 @@
+{
+  "id": "task-1753123297849-6dms0pfao",
+  "title": "Core Architecture Setup",
+  "description": "Establish SOLID architecture patterns, project structure, and core interfaces. Set up development environment and testing framework.",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "architecture",
+    "setup",
+    "foundation",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:37.849Z",
+  "updatedAt": "2025-07-21T19:08:14.596Z",
+  "storyPoints": 5,
+  "estimatedHours": "20",
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

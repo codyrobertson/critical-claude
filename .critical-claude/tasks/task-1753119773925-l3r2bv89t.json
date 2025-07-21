@@ -1,0 +1,39 @@
+{
+  "id": "task-1753119773925-l3r2bv89t",
+  "title": "State Management Integration",
+  "description": "Implement state management for profile data and upload progress",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "state",
+    "data-flow",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:42:53.925Z",
+  "updatedAt": "2025-07-21T19:08:14.594Z",
+  "storyPoints": 5,
+  "estimatedHours": "8",
+  "dependencies": [
+    "task-1753119773924-ml8nx7lfh",
+    "task-1753119773924-tkiptrwv1"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

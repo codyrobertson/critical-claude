@@ -1,0 +1,40 @@
+{
+  "id": "task-1753118681133-s72m2szy9",
+  "title": "Integration Testing",
+  "description": "Comprehensive testing of command interactions and AI integration",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "testing",
+    "quality",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:24:41.133Z",
+  "updatedAt": "2025-07-21T19:08:14.593Z",
+  "storyPoints": 5,
+  "estimatedHours": "10",
+  "dependencies": [
+    "task-1753118681132-30cac487d",
+    "task-1753118681132-80kszucv1",
+    "task-1753118681133-ue4timka3"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

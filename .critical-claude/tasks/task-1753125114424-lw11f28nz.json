@@ -1,0 +1,17 @@
+{
+  "id": "task-1753125114424-lw11f28nz",
+  "title": "Implement routing",
+  "description": "",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "routing",
+    "frontend"
+  ],
+  "createdAt": "2025-07-21T19:11:54.424Z",
+  "updatedAt": "2025-07-21T19:11:54.424Z",
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

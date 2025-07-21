@@ -1,266 +1,378 @@
-# 🚀 Critical Claude Critical Claude
+# 🚀 Critical Claude
 
-AI-powered AGILE task management that combines the simplicity of markdown with the intelligence of Critical Claude's analysis capabilities.
+Production-ready task management CLI with unified Claude Code integration via Model Context Protocol (MCP). Combines AI-powered task analysis with seamless bidirectional sync between Claude Code's TodoWrite system and Critical Claude's unified storage.
 
-## 🎯 Features
+## 🎯 Core Features
 
-### 🤖 AI-Powered Task Management
-- **Intelligent Task Generation**: Convert feature descriptions into actionable tasks
-- **Code Analysis Tasks**: Automatically create improvement tasks from code analysis
-- **Effort Estimation**: AI-driven story point estimation with confidence levels
-- **Sprint Analytics**: Real-time sprint progress analysis with risk detection
+### 🔗 Unified Claude Code Integration
+- **Bidirectional Task Sync**: Real-time sync between Claude Code TodoWrite and Critical Claude
+- **MCP Server**: Production-ready Model Context Protocol server for Claude integration
+- **Hook-Based Updates**: Live monitoring and sync of task changes
+- **Auto-Detection**: Automatically detects Claude Code context and configures integration
 
-### 🏃‍♂️ AGILE Methodology Support
-- **Hierarchical Structure**: Phase > Epic > Sprint > Task organization
-- **Sprint Planning**: AI-assisted capacity planning and task distribution
-- **Burndown Analytics**: Real-time progress tracking with predictive insights
-- **Retrospective Tools**: Automated insights and improvement suggestions
+### 🛠️ Unified Hook System
+- **Centralized Management**: Single `UnifiedHookManager` replaces multiple overlapping systems
+- **Real-time Synchronization**: Instant task updates between systems
+- **Production-Ready**: Clean, maintainable architecture with proper error handling
+- **Auto-Configuration**: Intelligent provider detection and configuration
 
-### 🔄 Automated Workflows
-- **Git Hooks Integration**: Auto-create tasks from commit patterns
-- **PR Analysis**: Generate code review tasks automatically
-- **CI/CD Integration**: Create tasks for failing builds and tests
-- **Documentation Sync**: Keep tasks aligned with code changes
+### 🧠 AI-Powered Task Management  
+- **Intelligent Task Analysis**: AI-driven task breakdown and complexity analysis
+- **Code Quality Integration**: Automated task creation from code analysis
+- **Smart Prioritization**: AI-assisted priority and effort estimation
+- **Multi-Provider Support**: OpenAI, Anthropic, Claude Code, or local AI providers
 
-## 🏗️ Architecture
+### 📋 Task Management
+- **Unified Storage**: Single source of truth for all task data
+- **Rich Task Model**: Priority, status, labels, story points, and AI metadata
+- **Search & Filtering**: Advanced task filtering and search capabilities
+- **Import/Export**: Multiple format support for existing project data
 
+### 🔄 Automation & Integration
+- **Real-time Sync**: Instant updates between Claude Code and Critical Claude
+- **Hook System**: Event-driven task updates and notifications
+- **CLI Interface**: Full-featured command-line interface
+- **MCP Server**: Production-ready Model Context Protocol integration
+
+## 🏗️ Unified Architecture
+
+### Core Components
 ```typescript
-import { CriticalClaudeClient } from '@critical-claude/critical-claude';
+import { 
+  UnifiedStorageManager, 
+  UnifiedHookManager, 
+  CriticalClaudeClient 
+} from 'critical-claude';
 
-// Initialize AI-powered task management
+// Unified storage for all task management
+const storage = new UnifiedStorageManager();
+
+// Centralized hook system with Claude Code integration
+const hookManager = new UnifiedHookManager(storage);
+
+// AI-powered task client with auto-detection
 const client = new CriticalClaudeClient();
+const tasks = await client.generateTasks("Feature description");
 
-// Generate tasks from feature description
-const tasks = await client.generateTasksFromFeature(
-  "Add OAuth authentication with Google and GitHub",
-  { teamSize: 2, sprintLength: 14 }
-);
-
-// Analyze code for improvement tasks
-const codeTasks = await client.analyzeCodeForTasks('./src/auth/login.ts');
-
-// Sprint progress analysis
-const sprintAnalysis = await client.analyzeSprintProgress(currentSprint);
+// Automatic sync to Claude Code via hooks
+await hookManager.syncToClaude();
 ```
 
-## 📋 Task Types
-
-### Enhanced Task Model
+### MCP Integration
 ```typescript
-interface EnhancedTask {
+// Available MCP tools for Claude Code integration:
+// cc_task_create, cc_task_list, cc_task_update, cc_task_delete
+// cc_sync_claude_code, cc_task_stats
+
+// Example Claude Code usage:
+// "Use cc_task_create to create a new high priority task"
+// "Use cc_sync_claude_code with execute true to sync all tasks"
+```
+
+## 📋 Unified Task Model
+
+### CommonTask Interface
+```typescript
+interface CommonTask {
   id: string;
   title: string;
-  description: string;
-  status: 'todo' | 'in-progress' | 'review' | 'done' | 'blocked';
-  assignee?: string;
-  storyPoints: number;
+  description?: string;
+  status: 'todo' | 'in_progress' | 'done' | 'blocked' | 'archived';
   priority: 'critical' | 'high' | 'medium' | 'low';
+  assignee?: string;
   labels: string[];
-  acceptanceCriteria: string[];
-  dependencies: string[];
-  codeReferences: CodeReference[];
-  generatedBy: 'manual' | 'ai' | 'hook' | 'analysis';
-  aiMetadata?: {
-    confidence: number;
-    reasoning: string;
-    suggestedEffort: number;
-    riskFactors: string[];
+  storyPoints?: number;
+  source: 'claude-code' | 'manual' | 'ai-generated' | 'imported';
+  metadata?: {
+    claudeCodeId?: string;
+    originalContent?: string;
+    syncedAt?: string;
   };
-  timeTracking: {
-    estimated: number;
-    actual: number;
-    remaining: number;
-  };
+  createdAt: string;
+  updatedAt: string;
 }
 ```
 
-## 🎯 AI Task Generation
-
-### Feature Breakdown
+### Claude Code Integration
 ```typescript
-// Input: High-level feature description
-const featureDescription = `
-  Add user authentication system with social login support.
-  Must support Google OAuth, GitHub OAuth, and email/password.
-  Include user profile management and session handling.
-`;
-
-// Output: Structured task breakdown
-const tasks = await client.generateTasksFromFeature(featureDescription, {
-  teamSize: 2,
-  sprintLength: 14,
-  techStack: ['TypeScript', 'React', 'Node.js']
-});
-
-// Results in tasks like:
-// - "Set up OAuth provider configurations" (3 points)
-// - "Implement Google OAuth integration" (5 points)  
-// - "Implement GitHub OAuth integration" (5 points)
-// - "Create user profile management UI" (8 points)
-// - "Add session management middleware" (3 points)
+interface ClaudeCodeTodo {
+  content: string;
+  status: 'pending' | 'in_progress' | 'completed';
+  priority: 'high' | 'medium' | 'low';
+  id: string;
+}
 ```
 
-### Code Analysis Tasks
+## 🔗 Claude Code Integration
+
+### Automatic Sync
 ```typescript
-// Analyze code file for improvements
-const improvementTasks = await client.analyzeCodeForTasks('./src/auth/login.ts');
+// Hook manager automatically syncs TodoWrite operations
+const hookManager = new UnifiedHookManager(storage);
 
-// Generates tasks based on Critical Claude analysis:
-// - "Fix security vulnerabilities in login.ts" (8 points, critical)
-// - "Improve error handling in authentication" (3 points, medium)
-// - "Add input validation to login form" (2 points, high)
+// When Claude Code creates todos, they automatically sync to Critical Claude
+// When Critical Claude updates tasks, changes sync back to Claude Code
+
+// Manual sync operations
+await hookManager.syncFromClaude(); // Pull todos from Claude Code
+await hookManager.syncToClaude();   // Push tasks to Claude Code
+
+// Bidirectional sync (default behavior)
+await hookManager.handleTodoWrite(claudeCodeTodos);
 ```
 
-## 🏃‍♂️ AGILE Workflows
-
-### Sprint Planning with AI
+### MCP Tool Usage
 ```typescript
-// AI-assisted sprint planning
-const sprintPlan = await client.planSprint({
-  capacity: 25, // story points
-  teamVelocity: 20, // historical average
-  backlogTasks: prioritizedBacklog,
-  sprintGoal: "Complete user authentication foundation"
-});
+// Available in Claude Code conversations:
 
-// Results in optimized task selection with risk assessment
+// Create tasks
+// "Use cc_task_create to create a high priority task for implementing authentication"
+
+// List and filter
+// "Use cc_task_list with status 'in_progress' to see current work"
+
+// Update tasks  
+// "Use cc_task_update to mark task abc123 as completed"
+
+// Sync operations
+// "Use cc_sync_claude_code with execute true to sync all tasks"
 ```
 
-### Progress Analytics
-```typescript
-// Real-time sprint analysis
-const analysis = await client.analyzeSprintProgress(currentSprint);
+## 🛠️ CLI Interface
 
-console.log(analysis);
-// {
-//   sprintId: "sprint-1",
-//   velocityTrend: [1.2, 1.8, 2.1],
-//   riskFactors: ["Sprint behind schedule", "2 blocked tasks"],
-//   suggestions: [
-//     "Consider reducing sprint scope",
-//     "Review blocked tasks with team"
-//   ],
-//   predictedCompletion: "2024-01-15",
-//   confidenceLevel: 0.75,
-//   blockers: [...]
-// }
-```
-
-## 🔄 Automation Features
-
-### Git Hook Integration
-```yaml
-# .claude/hooks.yml
-on:
-  commit:
-    - pattern: "fix:|bug:"
-      action: create_task
-      template: "Fix: {commit_message}"
-      priority: high
-      labels: [bug]
-    
-    - pattern: "feat:|feature:"
-      action: analyze_with_cc
-      tools: [cc_mvp_plan]
-      auto_create_tasks: true
-
-  pr:
-    opened:
-      action: create_review_tasks
-      assignee: "@team-lead"
-```
-
-### Automated Task Creation
-- **Commit Analysis**: Create tasks from commit patterns
-- **Build Failures**: Auto-generate fix tasks for CI failures
-- **Code Reviews**: Generate review tasks for PRs
-- **Documentation**: Create docs tasks for undocumented code
-
-## 📊 Analytics & Insights
-
-### Sprint Metrics
-- **Velocity Tracking**: Historical and predictive velocity analysis
-- **Burndown Charts**: Real-time progress with ideal vs actual
-- **Risk Detection**: Early warning for sprint issues
-- **Capacity Planning**: AI-optimized task distribution
-
-### Team Performance
-- **Individual Velocity**: Per-developer capacity tracking
-- **Bottleneck Analysis**: Identify workflow constraints
-- **Quality Metrics**: Track bug rates and code quality
-- **Effort Accuracy**: Compare estimates vs actual effort
-
-## 🛠️ Integration Points
-
-### Critical Claude MCP Tools
-- `cc_mvp_plan`: Feature breakdown into tasks
-- `cc_crit_code`: Code quality task generation
-- `cc_system_design_analyze`: Architecture improvement tasks
-- `cc_data_flow_analyze`: Performance optimization tasks
-
-### External Systems
-- **Git Repositories**: Commit and PR analysis
-- **CI/CD Pipelines**: Build status integration
-- **Code Editors**: Real-time task creation
-- **Project Management**: Sync with existing tools
-
-## 🚀 Getting Started
-
-### Installation
+### Task Management Commands
 ```bash
-npm install @critical-claude/critical-claude
+# Create tasks
+cc task create "Implement user authentication" --priority high --labels auth,security
+
+# List and filter tasks
+cc task list --status in_progress --priority high
+cc task list --assignee "john@example.com" --labels frontend
+
+# Update tasks
+cc task update abc123 --status done --assignee "jane@example.com"
+
+# Task statistics
+cc task stats
+
+# Claude Code sync
+cc sync claude-code --direction both
+cc sync claude-code --dry-run  # Preview changes
 ```
 
-### Basic Setup
-```typescript
-import { CriticalClaudeClient } from '@critical-claude/critical-claude';
+### AI-Powered Features
+```bash
+# Generate tasks from description
+cc ai generate "Build REST API for user management"
 
-// Initialize client
-const client = new CriticalClaudeClient();
+# Analyze task complexity
+cc ai analyze "Implement OAuth integration with Google"
 
-// Start generating AI-powered tasks
-const tasks = await client.generateTasksFromFeature("Your feature description");
+# Get AI service status
+cc ai status
 ```
 
-### Integration with Existing Tools
-```typescript
-// Extend existing backlog systems
-import { BacklogManager } from 'your-backlog-system';
-import { CriticalClaudeClient } from '@critical-claude/critical-claude';
+## ⚙️ Configuration
 
-class EnhancedBacklogManager extends BacklogManager {
-  private aiClient = new CriticalClaudeClient();
-  
-  async createFeature(description: string) {
-    // Generate AI tasks
-    const aiTasks = await this.aiClient.generateTasksFromFeature(description);
-    
-    // Add to backlog
-    return this.addTasks(aiTasks);
+### MCP Server Setup
+```json
+// claude_desktop_config.json
+{
+  "mcpServers": {
+    "critical-claude": {
+      "command": "node",
+      "args": ["/path/to/critical-claude/dist/mcp-server.js"],
+      "env": {
+        "CRITICAL_CLAUDE_PROJECT_PATH": "/path/to/your/project"
+      }
+    }
   }
 }
 ```
 
-## 📈 Benefits
+### Project Configuration
+```json
+// .critical-claude.json
+{
+  "version": "2.0.0",
+  "claude": {
+    "mcp_enabled": true,
+    "hooks_enabled": true,
+    "sync_mode": "bidirectional"
+  },
+  "ai": {
+    "provider": "claude-code",
+    "auto_detect": true
+  }
+}
+```
 
-### For Development Teams
-- **40% reduction** in manual task creation time
-- **25% improvement** in sprint planning accuracy
-- **60% faster** identification of code quality issues
-- **Real-time insights** into sprint health and risks
+## 📊 Task Analytics
 
-### For Project Managers
-- **Automated progress tracking** with predictive analytics
-- **Risk early warning system** for sprint delivery
-- **Data-driven capacity planning** with AI optimization
-- **Comprehensive reporting** with actionable insights
+### Statistics & Insights
+```bash
+# Get comprehensive task statistics
+cc task stats
 
-### For Technical Leads
-- **Automated code quality monitoring** with task generation
-- **Architecture improvement tracking** with AI analysis
-- **Technical debt visualization** and prioritization
-- **Development workflow optimization** with hook automation
+# Output:
+# 📊 Task Statistics
+# Total Tasks: 45
+# Archived Tasks: 12
+# 
+# By Status:
+#   todo: 15
+#   in_progress: 8
+#   done: 20
+#   blocked: 2
+# 
+# By Priority:
+#   critical: 3
+#   high: 12
+#   medium: 25
+#   low: 5
+```
+
+### Sync Status Monitoring
+```bash
+# Monitor Claude Code integration
+cc sync status
+cc sync claude-code --dry-run  # Preview sync operations
+```
+
+## 🔌 MCP Tools Reference
+
+### Available MCP Tools
+
+#### Task Management
+- **`cc_task_create`**: Create new tasks with full metadata
+- **`cc_task_list`**: List and filter tasks by status, priority, assignee
+- **`cc_task_update`**: Update existing task properties
+- **`cc_task_delete`**: Remove tasks by ID
+- **`cc_task_stats`**: Get comprehensive task statistics
+
+#### Claude Code Sync
+- **`cc_sync_claude_code`**: Bidirectional sync with Claude Code TodoWrite
+  - Support for dry-run mode
+  - Direction control (to/from/both)
+  - Real-time execution
+
+### External Integrations
+- **Claude Code**: Native TodoWrite/TodoRead integration
+- **MCP Protocol**: Standard Model Context Protocol compliance
+- **File System**: Local storage with JSON and YAML support
+- **AI Providers**: OpenAI, Anthropic, local, and mock providers
+
+## 🚀 Quick Start
+
+### Installation
+```bash
+# Install globally for CLI access
+npm install -g critical-claude
+
+# Or install locally in project
+npm install critical-claude
+```
+
+### CLI Setup
+```bash
+# Initialize in your project
+cc init
+
+# Create your first task
+cc task create "Set up project structure" --priority high
+
+# List tasks
+cc task list
+
+# Get help
+cc --help
+cc task --help
+```
+
+### MCP Integration Setup
+```bash
+# Start MCP server for Claude Code integration
+cc mcp start
+
+# In Claude Code, use MCP tools:
+# "Use cc_task_create to create a new task"
+# "Use cc_task_list to see all current tasks"
+# "Use cc_sync_claude_code to sync with TodoWrite"
+```
+
+### Programmatic Usage
+```typescript
+import { 
+  UnifiedStorageManager, 
+  UnifiedHookManager, 
+  CommonTask 
+} from 'critical-claude';
+
+// Initialize storage
+const storage = new UnifiedStorageManager();
+await storage.initialize();
+
+// Create a task
+const task = await storage.createTask({
+  title: "Implement user authentication",
+  priority: "high",
+  labels: ["auth", "security"]
+});
+
+// Setup Claude Code integration
+const hookManager = new UnifiedHookManager(storage);
+await hookManager.syncToClaude();
+```
+
+## 📈 Production Benefits
+
+### Unified Integration
+- **Single Source of Truth**: Eliminates task fragmentation across tools
+- **Real-time Sync**: Instant updates between Claude Code and task management
+- **Zero Configuration**: Auto-detection and setup for Claude Code integration
+- **Production Ready**: Clean architecture with proper error handling
+
+### Development Workflow
+- **Seamless Claude Code Integration**: Native TodoWrite/TodoRead support
+- **MCP Protocol Compliance**: Standard integration with Claude ecosystem
+- **CLI Productivity**: Full-featured command-line interface
+- **Bidirectional Sync**: Changes propagate automatically between systems
+
+### Code Quality
+- **985+ Lines Removed**: Eliminated redundant integration code
+- **Unified Architecture**: Single hook system replaces multiple overlapping implementations
+- **TypeScript Support**: Full type safety and IDE integration
+- **Comprehensive Testing**: Unit and integration test coverage
 
 ---
 
-*Transform your task management from reactive to predictive with Critical Claude's AI capabilities.*
+## 🔧 Development
+
+### Building from Source
+```bash
+# Clone repository
+git clone https://github.com/critical-claude/critical-claude.git
+cd critical-claude/packages/critical-claude
+
+# Install dependencies
+npm install
+
+# Build project
+npm run build
+
+# Run tests
+npm test
+
+# Start MCP server
+npm start
+```
+
+### Contributing
+- **Architecture**: Unified hook system with single responsibility
+- **Testing**: Comprehensive unit and integration tests required
+- **Documentation**: Update README and code comments for changes
+- **Production Focus**: All code must be production-ready
+
+---
+
+*Production-ready task management with seamless Claude Code integration.*

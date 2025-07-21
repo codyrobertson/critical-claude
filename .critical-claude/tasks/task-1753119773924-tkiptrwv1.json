@@ -1,0 +1,38 @@
+{
+  "id": "task-1753119773924-tkiptrwv1",
+  "title": "Image Processing Implementation",
+  "description": "Add client-side image processing for resizing and format validation",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "image-processing",
+    "validation",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:42:53.924Z",
+  "updatedAt": "2025-07-21T19:08:14.595Z",
+  "storyPoints": 5,
+  "estimatedHours": "10",
+  "dependencies": [
+    "task-1753119773924-mg2icu3wv"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

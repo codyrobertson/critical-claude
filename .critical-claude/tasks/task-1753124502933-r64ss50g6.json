@@ -1,0 +1,29 @@
+{
+  "id": "task-1753124502933-r64ss50g6",
+  "title": "Setup react project with node backend",
+  "description": "Initialize project structure, configure build tools, and setup development environment",
+  "status": "todo",
+  "priority": "critical",
+  "labels": [
+    "setup",
+    "architecture",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.933Z",
+  "updatedAt": "2025-07-21T19:08:14.595Z",
+  "storyPoints": 3,
+  "estimatedHours": 5,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

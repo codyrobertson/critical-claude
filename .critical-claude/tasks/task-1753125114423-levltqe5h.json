@@ -1,0 +1,17 @@
+{
+  "id": "task-1753125114423-levltqe5h",
+  "title": "Create database models",
+  "description": "",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "database",
+    "models"
+  ],
+  "createdAt": "2025-07-21T19:11:54.423Z",
+  "updatedAt": "2025-07-21T19:11:54.423Z",
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

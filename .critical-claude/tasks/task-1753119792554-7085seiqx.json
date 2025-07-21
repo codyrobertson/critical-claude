@@ -1,0 +1,39 @@
+{
+  "id": "task-1753119792554-7085seiqx",
+  "title": "Create Image Preview Component",
+  "description": "Develop preview functionality showing selected image with crop/zoom options",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "frontend",
+    "image-processing",
+    "ai-expanded",
+    "parent:task-1753119773924-mg2icu3wv",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:43:12.554Z",
+  "updatedAt": "2025-07-21T19:08:14.589Z",
+  "storyPoints": 5,
+  "estimatedHours": "8",
+  "dependencies": [
+    "task-1753119792554-22nanxblk"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-expansion"
+}

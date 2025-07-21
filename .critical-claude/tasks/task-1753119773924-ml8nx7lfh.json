@@ -1,0 +1,38 @@
+{
+  "id": "task-1753119773924-ml8nx7lfh",
+  "title": "Profile Display Layout",
+  "description": "Implement responsive layout for user profile information display",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "UI",
+    "responsive",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:42:53.924Z",
+  "updatedAt": "2025-07-21T19:08:14.592Z",
+  "storyPoints": 3,
+  "estimatedHours": "6",
+  "dependencies": [
+    "task-1753119773921-qlat1kzln"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

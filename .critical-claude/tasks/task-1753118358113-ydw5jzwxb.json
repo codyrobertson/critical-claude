@@ -1,0 +1,39 @@
+{
+  "id": "task-1753118358113-ydw5jzwxb",
+  "title": "Add frontend testing and validation",
+  "description": "Comprehensive testing for frontend functionality",
+  "status": "todo",
+  "priority": "critical",
+  "labels": [
+    "ui",
+    "frontend",
+    "testing",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:19:18.113Z",
+  "updatedAt": "2025-07-21T19:08:14.594Z",
+  "storyPoints": 3,
+  "estimatedHours": 12,
+  "dependencies": [
+    "task-1753118358112-msi69580w"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

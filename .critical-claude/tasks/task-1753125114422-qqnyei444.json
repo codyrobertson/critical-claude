@@ -1,0 +1,17 @@
+{
+  "id": "task-1753125114422-qqnyei444",
+  "title": "Initialize Git repository",
+  "description": "",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "git",
+    "setup"
+  ],
+  "createdAt": "2025-07-21T19:11:54.422Z",
+  "updatedAt": "2025-07-21T19:11:54.422Z",
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

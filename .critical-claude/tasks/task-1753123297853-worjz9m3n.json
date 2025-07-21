@@ -1,0 +1,33 @@
+{
+  "id": "task-1753123297853-worjz9m3n",
+  "title": "Command System",
+  "description": "Implement vim-style command system with command parsing and execution",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "feature",
+    "commands",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:37.853Z",
+  "updatedAt": "2025-07-21T19:08:14.598Z",
+  "storyPoints": 5,
+  "estimatedHours": "20",
+  "dependencies": [
+    "task-1753123297851-adbhtaafk"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

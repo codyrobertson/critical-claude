@@ -1,0 +1,39 @@
+{
+  "id": "task-1753119792554-22nanxblk",
+  "title": "Build File Input Handler",
+  "description": "Implement file input functionality with type validation and size restrictions",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "frontend",
+    "validation",
+    "ai-expanded",
+    "parent:task-1753119773924-mg2icu3wv",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:43:12.554Z",
+  "updatedAt": "2025-07-21T19:08:14.595Z",
+  "storyPoints": 3,
+  "estimatedHours": "5",
+  "dependencies": [
+    "task-1753119792552-g3fxqkcgq"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-expansion"
+}

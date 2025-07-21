@@ -1,0 +1,33 @@
+{
+  "id": "task-1753124502935-qo5my53pk",
+  "title": "Build user interface screens",
+  "description": "Create main application screens with routing and navigation",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "frontend",
+    "ui",
+    "routing",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.935Z",
+  "updatedAt": "2025-07-21T19:08:14.597Z",
+  "storyPoints": 8,
+  "estimatedHours": 12,
+  "dependencies": [
+    "task-1753124502935-kd34tcb9s",
+    "task-1753124502935-dk9d0i8he"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

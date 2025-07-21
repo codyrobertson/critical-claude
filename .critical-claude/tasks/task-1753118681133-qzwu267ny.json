@@ -1,0 +1,38 @@
+{
+  "id": "task-1753118681133-qzwu267ny",
+  "title": "Documentation & Deployment",
+  "description": "Create user/technical documentation and deployment configuration",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "docs",
+    "deployment",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:24:41.133Z",
+  "updatedAt": "2025-07-21T19:08:14.593Z",
+  "storyPoints": 3,
+  "estimatedHours": "6",
+  "dependencies": [
+    "task-1753118681133-s72m2szy9"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

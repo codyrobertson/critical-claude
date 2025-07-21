@@ -1,0 +1,37 @@
+{
+  "id": "task-1753119773926-77izkeywt",
+  "title": "Documentation",
+  "description": "Create component documentation including usage examples and props interface",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "documentation",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:42:53.926Z",
+  "updatedAt": "2025-07-21T19:08:14.594Z",
+  "storyPoints": 2,
+  "estimatedHours": "4",
+  "dependencies": [
+    "task-1753119773925-ho1juxs3l"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

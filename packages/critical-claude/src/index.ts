@@ -1,18 +1,22 @@
 /**
- * Critical Claude Backlog Integration - Unified Task Management
- * Single entry point for all task management functionality
+ * Critical Claude - Production-ready Task Management with Unified Claude Code Integration
+ * Single entry point for unified hook system and task management functionality
  */
 
-// Unified task management system
+// Core unified task management system
 export { UnifiedStorageManager } from './core/unified-storage.js';
-export { UnifiedTaskCommand } from './cli/commands/unified-task.js';
 export { UnifiedHookManager } from './core/unified-hook-manager.js';
 
-// Common types
+// CLI components
+export { UnifiedTaskCommand } from './cli/commands/unified-task.js';
+export { initializeCLI } from './cli/cc-main.js';
+
+// AI and client services
+export { CriticalClaudeClient } from './core/critical-claude-client.js';
+export { AIService } from './core/ai-service.js';
+
+// Common types and interfaces
 export { CommonTask, CreateTaskInput, UpdateTaskInput, TaskFilter, TaskListOptions } from './types/common-task.js';
 
-// Core utilities
+// Utilities
 export { logger } from './core/logger.js';
-
-// Main CLI entry
-export { initializeCLI } from './cli/cc-main.js';

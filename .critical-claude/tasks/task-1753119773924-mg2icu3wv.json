@@ -1,0 +1,49 @@
+{
+  "id": "task-1753119773924-mg2icu3wv",
+  "title": "Implement Avatar Upload UI",
+  "description": "Create drag-and-drop interface and file input for avatar upload with preview functionality",
+  "status": "in_progress",
+  "priority": "high",
+  "labels": [
+    "UI",
+    "file-handling",
+    "ai-generated",
+    "expanded",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:42:53.924Z",
+  "updatedAt": "2025-07-21T19:08:14.597Z",
+  "storyPoints": 5,
+  "estimatedHours": "8",
+  "dependencies": [
+    "task-1753119773921-qlat1kzln"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation",
+  "childTasks": [
+    "task-1753119792552-g3fxqkcgq",
+    "task-1753119792553-qosrjbcvw",
+    "task-1753119792554-22nanxblk",
+    "task-1753119792554-7085seiqx",
+    "task-1753119792554-bsfevt6bw",
+    "task-1753119792554-pzvws6e41",
+    "task-1753119792554-v2fg2zuf8",
+    "task-1753119792555-1uywrumd4"
+  ]
+}

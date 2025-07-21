@@ -39,7 +39,7 @@ const binDir = path.join(installDir, 'bin');
 });
 
 // Build the project if not already built
-const distDir = path.join(installDir, 'packages/backlog-integration/dist');
+const distDir = path.join(installDir, 'packages/critical-claude/dist');
 if (!fs.existsSync(distDir)) {
   console.log('📦 Building Critical Claude...');
   try {

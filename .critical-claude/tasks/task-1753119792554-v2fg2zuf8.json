@@ -1,0 +1,40 @@
+{
+  "id": "task-1753119792554-v2fg2zuf8",
+  "title": "Write Unit Tests",
+  "description": "Create comprehensive unit tests for all component functionality",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "testing",
+    "quality",
+    "ai-expanded",
+    "parent:task-1753119773924-mg2icu3wv",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:43:12.554Z",
+  "updatedAt": "2025-07-21T19:08:14.596Z",
+  "storyPoints": 3,
+  "estimatedHours": "6",
+  "dependencies": [
+    "task-1753119792554-bsfevt6bw",
+    "task-1753119792554-pzvws6e41"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-expansion"
+}

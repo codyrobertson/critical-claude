@@ -1,0 +1,35 @@
+{
+  "id": "task-1753123297853-urbio878v",
+  "title": "Integration and Testing",
+  "description": "Comprehensive integration testing and performance optimization",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "testing",
+    "integration",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:37.853Z",
+  "updatedAt": "2025-07-21T19:08:14.588Z",
+  "storyPoints": 5,
+  "estimatedHours": "25",
+  "dependencies": [
+    "task-1753123297853-worjz9m3n",
+    "task-1753123297852-tiyn15d1r",
+    "task-1753123297852-fl2m7bbze"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

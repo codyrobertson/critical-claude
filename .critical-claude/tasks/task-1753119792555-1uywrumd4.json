@@ -1,0 +1,39 @@
+{
+  "id": "task-1753119792555-1uywrumd4",
+  "title": "Cross-browser Testing",
+  "description": "Test and fix any browser compatibility issues",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "testing",
+    "compatibility",
+    "ai-expanded",
+    "parent:task-1753119773924-mg2icu3wv",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:43:12.555Z",
+  "updatedAt": "2025-07-21T19:08:14.596Z",
+  "storyPoints": 2,
+  "estimatedHours": "4",
+  "dependencies": [
+    "task-1753119792554-v2fg2zuf8"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-expansion"
+}

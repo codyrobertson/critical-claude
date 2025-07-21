@@ -11,7 +11,7 @@
 - feat: Add Claude Code integration with bidirectional todo sync
 - fix: Complete full implementation of lazy loading CLI with all command handlers
 - feat: Implement lazy loading CLI architecture with natural language task creation
-- feat: Add Critical Claude Backlog Integration package
+- feat: Add Critical Claude Critical Claude package
 - fix: Resolve MCP tool errors and add file path support
 - feat: Complete System Design and Data Flow agent implementation
 - feat: Add System Design and Data Flow agents to Critical Claude MCP

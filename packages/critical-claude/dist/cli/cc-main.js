@@ -94,6 +94,48 @@ export async function initializeCLI() {
             process.exit(1);
         }
     });
+    // Task viewer command
+    program
+        .command('viewer')
+        .alias('v')
+        .description('Launch terminal-based task viewer')
+        .option('-d, --debug', 'Enable debug logging')
+        .option('-v, --verbose', 'Enable verbose logging')
+        .option('-q, --quiet', 'Suppress non-error output')
+        .action(async (options) => {
+        try {
+            const { ViewerCommand } = await import('./commands/viewer.js');
+            const handler = new ViewerCommand();
+            await handler.execute(options);
+        }
+        catch (error) {
+            console.error('❌ Viewer failed:', error.message);
+            process.exit(1);
+        }
+    });
+    // Template command
+    program
+        .command('template [action] [args...]')
+        .alias('tpl')
+        .description('Task template management')
+        .option('-d, --description <desc>', 'Template description')
+        .option('-o, --output <file>', 'Output file for export')
+        .option('--draft', 'Create tasks as drafts')
+        .option('--status <status>', 'Filter tasks by status')
+        .option('--priority <priority>', 'Filter tasks by priority')
+        .option('--labels <labels...>', 'Filter tasks by labels')
+        .option('-q, --quiet', 'Suppress detailed output')
+        .action(async (action, args, options) => {
+        try {
+            const { TemplateCommand } = await import('./commands/template.js');
+            const handler = new TemplateCommand();
+            await handler.execute(action || 'list', args || [], options);
+        }
+        catch (error) {
+            console.error('❌ Template operation failed:', error.message);
+            process.exit(1);
+        }
+    });
     // Hook system management
     program
         .command('hooks')

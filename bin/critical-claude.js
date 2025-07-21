@@ -6,7 +6,7 @@ const { spawn } = require('child_process');
 
 // Get the installation directory
 const installDir = path.resolve(__dirname, '..');
-const targetScript = path.join(installDir, 'packages/backlog-integration/dist/cli/unified-cc-router.js');
+const targetScript = path.join(installDir, 'packages/critical-claude/dist/cli/unified-cc-router.js');
 
 const args = process.argv.slice(2);
 
@@ -20,7 +20,7 @@ if (!fs.existsSync(targetScript)) {
 
 const child = spawn('node', [targetScript, ...args], {
   stdio: 'inherit',
-  cwd: path.join(installDir, 'packages/backlog-integration')
+  cwd: path.join(installDir, 'packages/critical-claude')
 });
 
 child.on('error', (error) => {

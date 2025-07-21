@@ -1,0 +1,1 @@
+{"version":3,"file":"TaskId.d.ts","sourceRoot":"","sources":["../../../../src/viewer/domain/value-objects/TaskId.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,qBAAa,MAAM;aACW,KAAK,EAAE,MAAM;gBAAb,KAAK,EAAE,MAAM;IAMzC,MAAM,CAAC,KAAK,EAAE,MAAM,GAAG,OAAO;IAI9B,QAAQ,IAAI,MAAM;IAIlB,MAAM,CAAC,QAAQ,IAAI,MAAM;CAG1B"}

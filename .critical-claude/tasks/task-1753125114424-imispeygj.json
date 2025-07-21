@@ -1,0 +1,20 @@
+{
+  "id": "task-1753125114424-imispeygj",
+  "title": "Deployment",
+  "description": "Deploy to production environment",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "deployment",
+    "devops"
+  ],
+  "createdAt": "2025-07-21T19:11:54.424Z",
+  "updatedAt": "2025-07-21T19:11:54.424Z",
+  "storyPoints": 3,
+  "dependencies": [
+    "task-1753125114424-z96sssjl3"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

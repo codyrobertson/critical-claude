@@ -3,6 +3,11 @@
  * Replaces BacklogManager, SimpleTaskManager, and MCP-task-simple commands
  */
 import chalk from 'chalk';
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import * as toml from 'toml';
 import { UnifiedStorageManager } from '../../core/unified-storage.js';
 import { AITaskManager } from '../../core/ai-task-manager.js';
 import { UnifiedHookManager } from '../../core/unified-hook-manager.js';
@@ -77,6 +82,9 @@ export class UnifiedTaskCommand {
                     break;
                 case 'backup':
                     await this.createBackup(options);
+                    break;
+                case 'template':
+                    await this.handleTemplate(input, options);
                     break;
                 default:
                     console.log(this.getUsageHelp());
@@ -641,6 +649,13 @@ Actions:
   stats, status          Show task statistics
   init                   Initialize the system
   backup                 Create a backup
+  template               Load project task templates
+
+Template Commands:
+  template list          List available templates
+  template <name>        Load template with default variables
+  template show <name>   View template details
+  template create <name> Create a new template
 
 Options:
   -m, --mode <mode>      Mode: simple|agile|auto (default: auto)
@@ -666,10 +681,370 @@ Examples:
   cc task view task-123456789
   cc task edit task-123456789 --status done
   
+Template Examples:
+  cc task template webapp --framework react --database postgres
+  cc task template api --auth_method oauth2
+  cc task template mobile-app --platform flutter
+  
 Natural Language:
   cc task create "Fix urgent bug @high #security 3pts for:alice"
   
 For more help: https://critical-claude.dev/docs/tasks`;
+    }
+    // Template System Implementation
+    async handleTemplate(input, options) {
+        const subCommand = Array.isArray(input) ? input[0] : input;
+        const templateName = Array.isArray(input) && input.length > 1 ? input[1] : undefined;
+        switch (subCommand) {
+            case 'list':
+            case 'ls':
+                await this.listTemplates(options);
+                break;
+            case 'show':
+            case 'view':
+                if (!templateName) {
+                    throw new Error('Template name required. Usage: cc task template show <name>');
+                }
+                await this.showTemplate(templateName, options);
+                break;
+            case 'create':
+                if (!templateName) {
+                    throw new Error('Template name required. Usage: cc task template create <name>');
+                }
+                await this.createTemplate(templateName, options);
+                break;
+            default:
+                // If no subcommand, treat input as template name to load
+                if (!subCommand) {
+                    throw new Error('Template name required. Usage: cc task template <name>');
+                }
+                await this.loadTemplate(subCommand, options);
+                break;
+        }
+    }
+    getTemplatesDir() {
+        const __filename = fileURLToPath(import.meta.url);
+        const __dirname = dirname(__filename);
+        return path.join(__dirname, '..', '..', '..', 'templates');
+    }
+    async listTemplates(options) {
+        const templatesDir = this.getTemplatesDir();
+        if (!fs.existsSync(templatesDir)) {
+            console.log(chalk.yellow('No templates directory found.'));
+            return;
+        }
+        const files = fs.readdirSync(templatesDir).filter(f => f.endsWith('.toml'));
+        if (files.length === 0) {
+            console.log(chalk.yellow('No templates found.'));
+            console.log(chalk.gray('Create templates in: ' + templatesDir));
+            return;
+        }
+        console.log(chalk.cyan('📚 Available Task Templates:\n'));
+        for (const file of files) {
+            const templatePath = path.join(templatesDir, file);
+            try {
+                const content = fs.readFileSync(templatePath, 'utf8');
+                const template = toml.parse(content);
+                const name = path.basename(file, '.toml');
+                console.log(chalk.green(`  ${name}`));
+                if (template.metadata) {
+                    console.log(chalk.gray(`    ${template.metadata.description || 'No description'}`));
+                    if (template.metadata.tags) {
+                        console.log(chalk.gray(`    Tags: ${template.metadata.tags.join(', ')}`));
+                    }
+                }
+                console.log('');
+            }
+            catch (error) {
+                console.log(chalk.red(`  ${file} (invalid template)`));
+            }
+        }
+        console.log(chalk.gray('Usage: cc task template <name> [--var=value ...]'));
+    }
+    async showTemplate(name, options) {
+        const templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+        if (!fs.existsSync(templatePath)) {
+            throw new Error(`Template not found: ${name}`);
+        }
+        const content = fs.readFileSync(templatePath, 'utf8');
+        const template = toml.parse(content);
+        console.log(chalk.cyan(`📋 Template: ${name}\n`));
+        if (template.metadata) {
+            console.log(chalk.yellow('Metadata:'));
+            console.log(`  Description: ${template.metadata.description || 'None'}`);
+            console.log(`  Version: ${template.metadata.version || '1.0.0'}`);
+            console.log(`  Difficulty: ${template.metadata.difficulty || 'intermediate'}`);
+            console.log(`  Estimated: ${template.metadata.estimated_weeks || '?'} weeks`);
+            console.log(`  Team Size: ${template.metadata.team_size || '?'} developers`);
+            if (template.metadata.extends) {
+                console.log(`  Extends: ${template.metadata.extends}`);
+            }
+            console.log('');
+        }
+        if (template.variables) {
+            console.log(chalk.yellow('Variables:'));
+            for (const [key, defaultValue] of Object.entries(template.variables)) {
+                console.log(`  ${key}: ${defaultValue}`);
+            }
+            console.log('');
+        }
+        if (template.phases) {
+            console.log(chalk.yellow('Phases:'));
+            for (const [key, description] of Object.entries(template.phases)) {
+                console.log(`  ${key}: ${description}`);
+            }
+            console.log('');
+        }
+        let taskCount = 0;
+        if (template.tasks) {
+            for (const [phase, tasks] of Object.entries(template.tasks)) {
+                if (Array.isArray(tasks)) {
+                    taskCount += tasks.length;
+                }
+            }
+        }
+        console.log(chalk.yellow(`Total Tasks: ${taskCount}`));
+        console.log(chalk.gray('\nUsage: cc task template ' + name + ' [--var=value ...]'));
+    }
+    async loadTemplate(name, options) {
+        const templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+        if (!fs.existsSync(templatePath)) {
+            throw new Error(`Template not found: ${name}. Use 'cc task template list' to see available templates.`);
+        }
+        console.log(chalk.cyan(`📋 Loading template: ${name}`));
+        const content = fs.readFileSync(templatePath, 'utf8');
+        let template = toml.parse(content);
+        // Handle template inheritance
+        if (template.metadata?.extends) {
+            console.log(chalk.gray(`  Extending: ${template.metadata.extends}`));
+            const baseTemplate = await this.loadTemplateData(template.metadata.extends);
+            template = this.mergeTemplates(baseTemplate, template);
+        }
+        // Prepare variables
+        const variables = { ...template.variables };
+        // Override with command-line variables
+        for (const [key, value] of Object.entries(options)) {
+            if (key !== '_' && key !== 'plain' && key !== 'mode') {
+                variables[key] = value;
+            }
+        }
+        console.log(chalk.cyan('\n🔧 Using variables:'));
+        for (const [key, value] of Object.entries(variables)) {
+            console.log(chalk.gray(`  ${key}: ${value}`));
+        }
+        // Create tasks from template
+        const createdTasks = [];
+        const phaseTaskMap = {};
+        // Process tasks by phase
+        if (template.tasks) {
+            for (const [phase, tasks] of Object.entries(template.tasks)) {
+                if (!Array.isArray(tasks))
+                    continue;
+                phaseTaskMap[phase] = [];
+                for (let i = 0; i < tasks.length; i++) {
+                    const taskTemplate = tasks[i];
+                    const taskId = `${phase}-${i + 1}`;
+                    // Replace variables in task fields
+                    const processedTask = this.replaceVariables(taskTemplate, variables);
+                    // Create task input
+                    const createInput = {
+                        title: processedTask.title,
+                        description: processedTask.description,
+                        priority: processedTask.priority || 'medium',
+                        status: 'todo',
+                        labels: [...(processedTask.labels || []), 'template', `template:${name}`],
+                        storyPoints: processedTask.story_points,
+                        estimatedHours: processedTask.estimated_hours,
+                        aiGenerated: false,
+                        source: 'manual'
+                    };
+                    // Create the task
+                    const task = await this.storage.createTask(createInput);
+                    createdTasks.push(task);
+                    phaseTaskMap[phase].push(task);
+                    // Store mapping for dependency resolution
+                    processedTask._taskId = task.id;
+                    processedTask._phaseTaskId = taskId;
+                }
+            }
+        }
+        // Resolve and apply dependencies
+        await this.resolveDependencies(template, phaseTaskMap);
+        // Trigger hook sync
+        await this.hookManager.syncToClaude();
+        // Display summary
+        console.log(chalk.green(`\n✅ Created ${createdTasks.length} tasks from template: ${name}`));
+        if (template.phases) {
+            console.log(chalk.cyan('\n📊 Tasks by phase:'));
+            for (const [phase, description] of Object.entries(template.phases)) {
+                const phaseTasks = phaseTaskMap[phase] || [];
+                console.log(chalk.yellow(`\n${description} (${phaseTasks.length} tasks):`));
+                phaseTasks.forEach(task => {
+                    console.log(`  ${this.formatTaskListItem(task)}`);
+                });
+            }
+        }
+        else {
+            console.log(chalk.cyan('\n📝 Created tasks:'));
+            createdTasks.forEach(task => {
+                console.log(`  ${this.formatTaskListItem(task)}`);
+            });
+        }
+        console.log(chalk.gray('\nUse "cc task list" to see all tasks'));
+    }
+    async loadTemplateData(name) {
+        const templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+        if (!fs.existsSync(templatePath)) {
+            throw new Error(`Base template not found: ${name}`);
+        }
+        const content = fs.readFileSync(templatePath, 'utf8');
+        return toml.parse(content);
+    }
+    mergeTemplates(base, extension) {
+        const merged = JSON.parse(JSON.stringify(base)); // Deep clone
+        if (extension.metadata) {
+            merged.metadata = { ...merged.metadata, ...extension.metadata };
+        }
+        if (extension.variables) {
+            merged.variables = { ...merged.variables, ...extension.variables };
+        }
+        if (extension.phases) {
+            merged.phases = { ...merged.phases, ...extension.phases };
+        }
+        if (extension.tasks) {
+            if (!merged.tasks)
+                merged.tasks = {};
+            for (const [phase, tasks] of Object.entries(extension.tasks)) {
+                if (!merged.tasks[phase]) {
+                    merged.tasks[phase] = [];
+                }
+                if (Array.isArray(tasks)) {
+                    merged.tasks[phase] = [...(merged.tasks[phase] || []), ...tasks];
+                }
+            }
+        }
+        return merged;
+    }
+    replaceVariables(obj, variables) {
+        if (typeof obj === 'string') {
+            return obj.replace(/\{\{(\w+)\}\}/g, (match, varName) => {
+                return variables[varName] !== undefined ? variables[varName] : match;
+            });
+        }
+        else if (Array.isArray(obj)) {
+            return obj.map(item => this.replaceVariables(item, variables));
+        }
+        else if (typeof obj === 'object' && obj !== null) {
+            const result = {};
+            for (const [key, value] of Object.entries(obj)) {
+                result[key] = this.replaceVariables(value, variables);
+            }
+            return result;
+        }
+        return obj;
+    }
+    async resolveDependencies(template, phaseTaskMap) {
+        if (!template.tasks)
+            return;
+        const taskIdMap = {};
+        // Build task ID mapping
+        for (const [phase, tasks] of Object.entries(phaseTaskMap)) {
+            tasks.forEach((task, index) => {
+                taskIdMap[`${phase}-${index + 1}`] = task.id;
+            });
+        }
+        // Also support simple numeric IDs
+        let globalIndex = 1;
+        for (const tasks of Object.values(phaseTaskMap)) {
+            for (const task of tasks) {
+                taskIdMap[globalIndex.toString()] = task.id;
+                globalIndex++;
+            }
+        }
+        // Apply dependencies
+        for (const [phase, templateTasks] of Object.entries(template.tasks)) {
+            if (!Array.isArray(templateTasks))
+                continue;
+            const phaseTasks = phaseTaskMap[phase] || [];
+            for (let i = 0; i < templateTasks.length; i++) {
+                const taskTemplate = templateTasks[i];
+                const task = phaseTasks[i];
+                if (!task || !taskTemplate.dependencies)
+                    continue;
+                const resolvedDeps = [];
+                for (const dep of taskTemplate.dependencies) {
+                    const resolvedId = taskIdMap[dep];
+                    if (resolvedId) {
+                        resolvedDeps.push(resolvedId);
+                    }
+                    else {
+                        console.warn(chalk.yellow(`⚠️  Could not resolve dependency: ${dep}`));
+                    }
+                }
+                if (resolvedDeps.length > 0) {
+                    await this.storage.updateTask({
+                        id: task.id,
+                        dependencies: resolvedDeps
+                    });
+                }
+            }
+        }
+    }
+    async createTemplate(name, options) {
+        const templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+        if (fs.existsSync(templatePath) && !options.force) {
+            throw new Error(`Template already exists: ${name}. Use --force to overwrite.`);
+        }
+        const template = `# ${name} Template
+[metadata]
+name = "${name}"
+description = "TODO: Add description"
+version = "1.0.0"
+difficulty = "intermediate"
+estimated_weeks = 4
+team_size = 3
+tags = ["custom"]
+
+[variables]
+project_name = "${name}"
+# Add more variables as needed
+
+[phases]
+planning = "Planning & Design"
+implementation = "Core Implementation"
+testing = "Testing & Polish"
+
+[tasks]
+
+[[tasks.planning]]
+title = "Define project requirements"
+description = "Gather and document all project requirements"
+priority = "critical"
+labels = ["planning", "requirements"]
+phase = "planning"
+story_points = 3
+estimated_hours = 5
+
+[[tasks.planning]]
+title = "Create technical design"
+description = "Design system architecture and technical approach"
+priority = "high"
+labels = ["planning", "architecture"]
+phase = "planning"
+story_points = 5
+estimated_hours = 8
+dependencies = ["planning-1"]
+
+# Add more tasks as needed
+`;
+        // Ensure templates directory exists
+        const templatesDir = this.getTemplatesDir();
+        if (!fs.existsSync(templatesDir)) {
+            fs.mkdirSync(templatesDir, { recursive: true });
+        }
+        fs.writeFileSync(templatePath, template);
+        console.log(chalk.green(`✅ Created template: ${name}`));
+        console.log(chalk.gray(`Edit template at: ${templatePath}`));
     }
 }
 //# sourceMappingURL=unified-task.js.map

@@ -58,6 +58,7 @@ export declare class AIService {
     private config;
     private initialized;
     constructor(config?: AIConfig);
+    private loadEnvConfigSync;
     private isClaudeCodeContext;
     initialize(): Promise<void>;
     /**

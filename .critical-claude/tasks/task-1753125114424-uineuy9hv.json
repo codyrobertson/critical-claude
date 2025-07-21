@@ -1,0 +1,17 @@
+{
+  "id": "task-1753125114424-uineuy9hv",
+  "title": "Setup React with Vite",
+  "description": "",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "react",
+    "vite"
+  ],
+  "createdAt": "2025-07-21T19:11:54.424Z",
+  "updatedAt": "2025-07-21T19:11:54.424Z",
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

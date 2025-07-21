@@ -1,0 +1,32 @@
+{
+  "id": "task-1753124502935-kd34tcb9s",
+  "title": "Create react component library",
+  "description": "Build reusable UI components with proper styling and accessibility",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "frontend",
+    "ui",
+    "components",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.935Z",
+  "updatedAt": "2025-07-21T19:08:14.598Z",
+  "storyPoints": 5,
+  "estimatedHours": 8,
+  "dependencies": [
+    "task-1753124502933-r64ss50g6"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

@@ -3,6 +3,9 @@
  * Replaces pattern matching with actual AI-powered analysis
  */
 
+import fs from 'fs';
+import path from 'path';
+
 export interface AIConfig {
   provider: 'openai' | 'anthropic' | 'claude-code' | 'local' | 'mock';
   apiKey?: string;
@@ -67,10 +70,63 @@ export class AIService {
   constructor(config: AIConfig = { provider: 'mock' }) {
     this.config = config;
     
-    // Auto-detect Claude Code if no provider specified and running in Claude Code context
-    if (config.provider === 'mock' && this.isClaudeCodeContext()) {
-      console.log('🤖 Auto-detected Claude Code context, switching to claude-code provider');
-      this.config.provider = 'claude-code';
+    // Load configuration from cc.env file if it exists (sync)
+    this.loadEnvConfigSync();
+    
+    // Auto-detect best available provider - prioritize API keys over Claude Code
+    if (config.provider === 'mock') {
+      console.log('🔍 Auto-detecting AI provider...');
+      
+      // Check for direct API keys first (most reliable)
+      if (process.env.OPENAI_API_KEY) {
+        console.log('🤖 Found OpenAI API key, using OpenAI provider');
+        this.config.provider = 'openai';
+        this.config.apiKey = process.env.OPENAI_API_KEY;
+        this.config.model = process.env.CC_AI_MODEL || this.config.model;
+      } else if (process.env.ANTHROPIC_API_KEY) {
+        console.log('🤖 Found Anthropic API key, using Anthropic provider');
+        this.config.provider = 'anthropic';
+        this.config.apiKey = process.env.ANTHROPIC_API_KEY;
+        this.config.model = process.env.CC_AI_MODEL || this.config.model;
+      } else {
+        console.log('🤖 No API keys found, will attempt Claude Code CLI as fallback...');
+        this.config.provider = 'claude-code';
+      }
+      
+      // Apply cc.env overrides
+      this.config.temperature = process.env.CC_AI_TEMPERATURE ? 
+        parseFloat(process.env.CC_AI_TEMPERATURE) : this.config.temperature;
+      this.config.maxTokens = process.env.CC_AI_MAX_TOKENS ? 
+        parseInt(process.env.CC_AI_MAX_TOKENS) : this.config.maxTokens;
+    }
+  }
+
+  private loadEnvConfigSync(): void {
+    try {
+      // Look for cc.env in current working directory
+      const envPath = path.join(process.cwd(), 'cc.env');
+      
+      if (fs.existsSync(envPath)) {
+        console.log('📄 Loading configuration from cc.env');
+        const envContent = fs.readFileSync(envPath, 'utf8');
+        
+        // Parse simple KEY=VALUE format (ignoring comments and empty lines)
+        const lines = envContent.split('\n');
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (trimmed && !trimmed.startsWith('#')) {
+            const [key, ...valueParts] = trimmed.split('=');
+            if (key && valueParts.length > 0) {
+              const value = valueParts.join('=').replace(/^["']|["']$/g, ''); // Remove quotes
+              process.env[key.trim()] = value.trim();
+            }
+          }
+        }
+        console.log('✅ Loaded cc.env configuration');
+      }
+    } catch (error) {
+      // Silently ignore env loading errors
+      console.warn('⚠️  Could not load cc.env file:', (error as Error).message);
     }
   }
 
@@ -191,45 +247,42 @@ export class AIService {
     if (!this.config.apiKey) {
       throw new Error('OpenAI API key is required');
     }
-    // OpenAI client initialization would go here
-    // For now, fall back to mock
-    console.warn('OpenAI integration not implemented yet, using mock');
-    await this.initializeMock();
+    console.log('✅ OpenAI provider initialized');
   }
 
   private async initializeAnthropic(): Promise<void> {
     if (!this.config.apiKey) {
       throw new Error('Anthropic API key is required');
     }
-    // Anthropic client initialization would go here
-    // For now, fall back to mock
-    console.warn('Anthropic integration not implemented yet, using mock');
-    await this.initializeMock();
+    console.log('✅ Anthropic provider initialized');
   }
 
   private async initializeClaudeCode(): Promise<void> {
-    // Claude Code integration - uses MCP or direct API calls
-    const endpoint = this.config.claudeCodeEndpoint || 'http://localhost:3001/api/ai';
-    console.log(`Initializing Claude Code AI provider at ${endpoint}`);
-    
     try {
-      // Test connection to Claude Code AI endpoint
-      const response = await fetch(`${endpoint}/health`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(this.config.apiKey && { 'Authorization': `Bearer ${this.config.apiKey}` })
-        }
+      // Check if Claude Code CLI is available
+      const { spawn } = await import('child_process');
+      
+      return new Promise((resolve, reject) => {
+        const testProcess = spawn('claude', ['--version'], {
+          stdio: 'pipe'
+        });
+
+        testProcess.on('close', (code) => {
+          if (code === 0) {
+            console.log('✅ Claude Code CLI detected and available');
+            resolve();
+          } else {
+            reject(new Error('Claude Code CLI not found or not working'));
+          }
+        });
+
+        testProcess.on('error', (error) => {
+          reject(new Error(`Claude Code CLI not available: ${error.message}`));
+        });
       });
       
-      if (!response.ok) {
-        throw new Error(`Claude Code AI endpoint not available: ${response.status}`);
-      }
-      
-      console.log('✅ Claude Code AI provider initialized successfully');
     } catch (error) {
-      console.warn(`Claude Code AI endpoint not available, falling back to mock: ${(error as Error).message}`);
-      await this.initializeMock();
+      throw new Error(`Claude Code initialization failed: ${(error as Error).message}. Install with: npm install -g @anthropic-ai/claude-code`);
     }
   }
 
@@ -450,44 +503,156 @@ Consider:
   }
 
   private async callOpenAI(prompt: string): Promise<string> {
-    // OpenAI API call would go here
-    // For now, return mock response
-    return await this.callMock(prompt);
-  }
+    if (!this.config.apiKey) {
+      throw new Error('OpenAI API key required');
+    }
 
-  private async callAnthropic(prompt: string): Promise<string> {
-    // Anthropic API call would go here
-    // For now, return mock response
-    return await this.callMock(prompt);
-  }
-
-  private async callClaudeCode(prompt: string): Promise<string> {
-    const endpoint = this.config.claudeCodeEndpoint || 'http://localhost:3001/api/ai';
-    
     try {
-      const response = await fetch(`${endpoint}/generate`, {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(this.config.apiKey && { 'Authorization': `Bearer ${this.config.apiKey}` })
+          'Authorization': `Bearer ${this.config.apiKey}`
         },
         body: JSON.stringify({
-          prompt: prompt,
-          model: this.config.model || 'claude-3-5-sonnet',
-          maxTokens: this.config.maxTokens || 4000,
+          model: this.config.model || 'gpt-4',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an expert software project manager and technical analyst. Provide detailed, structured responses in the exact JSON format requested.'
+            },
+            {
+              role: 'user', 
+              content: prompt
+            }
+          ],
+          max_tokens: this.config.maxTokens || 4000,
           temperature: this.config.temperature || 0.7
         })
       });
 
       if (!response.ok) {
-        throw new Error(`Claude Code API error: ${response.status} ${response.statusText}`);
+        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
       }
 
       const result = await response.json();
-      return result.text || result.content || result.response || '';
+      return result.choices[0]?.message?.content || '';
     } catch (error) {
-      console.warn(`Claude Code API call failed, falling back to mock: ${(error as Error).message}`);
-      return await this.callMock(prompt);
+      console.warn(`OpenAI API call failed: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  private async callAnthropic(prompt: string): Promise<string> {
+    if (!this.config.apiKey) {
+      throw new Error('Anthropic API key required');
+    }
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': this.config.apiKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: this.config.model || 'claude-3-5-sonnet-20241022',
+          max_tokens: this.config.maxTokens || 4000,
+          temperature: this.config.temperature || 0.7,
+          messages: [
+            {
+              role: 'user',
+              content: `You are an expert software project manager and technical analyst. Provide detailed, structured responses in the exact JSON format requested.\n\n${prompt}`
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Anthropic API error: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      return result.content[0]?.text || '';
+    } catch (error) {
+      console.warn(`Anthropic API call failed: ${(error as Error).message}`);
+      throw error;
+    }
+  }
+
+  private async callClaudeCode(prompt: string): Promise<string> {
+    try {
+      // Use Claude Code SDK to spawn a subprocess
+      const { spawn } = await import('child_process');
+      const { promisify } = await import('util');
+      
+      console.log('🤖 Using Claude Code SDK subprocess...');
+      
+      return new Promise((resolve, reject) => {
+        const claudeProcess = spawn('claude', [
+          '-p', // Print mode (non-interactive)
+          '--output-format', 'json',
+          '--max-turns', '1'
+        ], {
+          stdio: ['pipe', 'pipe', 'pipe']
+        });
+
+        let stdout = '';
+        let stderr = '';
+
+        claudeProcess.stdout.on('data', (data) => {
+          stdout += data.toString();
+        });
+
+        claudeProcess.stderr.on('data', (data) => {
+          stderr += data.toString();
+        });
+
+        claudeProcess.on('close', (code) => {
+          if (code === 0) {
+            try {
+              const response = JSON.parse(stdout);
+              resolve(response.result || response.content || stdout);
+            } catch (parseError) {
+              // If JSON parsing fails, return raw stdout
+              resolve(stdout);
+            }
+          } else {
+            console.warn(`Claude Code process failed with code ${code}: ${stderr}`);
+            reject(new Error(`Claude Code failed: ${stderr}`));
+          }
+        });
+
+        claudeProcess.on('error', (error) => {
+          console.warn(`Claude Code spawn error: ${error.message}`);
+          reject(error);
+        });
+
+        // Send the prompt to claude stdin
+        claudeProcess.stdin.write(prompt);
+        claudeProcess.stdin.end();
+      });
+
+    } catch (error) {
+      console.warn(`Claude Code integration failed: ${(error as Error).message}`);
+      
+      // Fallback to other providers
+      if (process.env.OPENAI_API_KEY) {
+        console.log('🔄 Falling back to OpenAI API');
+        this.config.provider = 'openai';
+        this.config.apiKey = process.env.OPENAI_API_KEY;
+        return await this.callOpenAI(prompt);
+      }
+      
+      if (process.env.ANTHROPIC_API_KEY) {
+        console.log('🔄 Falling back to Anthropic API');
+        this.config.provider = 'anthropic';
+        this.config.apiKey = process.env.ANTHROPIC_API_KEY;
+        return await this.callAnthropic(prompt);
+      }
+      
+      throw new Error('Claude Code not available and no fallback API keys found. Install Claude Code CLI or set OPENAI_API_KEY/ANTHROPIC_API_KEY.');
     }
   }
 

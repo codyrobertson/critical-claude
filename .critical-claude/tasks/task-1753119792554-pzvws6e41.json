@@ -1,0 +1,39 @@
+{
+  "id": "task-1753119792554-pzvws6e41",
+  "title": "Add Loading States",
+  "description": "Implement loading indicators and progress feedback during upload process",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "frontend",
+    "ux",
+    "ai-expanded",
+    "parent:task-1753119773924-mg2icu3wv",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:43:12.554Z",
+  "updatedAt": "2025-07-21T19:08:14.595Z",
+  "storyPoints": 2,
+  "estimatedHours": "3",
+  "dependencies": [
+    "task-1753119792554-7085seiqx"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-expansion"
+}

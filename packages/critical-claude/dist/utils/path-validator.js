@@ -116,7 +116,7 @@ export class PathValidator {
         this.displayValidationResults(validation);
         // Check for common files
         const commonPaths = [
-            'packages/backlog-integration/dist/cli/cc-main.js',
+            'packages/critical-claude/dist/cli/cc-main.js',
             'package.json',
             '.critical-claude/config.json'
         ];

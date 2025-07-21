@@ -34,5 +34,15 @@ export declare class UnifiedTaskCommand implements CommandHandler {
     private getPriorityColor;
     private getEmptyStateMessage;
     private getUsageHelp;
+    private handleTemplate;
+    private getTemplatesDir;
+    private listTemplates;
+    private showTemplate;
+    private loadTemplate;
+    private loadTemplateData;
+    private mergeTemplates;
+    private replaceVariables;
+    private resolveDependencies;
+    private createTemplate;
 }
 //# sourceMappingURL=unified-task.d.ts.map

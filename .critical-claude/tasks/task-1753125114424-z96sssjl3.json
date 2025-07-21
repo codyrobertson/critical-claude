@@ -1,0 +1,21 @@
+{
+  "id": "task-1753125114424-z96sssjl3",
+  "title": "Testing",
+  "description": "Implement comprehensive test coverage",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "testing",
+    "quality"
+  ],
+  "createdAt": "2025-07-21T19:11:54.424Z",
+  "updatedAt": "2025-07-21T19:11:54.424Z",
+  "storyPoints": 5,
+  "dependencies": [
+    "task-1753125114423-cvmoqfyq9",
+    "task-1753125114424-wth2ddol7"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

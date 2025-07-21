@@ -1,0 +1,20 @@
+{
+  "id": "task-1753125114423-cvmoqfyq9",
+  "title": "Backend API Development",
+  "description": "Create RESTful API with postgresql database",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "backend",
+    "api"
+  ],
+  "createdAt": "2025-07-21T19:11:54.423Z",
+  "updatedAt": "2025-07-21T19:11:54.423Z",
+  "storyPoints": 8,
+  "dependencies": [
+    "task-1753125114421-8aceht56h"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

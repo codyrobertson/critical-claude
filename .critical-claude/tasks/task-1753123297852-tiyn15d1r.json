@@ -1,0 +1,34 @@
+{
+  "id": "task-1753123297852-tiyn15d1r",
+  "title": "Search Implementation",
+  "description": "Build efficient search functionality with filtering and highlighting",
+  "status": "done",
+  "priority": "medium",
+  "labels": [
+    "feature",
+    "search",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T18:41:37.852Z",
+  "updatedAt": "2025-07-21T19:08:14.597Z",
+  "storyPoints": 5,
+  "estimatedHours": "20",
+  "dependencies": [
+    "task-1753123297852-wrsi33f8g",
+    "task-1753123297851-adbhtaafk"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "task-1753125114424-wth2ddol7",
+  "title": "Frontend Development",
+  "description": "Build React frontend for my-app",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "frontend",
+    "react"
+  ],
+  "createdAt": "2025-07-21T19:11:54.424Z",
+  "updatedAt": "2025-07-21T19:11:54.424Z",
+  "storyPoints": 8,
+  "dependencies": [
+    "task-1753125114421-8aceht56h"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

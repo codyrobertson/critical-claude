@@ -1,0 +1,32 @@
+{
+  "id": "task-1753124502936-1l5tt9fvk",
+  "title": "Setup CI/CD pipeline",
+  "description": "Configure automated testing, building, and deployment workflows",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "devops",
+    "deployment",
+    "automation",
+    "template",
+    "template:webapp",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T19:01:42.936Z",
+  "updatedAt": "2025-07-21T19:08:14.597Z",
+  "storyPoints": 3,
+  "estimatedHours": 5,
+  "dependencies": [
+    "task-1753124502936-gmk8gwh5n"
+  ],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

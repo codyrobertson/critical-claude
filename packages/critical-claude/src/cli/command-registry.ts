@@ -22,13 +22,23 @@ export class CommandRegistry {
   }
 
   private initializeCommands(): void {
-    // Only register the unified task command
+    // Register the unified task command
     this.register({
       name: 'task',
       description: 'Unified task management',
       loader: async () => {
         const { UnifiedTaskCommand } = await import('./commands/unified-task.js');
         return new UnifiedTaskCommand();
+      }
+    });
+    
+    // Register the viewer command
+    this.register({
+      name: 'viewer',
+      description: 'Terminal-based task viewer',
+      loader: async () => {
+        const { ViewerCommand } = await import('./commands/viewer.js');
+        return new ViewerCommand();
       }
     });
   }

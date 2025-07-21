@@ -1,0 +1,64 @@
+# Microservice Architecture Template
+[metadata]
+name = "microservice"
+description = "Microservice with event-driven architecture"
+version = "1.0.0"
+difficulty = "advanced"
+estimated_weeks = 3
+team_size = 2
+tags = ["microservice", "distributed", "events", "docker"]
+# Template inheritance - builds on API template
+extends = "api"
+
+[variables]
+service_name = "user-service"
+message_broker = "rabbitmq"
+container = "docker"
+orchestration = "kubernetes"
+
+# Additional tasks beyond those inherited from api.toml:
+
+[[tasks.microservice]]
+title = "Setup {{message_broker}} integration"
+description = "Configure message broker connection and event handlers"
+priority = "high"
+labels = ["messaging", "events", "architecture"]
+story_points = 5
+estimated_hours = 8
+dependencies = ["4"]  # After API routes
+
+[[tasks.microservice]]
+title = "Implement event publishers and consumers"
+description = "Create event-driven communication patterns"
+priority = "high"
+labels = ["events", "async", "messaging"]
+story_points = 5
+estimated_hours = 8
+dependencies = ["9"]
+
+[[tasks.microservice]]
+title = "Add distributed tracing"
+description = "Implement OpenTelemetry for request tracing"
+priority = "medium"
+labels = ["monitoring", "observability"]
+story_points = 3
+estimated_hours = 5
+dependencies = ["10"]
+
+[[tasks.microservice]]
+title = "Create {{container}} configuration"
+description = "Dockerfile, docker-compose, and multi-stage builds"
+priority = "high"
+labels = ["docker", "containerization", "devops"]
+story_points = 3
+estimated_hours = 5
+dependencies = ["8"]
+
+[[tasks.microservice]]
+title = "Setup {{orchestration}} deployment"
+description = "Create deployment, service, and ingress configurations"
+priority = "high"
+labels = ["kubernetes", "orchestration", "devops"]
+story_points = 5
+estimated_hours = 8
+dependencies = ["12"]

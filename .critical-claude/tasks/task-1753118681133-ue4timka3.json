@@ -1,0 +1,38 @@
+{
+  "id": "task-1753118681133-ue4timka3",
+  "title": "Dependencies Command Implementation",
+  "description": "Create deps command to analyze and suggest task dependencies",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "feature",
+    "analysis",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:24:41.133Z",
+  "updatedAt": "2025-07-21T19:08:14.593Z",
+  "storyPoints": 5,
+  "estimatedHours": "10",
+  "dependencies": [
+    "task-1753118681132-y0oehfyl3"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

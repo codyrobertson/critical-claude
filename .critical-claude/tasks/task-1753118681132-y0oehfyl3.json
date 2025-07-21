@@ -1,0 +1,38 @@
+{
+  "id": "task-1753118681132-y0oehfyl3",
+  "title": "Core Command Parser",
+  "description": "Implement base command parsing system to handle expand, research, and deps commands",
+  "status": "todo",
+  "priority": "critical",
+  "labels": [
+    "core",
+    "parser",
+    "ai-generated",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude",
+    "synced-to-claude"
+  ],
+  "createdAt": "2025-07-21T17:24:41.132Z",
+  "updatedAt": "2025-07-21T19:08:14.591Z",
+  "storyPoints": 5,
+  "estimatedHours": "10",
+  "dependencies": [
+    "task-1753118681129-8rvz4bgij"
+  ],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}
