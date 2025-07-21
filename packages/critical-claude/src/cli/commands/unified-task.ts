@@ -709,6 +709,21 @@ export class UnifiedTaskCommand implements CommandHandler {
       output += chalk.gray('📝 Draft\n');
     }
     
+    // Display custom fields if present
+    if (task.customFields && Object.keys(task.customFields).length > 0) {
+      output += chalk.yellow('\n📌 Custom Fields:\n');
+      for (const [key, value] of Object.entries(task.customFields)) {
+        if (Array.isArray(value)) {
+          output += `${key}:\n`;
+          value.forEach(item => {
+            output += `  • ${item}\n`;
+          });
+        } else if (value !== null && value !== undefined) {
+          output += `${key}: ${value}\n`;
+        }
+      }
+    }
+    
     return output;
   }
   
@@ -848,52 +863,112 @@ For more help: https://critical-claude.dev/docs/tasks`;
     const __dirname = dirname(__filename);
     return path.join(__dirname, '..', '..', '..', 'templates');
   }
+  
+  private getUserTemplatesDirs(): string[] {
+    return [
+      path.join(process.cwd(), '.cc', 'templates'),
+      path.join(process.cwd(), '.critical-claude', 'templates')
+    ];
+  }
 
   private async listTemplates(options: any): Promise<void> {
-    const templatesDir = this.getTemplatesDir();
-    
-    if (!fs.existsSync(templatesDir)) {
-      console.log(chalk.yellow('No templates directory found.'));
-      return;
-    }
-    
-    const files = fs.readdirSync(templatesDir).filter(f => f.endsWith('.toml'));
-    
-    if (files.length === 0) {
-      console.log(chalk.yellow('No templates found.'));
-      console.log(chalk.gray('Create templates in: ' + templatesDir));
-      return;
-    }
-    
     console.log(chalk.cyan('📚 Available Task Templates:\n'));
     
-    for (const file of files) {
-      const templatePath = path.join(templatesDir, file);
-      try {
-        const content = fs.readFileSync(templatePath, 'utf8');
-        const template = toml.parse(content) as any;
-        const name = path.basename(file, '.toml');
-        
-        console.log(chalk.green(`  ${name}`));
-        if (template.metadata) {
-          console.log(chalk.gray(`    ${template.metadata.description || 'No description'}`));
-          if (template.metadata.tags) {
-            console.log(chalk.gray(`    Tags: ${template.metadata.tags.join(', ')}`));
+    // List built-in templates
+    const templatesDir = this.getTemplatesDir();
+    let hasTemplates = false;
+    
+    if (fs.existsSync(templatesDir)) {
+      const builtInFiles = fs.readdirSync(templatesDir).filter(f => f.endsWith('.toml'));
+      
+      if (builtInFiles.length > 0) {
+        hasTemplates = true;
+        for (const file of builtInFiles) {
+          const templatePath = path.join(templatesDir, file);
+          try {
+            const content = fs.readFileSync(templatePath, 'utf8');
+            const template = toml.parse(content) as any;
+            const name = path.basename(file, '.toml');
+            
+            console.log(chalk.green(`  ${name}`));
+            if (template.metadata) {
+              console.log(chalk.gray(`    ${template.metadata.description || 'No description'}`));
+              if (template.metadata.tags) {
+                console.log(chalk.gray(`    Tags: ${template.metadata.tags.join(', ')}`));
+              }
+            }
+            console.log('');
+          } catch (error) {
+            console.log(chalk.red(`  ${file} (invalid template)`));
           }
         }
-        console.log('');
-      } catch (error) {
-        console.log(chalk.red(`  ${file} (invalid template)`));
       }
     }
     
-    console.log(chalk.gray('Usage: cc task template <name> [--var=value ...]'));
+    // List user templates
+    const userDirs = this.getUserTemplatesDirs();
+    let hasUserTemplates = false;
+    
+    for (const userDir of userDirs) {
+      if (fs.existsSync(userDir)) {
+        const userFiles = fs.readdirSync(userDir).filter(f => f.endsWith('.toml'));
+        
+        if (userFiles.length > 0 && !hasUserTemplates) {
+          hasUserTemplates = true;
+          console.log(chalk.yellow('User Templates:\n'));
+        }
+        
+        for (const file of userFiles) {
+          const templatePath = path.join(userDir, file);
+          try {
+            const content = fs.readFileSync(templatePath, 'utf8');
+            const template = toml.parse(content) as any;
+            const name = path.basename(file, '.toml');
+            
+            console.log(chalk.blue(`  ${name} `) + chalk.gray('(custom)'));
+            if (template.metadata) {
+              console.log(chalk.gray(`    ${template.metadata.description || template.description || 'No description'}`));
+              if (template.metadata.tags) {
+                console.log(chalk.gray(`    Tags: ${template.metadata.tags.join(', ')}`));
+              }
+            }
+            console.log('');
+          } catch (error) {
+            console.log(chalk.red(`  ${file} (invalid template)`));
+          }
+        }
+      }
+    }
+    
+    if (!hasTemplates && !hasUserTemplates) {
+      console.log(chalk.yellow('No templates found.'));
+      console.log(chalk.gray('\nCreate custom templates in:'));
+      console.log(chalk.gray('  .critical-claude/templates/<name>.toml'));
+      console.log(chalk.gray('  .cc/templates/<name>.toml'));
+    } else {
+      console.log(chalk.gray('Usage: cc task template <name> [--var=value ...]'));
+    }
   }
 
   private async showTemplate(name: string, options: any): Promise<void> {
-    const templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+    // Check built-in templates first
+    let templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+    let templateFound = fs.existsSync(templatePath);
     
-    if (!fs.existsSync(templatePath)) {
+    // Check user templates if not found
+    if (!templateFound) {
+      const userDirs = this.getUserTemplatesDirs();
+      for (const userDir of userDirs) {
+        const userPath = path.join(userDir, `${name}.toml`);
+        if (fs.existsSync(userPath)) {
+          templatePath = userPath;
+          templateFound = true;
+          break;
+        }
+      }
+    }
+    
+    if (!templateFound) {
       throw new Error(`Template not found: ${name}`);
     }
     
@@ -945,9 +1020,24 @@ For more help: https://critical-claude.dev/docs/tasks`;
   }
 
   private async loadTemplate(name: string, options: any): Promise<void> {
-    const templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+    // Check built-in templates first
+    let templatePath = path.join(this.getTemplatesDir(), `${name}.toml`);
+    let templateFound = fs.existsSync(templatePath);
     
-    if (!fs.existsSync(templatePath)) {
+    // Check user templates if not found
+    if (!templateFound) {
+      const userDirs = this.getUserTemplatesDirs();
+      for (const userDir of userDirs) {
+        const userPath = path.join(userDir, `${name}.toml`);
+        if (fs.existsSync(userPath)) {
+          templatePath = userPath;
+          templateFound = true;
+          break;
+        }
+      }
+    }
+    
+    if (!templateFound) {
       throw new Error(`Template not found: ${name}. Use 'cc task template list' to see available templates.`);
     }
     
@@ -1006,7 +1096,8 @@ For more help: https://critical-claude.dev/docs/tasks`;
             storyPoints: processedTask.story_points,
             estimatedHours: processedTask.estimated_hours,
             aiGenerated: false,
-            source: 'manual'
+            source: 'manual',
+            customFields: processedTask.custom
           };
           
           // Create the task

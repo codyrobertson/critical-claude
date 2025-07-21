@@ -9,6 +9,11 @@ import path from 'path';
 import toml from '@iarna/toml';
 import { UnifiedStorageManager } from '../../core/unified-storage.js';
 import { AITaskManager } from '../../core/ai-task-manager.js';
+import { 
+  CustomFieldDefinition, 
+  CustomFieldValue, 
+  CustomFieldValues 
+} from '../../types/common-task.js';
 
 interface TaskTemplate {
   name: string;
@@ -16,6 +21,14 @@ interface TaskTemplate {
   tasks: TemplateTask[];
   dependencies?: string[];
   variables?: Record<string, string>;
+  // Custom field definitions for this template
+  fields?: Record<string, CustomFieldDefinition>;
+  // Metadata about the template
+  metadata?: {
+    version?: string;
+    author?: string;
+    tags?: string[];
+  };
 }
 
 interface TemplateTask {
@@ -27,6 +40,8 @@ interface TemplateTask {
   hours?: number;
   depends_on?: string[];
   subtasks?: TemplateTask[];
+  // Custom fields - can contain any fields defined in template.fields
+  custom?: CustomFieldValues;
 }
 
 export class TemplateCommand {
@@ -223,25 +238,32 @@ export class TemplateCommand {
   }
 
   private async getUserTemplates(): Promise<TaskTemplate[]> {
-    const templateDir = path.join(process.cwd(), '.cc', 'templates');
+    const templates: TaskTemplate[] = [];
     
-    try {
-      await fs.access(templateDir);
-      const files = await fs.readdir(templateDir);
-      const templates: TaskTemplate[] = [];
-      
-      for (const file of files) {
-        if (file.endsWith('.toml')) {
-          const content = await fs.readFile(path.join(templateDir, file), 'utf8');
-          const template = toml.parse(content) as any;
-          templates.push(template);
+    // Check both .cc/templates and .critical-claude/templates
+    const templateDirs = [
+      path.join(process.cwd(), '.cc', 'templates'),
+      path.join(process.cwd(), '.critical-claude', 'templates')
+    ];
+    
+    for (const templateDir of templateDirs) {
+      try {
+        await fs.access(templateDir);
+        const files = await fs.readdir(templateDir);
+        
+        for (const file of files) {
+          if (file.endsWith('.toml')) {
+            const content = await fs.readFile(path.join(templateDir, file), 'utf8');
+            const template = toml.parse(content) as unknown as TaskTemplate;
+            templates.push(template);
+          }
         }
+      } catch {
+        // Directory doesn't exist, skip it
       }
-      
-      return templates;
-    } catch {
-      return [];
     }
+    
+    return templates;
   }
 
   private async loadTemplate(name: string): Promise<TaskTemplate | null> {
@@ -249,15 +271,22 @@ export class TemplateCommand {
     const builtIn = await this.loadBuiltInTemplate(name);
     if (builtIn) return builtIn;
     
-    // Check user templates
-    const userTemplatePath = path.join(process.cwd(), '.cc', 'templates', `${name}.toml`);
+    // Check user templates in both directories
+    const userTemplatePaths = [
+      path.join(process.cwd(), '.cc', 'templates', `${name}.toml`),
+      path.join(process.cwd(), '.critical-claude', 'templates', `${name}.toml`)
+    ];
     
-    try {
-      const content = await fs.readFile(userTemplatePath, 'utf8');
-      return toml.parse(content) as any;
-    } catch {
-      return null;
+    for (const templatePath of userTemplatePaths) {
+      try {
+        const content = await fs.readFile(templatePath, 'utf8');
+        return toml.parse(content) as unknown as TaskTemplate;
+      } catch {
+        // File doesn't exist, try next path
+      }
     }
+    
+    return null;
   }
 
   private async loadBuiltInTemplate(name: string): Promise<TaskTemplate | null> {
@@ -427,7 +456,8 @@ export class TemplateCommand {
       dependencies: dependencies.length > 0 ? dependencies : undefined,
       aiGenerated: false,
       source: 'manual' as any,
-      draft: options.draft || false
+      draft: options.draft || false,
+      customFields: templateTask.custom
     });
     
     // Store mapping for dependency resolution

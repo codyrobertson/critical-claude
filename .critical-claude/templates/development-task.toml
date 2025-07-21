@@ -1,0 +1,110 @@
+# Development Task Template with Custom Fields
+[metadata]
+name = "development-task"
+displayName = "Development Task Template"
+description = "Comprehensive task template with problem definition, solution spec, and acceptance criteria"
+version = "1.0.0"
+author = "Critical Claude Team"
+tags = ["development", "engineering", "custom-fields"]
+
+# Custom field definitions for this template
+[fields.ID]
+type = "string"
+required = true
+description = "Unique task identifier"
+example = "TASK-001"
+validation = { pattern = "^[A-Z]+-[0-9]+$" }
+
+[fields.Problem]
+type = "text"
+required = true
+description = "Clear problem statement that this task solves"
+example = "Users cannot reset their passwords when they forget them"
+validation = { minLength = 10, maxLength = 1000 }
+
+[fields.Solution]
+type = "text"
+required = true
+description = "Technical solution specification"
+example = "Implement password reset flow with email verification"
+validation = { minLength = 20, maxLength = 2000 }
+
+[fields.AcceptanceCriteria]
+type = "array"
+required = true
+description = "List of acceptance criteria that must be met"
+example = ["User can request password reset", "Email is sent with reset link", "Link expires after 24 hours"]
+
+[fields.Risks]
+type = "array"
+required = false
+description = "Potential risks or concerns"
+example = ["Security vulnerability if tokens are not properly validated", "Email delivery issues"]
+
+[fields.Dependencies]
+type = "array"
+required = false
+description = "External dependencies or blockers"
+example = ["Email service must be configured", "User authentication system must be in place"]
+
+[fields.TechnicalRequirements]
+type = "text"
+required = false
+description = "Specific technical requirements or constraints"
+example = "Must use JWT tokens, implement rate limiting, support mobile devices"
+
+[fields.EstimatedComplexity]
+type = "select"
+required = true
+description = "Complexity estimation"
+options = ["trivial", "simple", "medium", "complex", "very-complex"]
+default = "medium"
+
+# Variables that can be customized when loading the template
+[variables]
+project_prefix = "PROJ"
+default_assignee = "unassigned"
+default_priority = "medium"
+
+# Define phases for the development workflow
+[phases]
+planning = "Planning & Design"
+implementation = "Core Implementation"
+testing = "Testing & Quality"
+documentation = "Documentation & Deployment"
+
+# Task definitions with custom fields organized by phase
+[[tasks.planning]]
+title = "{{project_prefix}}-001: Define Requirements"
+description = "Gather and document all requirements with acceptance criteria"
+priority = "critical"
+labels = ["planning", "requirements"]
+story_points = 3
+estimated_hours = 6
+
+[[tasks.implementation]]
+title = "{{project_prefix}}-002: Implement Core Feature"
+description = "Main implementation task with full specification"
+priority = "{{default_priority}}"
+labels = ["feature", "core"]
+story_points = 8
+estimated_hours = 16
+dependencies = ["{{project_prefix}}-001: Define Requirements"]
+
+[[tasks.testing]]
+title = "{{project_prefix}}-003: Write Unit Tests"
+description = "Comprehensive test coverage for the feature"
+priority = "high"
+labels = ["testing", "quality"]
+story_points = 3
+estimated_hours = 6
+dependencies = ["{{project_prefix}}-002: Implement Core Feature"]
+
+[[tasks.documentation]]
+title = "{{project_prefix}}-004: Update Documentation"
+description = "Update all relevant documentation"
+priority = "medium"
+labels = ["documentation"]
+story_points = 2
+estimated_hours = 4
+dependencies = ["{{project_prefix}}-002: Implement Core Feature"]

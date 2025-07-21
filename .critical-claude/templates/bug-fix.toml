@@ -1,0 +1,177 @@
+# Bug Fix Template with Custom Fields
+[metadata]
+name = "bug-fix"
+displayName = "Bug Fix Template"
+description = "Template for tracking and fixing software bugs with detailed investigation and resolution steps"
+version = "1.0.0"
+author = "Critical Claude Team"
+tags = ["bug", "maintenance", "support", "debugging"]
+
+# Custom field definitions for bug tracking
+[fields.BugID]
+type = "string"
+required = true
+description = "Unique bug identifier from issue tracker"
+example = "BUG-1234"
+validation = { pattern = "^[A-Z]+-[0-9]+$" }
+
+[fields.Severity]
+type = "select"
+required = true
+description = "Bug severity level"
+options = ["low", "medium", "high", "critical"]
+default = "medium"
+
+[fields.ReproductionSteps]
+type = "text"
+required = true
+description = "Steps to reproduce the bug"
+example = "1. Navigate to login page\n2. Enter invalid credentials\n3. Click login button\n4. Error occurs"
+
+[fields.ExpectedBehavior]
+type = "text"
+required = true
+description = "What should happen instead"
+example = "User should see a clear error message and be able to try again"
+
+[fields.ActualBehavior]
+type = "text"
+required = true
+description = "What actually happens"
+example = "Application crashes with a 500 error"
+
+[fields.Environment]
+type = "text"
+required = false
+description = "Environment details where bug occurs"
+example = "Browser: Chrome 118, OS: macOS 14, Device: Desktop"
+
+[fields.RootCause]
+type = "text"
+required = false
+description = "Identified root cause of the bug"
+example = "Null pointer exception in authentication validation"
+
+[fields.Solution]
+type = "text"
+required = false
+description = "Implemented solution description"
+example = "Added null check and proper error handling in auth service"
+
+[fields.TestingNotes]
+type = "text"
+required = false
+description = "Notes about testing the fix"
+example = "Tested on all supported browsers, verified error handling works correctly"
+
+# Template variables
+[variables]
+bug_prefix = "BUG"
+default_assignee = "dev-team"
+default_priority = "high"
+
+# Bug fix workflow phases
+[phases]
+investigation = "Bug Investigation & Analysis"
+implementation = "Fix Implementation"
+testing = "Testing & Verification"
+deployment = "Deployment & Monitoring"
+
+# Bug fix tasks
+[[tasks.investigation]]
+title = "{{bug_prefix}}-001: Investigate Bug Report"
+description = "Analyze the bug report and gather initial information"
+priority = "{{default_priority}}"
+labels = ["bug", "investigation"]
+story_points = 2
+estimated_hours = 3
+
+[[tasks.investigation]]
+title = "{{bug_prefix}}-002: Reproduce Bug"
+description = "Follow reproduction steps to confirm and understand the bug"
+priority = "critical"
+labels = ["bug", "reproduction"]
+story_points = 3
+estimated_hours = 4
+dependencies = ["{{bug_prefix}}-001: Investigate Bug Report"]
+
+[[tasks.investigation]]
+title = "{{bug_prefix}}-003: Identify Root Cause"
+description = "Debug the issue to find the root cause"
+priority = "high"
+labels = ["bug", "debugging", "analysis"]
+story_points = 5
+estimated_hours = 8
+dependencies = ["{{bug_prefix}}-002: Reproduce Bug"]
+
+[[tasks.implementation]]
+title = "{{bug_prefix}}-004: Implement Fix"
+description = "Develop and implement the bug fix"
+priority = "high"
+labels = ["bug", "fix", "development"]
+story_points = 5
+estimated_hours = 6
+dependencies = ["{{bug_prefix}}-003: Identify Root Cause"]
+
+[[tasks.implementation]]
+title = "{{bug_prefix}}-005: Code Review"
+description = "Get the bug fix reviewed by team members"
+priority = "high"
+labels = ["bug", "review", "quality"]
+story_points = 2
+estimated_hours = 2
+dependencies = ["{{bug_prefix}}-004: Implement Fix"]
+
+[[tasks.testing]]
+title = "{{bug_prefix}}-006: Unit Testing"
+description = "Write and run unit tests for the fix"
+priority = "high"
+labels = ["bug", "testing", "unit-test"]
+story_points = 3
+estimated_hours = 4
+dependencies = ["{{bug_prefix}}-005: Code Review"]
+
+[[tasks.testing]]
+title = "{{bug_prefix}}-007: Integration Testing"
+description = "Test the fix in integration environment"
+priority = "medium"
+labels = ["bug", "testing", "integration"]
+story_points = 2
+estimated_hours = 3
+dependencies = ["{{bug_prefix}}-006: Unit Testing"]
+
+[[tasks.testing]]
+title = "{{bug_prefix}}-008: Regression Testing"
+description = "Ensure the fix doesn't break existing functionality"
+priority = "critical"
+labels = ["bug", "testing", "regression"]
+story_points = 3
+estimated_hours = 4
+dependencies = ["{{bug_prefix}}-007: Integration Testing"]
+
+[[tasks.deployment]]
+title = "{{bug_prefix}}-009: Deploy to Staging"
+description = "Deploy the fix to staging environment"
+priority = "medium"
+labels = ["bug", "deployment", "staging"]
+story_points = 2
+estimated_hours = 2
+dependencies = ["{{bug_prefix}}-008: Regression Testing"]
+
+[[tasks.deployment]]
+title = "{{bug_prefix}}-010: Production Deployment"
+description = "Deploy the fix to production environment"
+priority = "high"
+labels = ["bug", "deployment", "production"]
+story_points = 2
+estimated_hours = 2
+dependencies = ["{{bug_prefix}}-009: Deploy to Staging"]
+
+[[tasks.deployment]]
+title = "{{bug_prefix}}-011: Monitor Fix"
+description = "Monitor the fix in production and verify resolution"
+priority = "medium"
+labels = ["bug", "monitoring", "verification"]
+story_points = 1
+estimated_hours = 2
+dependencies = ["{{bug_prefix}}-010: Production Deployment"]

@@ -6,6 +6,118 @@
 export type TaskStatus = 'todo' | 'in_progress' | 'done' | 'blocked' | 'archived';
 export type TaskPriority = 'critical' | 'high' | 'medium' | 'low';
 
+// Custom field type definitions
+export type CustomFieldType = 'string' | 'text' | 'number' | 'boolean' | 'array' | 'select' | 'date' | 'url';
+
+export interface CustomFieldDefinition {
+  type: CustomFieldType;
+  required?: boolean;
+  description?: string;
+  default?: CustomFieldValue;
+  options?: string[]; // For select type
+  example?: string;
+  validation?: {
+    pattern?: string; // Regex pattern for string fields
+    min?: number; // For number fields
+    max?: number; // For number fields
+    minLength?: number; // For string/text fields
+    maxLength?: number; // For string/text fields
+  };
+}
+
+export type CustomFieldValue = string | number | boolean | string[] | Date | null;
+export type CustomFieldValues = Record<string, CustomFieldValue>;
+
+// Type guards for custom fields
+export function isValidCustomFieldValue(value: unknown): value is CustomFieldValue {
+  return (
+    value === null ||
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean' ||
+    value instanceof Date ||
+    (Array.isArray(value) && value.every(v => typeof v === 'string'))
+  );
+}
+
+export function validateCustomFieldValue(
+  value: unknown, 
+  definition: CustomFieldDefinition
+): { valid: boolean; error?: string } {
+  // Check if required
+  if (definition.required && (value === null || value === undefined || value === '')) {
+    return { valid: false, error: 'Field is required' };
+  }
+  
+  // Type-specific validation
+  switch (definition.type) {
+    case 'string':
+    case 'text':
+    case 'url':
+      if (value !== null && typeof value !== 'string') {
+        return { valid: false, error: 'Value must be a string' };
+      }
+      if (typeof value === 'string' && definition.validation) {
+        if (definition.validation.minLength && value.length < definition.validation.minLength) {
+          return { valid: false, error: `Minimum length is ${definition.validation.minLength}` };
+        }
+        if (definition.validation.maxLength && value.length > definition.validation.maxLength) {
+          return { valid: false, error: `Maximum length is ${definition.validation.maxLength}` };
+        }
+        if (definition.validation.pattern) {
+          const regex = new RegExp(definition.validation.pattern);
+          if (!regex.test(value)) {
+            return { valid: false, error: 'Value does not match required pattern' };
+          }
+        }
+      }
+      break;
+      
+    case 'number':
+      if (value !== null && typeof value !== 'number') {
+        return { valid: false, error: 'Value must be a number' };
+      }
+      if (typeof value === 'number' && definition.validation) {
+        if (definition.validation.min !== undefined && value < definition.validation.min) {
+          return { valid: false, error: `Minimum value is ${definition.validation.min}` };
+        }
+        if (definition.validation.max !== undefined && value > definition.validation.max) {
+          return { valid: false, error: `Maximum value is ${definition.validation.max}` };
+        }
+      }
+      break;
+      
+    case 'boolean':
+      if (value !== null && typeof value !== 'boolean') {
+        return { valid: false, error: 'Value must be a boolean' };
+      }
+      break;
+      
+    case 'array':
+      if (value !== null && (!Array.isArray(value) || !value.every(v => typeof v === 'string'))) {
+        return { valid: false, error: 'Value must be an array of strings' };
+      }
+      break;
+      
+    case 'select':
+      if (value !== null && typeof value !== 'string') {
+        return { valid: false, error: 'Value must be a string' };
+      }
+      if (value !== null && definition.options && !definition.options.includes(value as string)) {
+        return { valid: false, error: `Value must be one of: ${definition.options.join(', ')}` };
+      }
+      break;
+      
+    case 'date':
+      if (value !== null && !(value instanceof Date)) {
+        return { valid: false, error: 'Value must be a Date' };
+      }
+      break;
+  }
+  
+  return { valid: true };
+}
+
 export interface TaskDependency {
   from: string;
   to: string;
@@ -66,6 +178,9 @@ export interface CommonTask {
   draft?: boolean;
   external?: boolean;
   source?: 'manual' | 'ai' | 'ai-generation' | 'ai-expansion' | 'import' | 'claude-code';
+  
+  // Custom fields for template-based tasks
+  customFields?: CustomFieldValues;
 }
 
 export interface CreateTaskInput {
@@ -85,6 +200,7 @@ export interface CreateTaskInput {
   draft?: boolean;
   aiGenerated?: boolean;
   source?: 'manual' | 'ai' | 'ai-generation' | 'ai-expansion' | 'import' | 'claude-code';
+  customFields?: CustomFieldValues;
 }
 
 export interface UpdateTaskInput {

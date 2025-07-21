@@ -1,0 +1,151 @@
+# Template Generator - A template for creating templates!
+[metadata]
+name = "template-generator"
+displayName = "Template Generator"
+description = "Generate a custom task template with your own fields, phases, and tasks"
+version = "1.0.0"
+author = "Critical Claude Team"
+tags = ["meta", "template", "generator", "custom-fields"]
+
+# Custom field definitions for template creation
+[fields.TemplateName]
+type = "string"
+required = true
+description = "Name of the template (used as filename)"
+example = "my-custom-template"
+validation = { pattern = "^[a-z0-9-]+$", minLength = 3, maxLength = 30 }
+
+[fields.TemplateDisplayName]
+type = "string"
+required = true
+description = "Human-readable name for the template"
+example = "My Custom Development Template"
+
+[fields.TemplateDescription]
+type = "text"
+required = true
+description = "Description of what this template is for"
+example = "A specialized template for bug fixing and maintenance tasks"
+
+[fields.TemplateAuthor]
+type = "string"
+required = false
+description = "Author of the template"
+example = "Development Team"
+default = "Critical Claude User"
+
+[fields.TemplateTags]
+type = "array"
+required = false
+description = "Tags to categorize the template"
+example = ["bug-fix", "maintenance", "support"]
+
+[fields.CustomFields]
+type = "text"
+required = false
+description = "JSON configuration for custom fields (see documentation)"
+example = '{"BugSeverity": {"type": "select", "options": ["low", "medium", "high", "critical"]}, "ReproductionSteps": {"type": "text", "required": true}}'
+
+[fields.Phases]
+type = "text"
+required = false
+description = "JSON configuration for phases"
+example = '{"analysis": "Bug Analysis", "fix": "Implementation", "test": "Testing & Verification"}'
+default = '{"planning": "Planning", "implementation": "Implementation", "testing": "Testing"}'
+
+[fields.Variables]
+type = "text"
+required = false
+description = "JSON configuration for template variables"
+example = '{"project_prefix": "BUG", "default_assignee": "dev-team"}'
+default = '{"project_prefix": "TASK", "default_priority": "medium"}'
+
+[fields.SampleTasks]
+type = "text"
+required = false
+description = "JSON array of sample tasks for the template"
+example = '[{"title": "Analyze bug report", "phase": "analysis", "priority": "high"}]'
+
+# Variables for the template generator
+[variables]
+template_name = "custom-template"
+author = "User"
+output_dir = ".critical-claude/templates"
+
+# Phases for template creation
+[phases]
+planning = "Template Planning & Design"
+creation = "Template File Creation"
+testing = "Template Testing & Validation"
+
+# Tasks for creating a custom template
+[[tasks.planning]]
+title = "{{template_name}}-001: Define Template Requirements"
+description = "Define what your custom template should accomplish and what fields it needs"
+priority = "critical"
+labels = ["template", "planning", "requirements"]
+story_points = 3
+estimated_hours = 4
+
+[[tasks.planning]]
+title = "{{template_name}}-002: Design Custom Fields Schema"
+description = "Design the custom fields that tasks in your template will use"
+priority = "high"
+labels = ["template", "design", "schema"]
+story_points = 5
+estimated_hours = 6
+dependencies = ["{{template_name}}-001: Define Template Requirements"]
+
+[[tasks.creation]]
+title = "{{template_name}}-003: Create Template TOML File"
+description = "Write the actual template file with metadata, fields, variables, phases, and tasks"
+priority = "high"
+labels = ["template", "creation", "toml"]
+story_points = 8
+estimated_hours = 12
+dependencies = ["{{template_name}}-002: Design Custom Fields Schema"]
+
+[[tasks.creation]]
+title = "{{template_name}}-004: Add Sample Tasks to Template"
+description = "Create representative sample tasks that demonstrate the template's capabilities"
+priority = "medium"
+labels = ["template", "samples", "examples"]
+story_points = 3
+estimated_hours = 4
+dependencies = ["{{template_name}}-003: Create Template TOML File"]
+
+[[tasks.testing]]
+title = "{{template_name}}-005: Test Template Loading"
+description = "Verify the template can be loaded and listed correctly"
+priority = "high"
+labels = ["template", "testing", "validation"]
+story_points = 2
+estimated_hours = 2
+dependencies = ["{{template_name}}-004: Add Sample Tasks to Template"]
+
+[[tasks.testing]]
+title = "{{template_name}}-006: Test Task Creation from Template"
+description = "Create actual tasks from the template to verify it works correctly"
+priority = "critical"
+labels = ["template", "testing", "integration"]
+story_points = 3
+estimated_hours = 3
+dependencies = ["{{template_name}}-005: Test Template Loading"]
+
+[[tasks.testing]]
+title = "{{template_name}}-007: Validate Custom Fields Display"
+description = "Ensure custom fields appear correctly when viewing tasks created from the template"
+priority = "medium"
+labels = ["template", "testing", "ui"]
+story_points = 2
+estimated_hours = 2
+dependencies = ["{{template_name}}-006: Test Task Creation from Template"]
+
+[[tasks.testing]]
+title = "{{template_name}}-008: Create Template Documentation"
+description = "Document how to use your custom template for other team members"
+priority = "medium"
+labels = ["template", "documentation"]
+story_points = 3
+estimated_hours = 4
+dependencies = ["{{template_name}}-007: Validate Custom Fields Display"]
