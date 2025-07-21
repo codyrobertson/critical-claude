@@ -38,7 +38,7 @@ export async function initializeCLI() {
     program
         .name('cc')
         .description('Critical Claude CLI - Unified Task Management')
-        .version('2.0.0')
+        .version('2.3.0')
         .option('-v, --verbose', 'Enable verbose logging')
         .option('-q, --quiet', 'Suppress non-essential output')
         .option('--no-color', 'Disable colored output');
@@ -258,6 +258,39 @@ CC_DEFAULT_STATUS=todo
             process.exit(1);
         }
     });
+    // Template generator command
+    program
+        .command('create-template')
+        .description('Interactive template generator - create custom templates with guided prompts')
+        .action(async () => {
+        try {
+            console.log('🚀 Launching Interactive Template Generator...\n');
+            // Import the template generator
+            const { spawn } = await import('child_process');
+            const path = await import('path');
+            // Find the script path
+            const scriptPath = path.join(path.dirname(new URL(import.meta.url).pathname), '../../../scripts/create-template.js');
+            // Run the interactive script
+            const child = spawn('node', [scriptPath], {
+                stdio: 'inherit',
+                shell: true
+            });
+            child.on('error', (err) => {
+                console.error('❌ Failed to start template generator:', err.message);
+                process.exit(1);
+            });
+            child.on('close', (code) => {
+                if (code !== 0) {
+                    console.error(`❌ Template generator exited with code ${code}`);
+                    process.exit(code || 1);
+                }
+            });
+        }
+        catch (error) {
+            console.error('❌ Template generator failed:', error.message);
+            process.exit(1);
+        }
+    });
     // Hook system management
     program
         .command('hooks')
@@ -327,6 +360,11 @@ CC_DEFAULT_STATUS=todo
         console.log('  $ cc task expand <task-id>                 # Expand into subtasks');
         console.log('  $ cc task estimate <task-id> --apply       # AI task estimation');
         console.log('  $ cc task deps                             # Analyze dependencies');
+        console.log('');
+        console.log(chalk.cyan('Template System:'));
+        console.log('  $ cc task template list                     # List available templates');
+        console.log('  $ cc task template webapp                   # Load webapp template');
+        console.log('  $ cc create-template                        # Interactive template creator');
         console.log('');
         console.log(chalk.cyan('Task Operations:'));
         console.log('  $ cc task create "Fix bug @high #security 3pts for:alice"');

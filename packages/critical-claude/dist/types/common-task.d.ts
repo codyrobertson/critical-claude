@@ -4,6 +4,29 @@
  */
 export type TaskStatus = 'todo' | 'in_progress' | 'done' | 'blocked' | 'archived';
 export type TaskPriority = 'critical' | 'high' | 'medium' | 'low';
+export type CustomFieldType = 'string' | 'text' | 'number' | 'boolean' | 'array' | 'select' | 'date' | 'url';
+export interface CustomFieldDefinition {
+    type: CustomFieldType;
+    required?: boolean;
+    description?: string;
+    default?: CustomFieldValue;
+    options?: string[];
+    example?: string;
+    validation?: {
+        pattern?: string;
+        min?: number;
+        max?: number;
+        minLength?: number;
+        maxLength?: number;
+    };
+}
+export type CustomFieldValue = string | number | boolean | string[] | Date | null;
+export type CustomFieldValues = Record<string, CustomFieldValue>;
+export declare function isValidCustomFieldValue(value: unknown): value is CustomFieldValue;
+export declare function validateCustomFieldValue(value: unknown, definition: CustomFieldDefinition): {
+    valid: boolean;
+    error?: string;
+};
 export interface TaskDependency {
     from: string;
     to: string;
@@ -46,6 +69,7 @@ export interface CommonTask {
     draft?: boolean;
     external?: boolean;
     source?: 'manual' | 'ai' | 'ai-generation' | 'ai-expansion' | 'import' | 'claude-code';
+    customFields?: CustomFieldValues;
 }
 export interface CreateTaskInput {
     title: string;
@@ -64,6 +88,7 @@ export interface CreateTaskInput {
     draft?: boolean;
     aiGenerated?: boolean;
     source?: 'manual' | 'ai' | 'ai-generation' | 'ai-expansion' | 'import' | 'claude-code';
+    customFields?: CustomFieldValues;
 }
 export interface UpdateTaskInput {
     id: string;

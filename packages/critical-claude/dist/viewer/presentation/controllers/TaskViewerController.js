@@ -171,8 +171,13 @@ export class TaskViewerController {
         }
     }
     switchFocus() {
-        if (this.layout.type === 'single')
+        // If in single layout, switch to split layout
+        if (this.layout.type === 'single') {
+            this.setLayout({ type: 'split-horizontal', activePane: 'right' });
+            this.taskListView.blur();
+            this.taskDetailView.focus();
             return;
+        }
         if (this.layout.activePane === 'left' || this.layout.activePane === 'top') {
             this.layout.activePane = this.layout.type === 'split-horizontal' ? 'right' : 'bottom';
             this.taskListView.blur();

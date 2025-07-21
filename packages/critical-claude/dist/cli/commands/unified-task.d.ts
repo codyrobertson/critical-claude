@@ -36,6 +36,7 @@ export declare class UnifiedTaskCommand implements CommandHandler {
     private getUsageHelp;
     private handleTemplate;
     private getTemplatesDir;
+    private getUserTemplatesDirs;
     private listTemplates;
     private showTemplate;
     private loadTemplate;

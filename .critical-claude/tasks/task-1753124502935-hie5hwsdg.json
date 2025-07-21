@@ -2,7 +2,7 @@
   "id": "task-1753124502935-hie5hwsdg",
   "title": "Implement jwt authentication system",
   "description": "Create authentication middleware, user models, and auth endpoints",
-  "status": "todo",
+  "status": "in_progress",
   "priority": "critical",
   "labels": [
     "auth",
@@ -20,7 +20,7 @@
     "synced-to-claude"
   ],
   "createdAt": "2025-07-21T19:01:42.935Z",
-  "updatedAt": "2025-07-21T19:08:14.597Z",
+  "updatedAt": "2025-07-21T23:16:13.701Z",
   "storyPoints": 5,
   "estimatedHours": 8,
   "dependencies": [

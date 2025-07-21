@@ -48,7 +48,7 @@ export async function initializeCLI() {
   program
     .name('cc')
     .description('Critical Claude CLI - Unified Task Management')
-    .version('2.0.0')
+    .version('2.3.0')
     .option('-v, --verbose', 'Enable verbose logging')
     .option('-q, --quiet', 'Suppress non-essential output')
     .option('--no-color', 'Disable colored output');

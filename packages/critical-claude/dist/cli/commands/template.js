@@ -161,38 +161,50 @@ export class TemplateCommand {
         ];
     }
     async getUserTemplates() {
-        const templateDir = path.join(process.cwd(), '.cc', 'templates');
-        try {
-            await fs.access(templateDir);
-            const files = await fs.readdir(templateDir);
-            const templates = [];
-            for (const file of files) {
-                if (file.endsWith('.toml')) {
-                    const content = await fs.readFile(path.join(templateDir, file), 'utf8');
-                    const template = toml.parse(content);
-                    templates.push(template);
+        const templates = [];
+        // Check both .cc/templates and .critical-claude/templates
+        const templateDirs = [
+            path.join(process.cwd(), '.cc', 'templates'),
+            path.join(process.cwd(), '.critical-claude', 'templates')
+        ];
+        for (const templateDir of templateDirs) {
+            try {
+                await fs.access(templateDir);
+                const files = await fs.readdir(templateDir);
+                for (const file of files) {
+                    if (file.endsWith('.toml')) {
+                        const content = await fs.readFile(path.join(templateDir, file), 'utf8');
+                        const template = toml.parse(content);
+                        templates.push(template);
+                    }
                 }
             }
-            return templates;
+            catch {
+                // Directory doesn't exist, skip it
+            }
         }
-        catch {
-            return [];
-        }
+        return templates;
     }
     async loadTemplate(name) {
         // Check built-in templates first
         const builtIn = await this.loadBuiltInTemplate(name);
         if (builtIn)
             return builtIn;
-        // Check user templates
-        const userTemplatePath = path.join(process.cwd(), '.cc', 'templates', `${name}.toml`);
-        try {
-            const content = await fs.readFile(userTemplatePath, 'utf8');
-            return toml.parse(content);
+        // Check user templates in both directories
+        const userTemplatePaths = [
+            path.join(process.cwd(), '.cc', 'templates', `${name}.toml`),
+            path.join(process.cwd(), '.critical-claude', 'templates', `${name}.toml`)
+        ];
+        for (const templatePath of userTemplatePaths) {
+            try {
+                const content = await fs.readFile(templatePath, 'utf8');
+                return toml.parse(content);
+            }
+            catch {
+                // File doesn't exist, try next path
+            }
         }
-        catch {
-            return null;
-        }
+        return null;
     }
     async loadBuiltInTemplate(name) {
         const templates = {
@@ -336,7 +348,8 @@ export class TemplateCommand {
             dependencies: dependencies.length > 0 ? dependencies : undefined,
             aiGenerated: false,
             source: 'manual',
-            draft: options.draft || false
+            draft: options.draft || false,
+            customFields: templateTask.custom
         });
         // Store mapping for dependency resolution
         taskMap.set(templateTask.title, task.id);
