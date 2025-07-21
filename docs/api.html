@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - Critical Claude</title>
+    <meta name="description" content="Complete API reference for Critical Claude CLI - commands, options, and programmatic usage.">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .api-hero {
+            padding: 6rem 0;
+            text-align: center;
+            background: var(--surface);
+        }
+        
+        .api-content {
+            padding: 4rem 0;
+        }
+        
+        .command-section {
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 3rem;
+        }
+        
+        .command-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .command-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        }
+        
+        .command-description {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+        
+        .command-usage {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            margin-bottom: 2rem;
+        }
+        
+        .options-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        
+        .options-table th,
+        .options-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        
+        .options-table th {
+            background: var(--surface);
+            font-weight: 600;
+        }
+        
+        .option-flag {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            background: var(--code-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+        
+        .examples-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .example-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+        
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .example-description {
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+        
+        .example-code {
+            background: var(--text);
+            color: var(--bg);
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            font-size: 0.875rem;
+        }
+        
+        .api-nav {
+            position: sticky;
+            top: 100px;
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+        
+        .api-nav h4 {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .api-nav ul {
+            list-style: none;
+        }
+        
+        .api-nav a {
+            display: block;
+            padding: 0.25rem 0.5rem;
+            text-decoration: none;
+            color: var(--text-muted);
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+        
+        .api-nav a:hover,
+        .api-nav a.active {
+            color: var(--accent);
+            background: rgba(0, 102, 255, 0.1);
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .api-nav {
+                position: relative;
+                top: 0;
+            }
+        }
+        
+        .status-icons {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .status-icon {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--surface);
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+        }
+        
+        .mcp-tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .mcp-tool {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+        
+        .mcp-tool h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .parameter-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+        
+        .parameter-list li {
+            padding: 0.25rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .parameter-name {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            background: var(--code-bg);
+            padding: 0.125rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+            min-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">Critical Claude</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="templates.html">Templates</a></li>
+                <li><a href="api.html" class="active">API Reference</a></li>
+                <li><a href="https://github.com/codyrobertson/critical-claude">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="api-hero">
+        <div class="container">
+            <h1>API Reference</h1>
+            <p class="subtitle">
+                Complete reference for Critical Claude CLI commands, options, and programmatic usage.<br>
+                Master every feature with detailed examples and explanations.
+            </p>
+            <div class="code-block">
+                cc --help
+            </div>
+        </div>
+    </section>
+    
+    <!-- API Content -->
+    <section class="api-content">
+        <div class="container">
+            <div class="two-column">
+                <!-- Navigation -->
+                <div class="api-nav">
+                    <h4>Commands</h4>
+                    <ul>
+                        <li><a href="#init">cc init</a></li>
+                        <li><a href="#task">cc task</a></li>
+                        <li><a href="#task-ai">cc task ai</a></li>
+                        <li><a href="#task-template">cc task template</a></li>
+                        <li><a href="#task-deps">cc task deps</a></li>
+                        <li><a href="#task-research">cc task research</a></li>
+                        <li><a href="#task-expand">cc task expand</a></li>
+                        <li><a href="#viewer">cc viewer</a></li>
+                        <li><a href="#mcp-server">cc mcp-server</a></li>
+                    </ul>
+                    <h4>Status Icons</h4>
+                    <div class="status-icons">
+                        <span class="status-icon">📝 Todo</span>
+                        <span class="status-icon">🔄 In Progress</span>
+                        <span class="status-icon">✅ Done</span>
+                        <span class="status-icon">🚫 Blocked</span>
+                        <span class="status-icon">📦 Archived</span>
+                    </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="api-commands">
+                    <!-- Init Command -->
+                    <div id="init" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc init</div>
+                        </div>
+                        <div class="command-description">
+                            Initialize a new Critical Claude project in the current directory.
+                        </div>
+                        <div class="command-usage">cc init [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--name</span></td>
+                                    <td>Project name</td>
+                                    <td>Current directory name</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--template</span></td>
+                                    <td>Initial template to load</td>
+                                    <td>None</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--team-size</span></td>
+                                    <td>Team size (affects AI task generation)</td>
+                                    <td>3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="examples-grid">
+                            <div class="example-card">
+                                <div class="example-title">Basic Initialization</div>
+                                <div class="example-description">Initialize project with default settings</div>
+                                <div class="example-code">cc init</div>
+                            </div>
+                            <div class="example-card">
+                                <div class="example-title">With Template</div>
+                                <div class="example-description">Initialize and load a project template</div>
+                                <div class="example-code">cc init --template webapp --name my-project</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task Command -->
+                    <div id="task" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc task</div>
+                        </div>
+                        <div class="command-description">
+                            Core task management commands for creating, listing, editing, and organizing tasks.
+                        </div>
+                        
+                        <h3>Subcommands</h3>
+                        
+                        <h4>cc task create</h4>
+                        <div class="command-usage">cc task create &lt;title&gt; [options]</div>
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--priority</span></td>
+                                    <td>Task priority (critical, high, medium, low)</td>
+                                    <td>--priority high</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--assignee</span></td>
+                                    <td>Assign to team member</td>
+                                    <td>--assignee alice</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--labels</span></td>
+                                    <td>Comma-separated labels</td>
+                                    <td>--labels "backend,api"</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--story-points</span></td>
+                                    <td>Effort estimation</td>
+                                    <td>--story-points 5</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--dependencies</span></td>
+                                    <td>Task dependencies</td>
+                                    <td>--dependencies task-123</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>cc task list</h4>
+                        <div class="command-usage">cc task list [options]</div>
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--status</span></td>
+                                    <td>Filter by status</td>
+                                    <td>--status in_progress</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--priority</span></td>
+                                    <td>Filter by priority</td>
+                                    <td>--priority critical</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--assignee</span></td>
+                                    <td>Filter by assignee</td>
+                                    <td>--assignee alice</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--labels</span></td>
+                                    <td>Filter by labels</td>
+                                    <td>--labels backend</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--format</span></td>
+                                    <td>Output format (table, json, csv)</td>
+                                    <td>--format json</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h4>cc task edit</h4>
+                        <div class="command-usage">cc task edit &lt;task-id&gt; [options]</div>
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Example</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--status</span></td>
+                                    <td>Change status</td>
+                                    <td>--status done</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--title</span></td>
+                                    <td>Update title</td>
+                                    <td>--title "New title"</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--force</span></td>
+                                    <td>Force change (bypass dependency checks)</td>
+                                    <td>--force</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="examples-grid">
+                            <div class="example-card">
+                                <div class="example-title">Natural Language Parsing</div>
+                                <div class="example-description">Create tasks using natural language</div>
+                                <div class="example-code">cc task create "Fix login bug @critical #security 5pts for:alice"</div>
+                            </div>
+                            <div class="example-card">
+                                <div class="example-title">Bulk Operations</div>
+                                <div class="example-description">Update multiple tasks at once</div>
+                                <div class="example-code">cc task edit --status in_progress task-1 task-2 task-3</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task AI Command -->
+                    <div id="task-ai" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc task ai</div>
+                        </div>
+                        <div class="command-description">
+                            Generate comprehensive task breakdowns using AI from natural language descriptions.
+                        </div>
+                        <div class="command-usage">cc task ai &lt;description&gt; [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--maxTasks</span></td>
+                                    <td>Maximum number of tasks to generate</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--teamSize</span></td>
+                                    <td>Target team size</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--experience</span></td>
+                                    <td>Team experience level (junior, intermediate, senior)</td>
+                                    <td>intermediate</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--dry-run</span></td>
+                                    <td>Preview without creating tasks</td>
+                                    <td>false</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="examples-grid">
+                            <div class="example-card">
+                                <div class="example-title">Basic AI Generation</div>
+                                <div class="example-description">Generate tasks for a web application</div>
+                                <div class="example-code">cc task ai "Build user authentication with OAuth2 and JWT tokens"</div>
+                            </div>
+                            <div class="example-card">
+                                <div class="example-title">Advanced Generation</div>
+                                <div class="example-description">Fine-tune generation parameters</div>
+                                <div class="example-code">cc task ai "E-commerce checkout flow" --maxTasks 12 --teamSize 5 --experience senior</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task Template Command -->
+                    <div id="task-template" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc task template</div>
+                        </div>
+                        <div class="command-description">
+                            Load and manage project templates with professional task breakdowns.
+                        </div>
+                        
+                        <h3>Subcommands</h3>
+                        
+                        <h4>cc task template list</h4>
+                        <div class="command-usage">cc task template list</div>
+                        <p>List all available templates with descriptions and task counts.</p>
+                        
+                        <h4>cc task template show</h4>
+                        <div class="command-usage">cc task template show &lt;template-name&gt;</div>
+                        <p>Display template details, variables, and task structure.</p>
+                        
+                        <h4>cc task template &lt;name&gt;</h4>
+                        <div class="command-usage">cc task template &lt;template-name&gt; [--variable value] [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Template</th>
+                                    <th>Common Variables</th>
+                                    <th>Example Usage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>webapp</td>
+                                    <td>framework, database, auth_type</td>
+                                    <td>--framework react --database postgres</td>
+                                </tr>
+                                <tr>
+                                    <td>api</td>
+                                    <td>framework, database, auth_type</td>
+                                    <td>--framework express --auth jwt</td>
+                                </tr>
+                                <tr>
+                                    <td>mobile-app</td>
+                                    <td>platform, state_manager</td>
+                                    <td>--platform react-native</td>
+                                </tr>
+                                <tr>
+                                    <td>machine-learning</td>
+                                    <td>ml_framework, model_type</td>
+                                    <td>--ml_framework pytorch</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="examples-grid">
+                            <div class="example-card">
+                                <div class="example-title">Load Web App Template</div>
+                                <div class="example-description">Create full-stack web application tasks</div>
+                                <div class="example-code">cc task template webapp --framework vue --database mongodb --auth_type oauth2</div>
+                            </div>
+                            <div class="example-card">
+                                <div class="example-title">Custom Template Variables</div>
+                                <div class="example-description">Override multiple template variables</div>
+                                <div class="example-code">cc task template machine-learning --ml_framework tensorflow --model_type classification --deployment_target api</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task Dependencies Command -->
+                    <div id="task-deps" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc task deps</div>
+                        </div>
+                        <div class="command-description">
+                            Analyze task dependencies, identify critical paths, and find parallelization opportunities.
+                        </div>
+                        <div class="command-usage">cc task deps [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--format</span></td>
+                                    <td>Output format (tree, graph, json)</td>
+                                    <td>tree</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--show-parallel</span></td>
+                                    <td>Highlight parallelizable tasks</td>
+                                    <td>true</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--critical-path</span></td>
+                                    <td>Show critical path analysis</td>
+                                    <td>true</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="example-card">
+                            <div class="example-title">Dependency Analysis Output</div>
+                            <div class="example-description">Comprehensive dependency analysis</div>
+                            <div class="example-code">$ cc task deps
+
+🎯 Critical Path Analysis:
+   Path 1: task-1 → task-3 → task-7 (15 story points, 24 hours)
+   Path 2: task-2 → task-4 → task-8 (12 story points, 19 hours)
+
+🚧 Bottlenecks:
+   • task-3 blocks 4 other tasks
+   • task-7 blocks final deployment
+
+💡 Parallelization Opportunities:
+   • Phase 1: task-1, task-2, task-5 can run in parallel
+   • Phase 2: task-3, task-6 can run in parallel
+   • Phase 3: task-4, task-9, task-10 can run in parallel</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task Research Command -->
+                    <div id="task-research" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc task research</div>
+                        </div>
+                        <div class="command-description">
+                            Multi-agent research system that analyzes implementation requirements and generates actionable tasks.
+                        </div>
+                        <div class="command-usage">cc task research &lt;topic&gt; [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--depth</span></td>
+                                    <td>Research depth (shallow, medium, deep)</td>
+                                    <td>medium</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--focus</span></td>
+                                    <td>Focus area (technical, business, security)</td>
+                                    <td>technical</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--create-tasks</span></td>
+                                    <td>Automatically create tasks from research</td>
+                                    <td>true</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p><strong>Research Agents:</strong></p>
+                        <ul>
+                            <li><strong>🎯 Planner:</strong> Breaks down high-level requirements</li>
+                            <li><strong>📚 Researcher:</strong> Gathers technical information and best practices</li>
+                            <li><strong>📈 Analyst:</strong> Evaluates complexity, risks, and effort</li>
+                            <li><strong>✍️ Writer:</strong> Creates actionable implementation tasks</li>
+                        </ul>
+                        
+                        <div class="examples-grid">
+                            <div class="example-card">
+                                <div class="example-title">Technical Research</div>
+                                <div class="example-description">Research real-time features implementation</div>
+                                <div class="example-code">cc task research "Real-time notifications with WebSockets" --depth deep</div>
+                            </div>
+                            <div class="example-card">
+                                <div class="example-title">Security Focus</div>
+                                <div class="example-description">Research with security emphasis</div>
+                                <div class="example-code">cc task research "API authentication patterns" --focus security</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Task Expand Command -->
+                    <div id="task-expand" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc task expand</div>
+                        </div>
+                        <div class="command-description">
+                            Expand a single complex task into multiple smaller, manageable subtasks.
+                        </div>
+                        <div class="command-usage">cc task expand &lt;task-id&gt; [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--maxTasks</span></td>
+                                    <td>Maximum number of subtasks</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--granularity</span></td>
+                                    <td>Task granularity (coarse, medium, fine)</td>
+                                    <td>medium</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--preserve-original</span></td>
+                                    <td>Keep original task as parent</td>
+                                    <td>true</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="example-card">
+                            <div class="example-title">Task Expansion</div>
+                            <div class="example-description">Break complex task into subtasks</div>
+                            <div class="example-code">cc task expand task-123 --maxTasks 6 --granularity fine</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Viewer Command -->
+                    <div id="viewer" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc viewer</div>
+                        </div>
+                        <div class="command-description">
+                            Launch interactive terminal UI for task management with real-time updates and vim-style navigation.
+                        </div>
+                        <div class="command-usage">cc viewer [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--theme</span></td>
+                                    <td>UI theme (dark, light, auto)</td>
+                                    <td>auto</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--layout</span></td>
+                                    <td>Layout mode (split, full)</td>
+                                    <td>split</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--filter</span></td>
+                                    <td>Initial filter</td>
+                                    <td>none</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <p><strong>Vim-style Keybindings:</strong></p>
+                        <ul>
+                            <li><strong>j/k:</strong> Navigate up/down</li>
+                            <li><strong>h/l:</strong> Navigate left/right</li>
+                            <li><strong>/:</strong> Search tasks</li>
+                            <li><strong>n/N:</strong> Next/previous search result</li>
+                            <li><strong>Enter:</strong> View task details</li>
+                            <li><strong>e:</strong> Edit task</li>
+                            <li><strong>d:</strong> Mark task as done</li>
+                            <li><strong>q:</strong> Quit viewer</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- MCP Server Command -->
+                    <div id="mcp-server" class="command-section">
+                        <div class="command-header">
+                            <div class="command-name">cc mcp-server</div>
+                        </div>
+                        <div class="command-description">
+                            Start Model Context Protocol server for Claude Desktop integration.
+                        </div>
+                        <div class="command-usage">cc mcp-server [options]</div>
+                        
+                        <table class="options-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Description</th>
+                                    <th>Default</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="option-flag">--port</span></td>
+                                    <td>Server port</td>
+                                    <td>3000</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="option-flag">--log-level</span></td>
+                                    <td>Logging level (error, warn, info, debug)</td>
+                                    <td>info</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <h3>Available MCP Tools</h3>
+                        <div class="mcp-tools">
+                            <div class="mcp-tool">
+                                <h4>task_create</h4>
+                                <p>Create new tasks with natural language parsing</p>
+                                <ul class="parameter-list">
+                                    <li><span class="parameter-name">title</span> Task title</li>
+                                    <li><span class="parameter-name">priority</span> Priority level</li>
+                                    <li><span class="parameter-name">assignee</span> Team member</li>
+                                    <li><span class="parameter-name">labels</span> Task labels</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mcp-tool">
+                                <h4>task_list</h4>
+                                <p>List and filter tasks with various criteria</p>
+                                <ul class="parameter-list">
+                                    <li><span class="parameter-name">status</span> Filter by status</li>
+                                    <li><span class="parameter-name">priority</span> Filter by priority</li>
+                                    <li><span class="parameter-name">assignee</span> Filter by assignee</li>
+                                    <li><span class="parameter-name">limit</span> Maximum results</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mcp-tool">
+                                <h4>task_update</h4>
+                                <p>Update task properties and status</p>
+                                <ul class="parameter-list">
+                                    <li><span class="parameter-name">task_id</span> Task identifier</li>
+                                    <li><span class="parameter-name">status</span> New status</li>
+                                    <li><span class="parameter-name">title</span> New title</li>
+                                    <li><span class="parameter-name">assignee</span> New assignee</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mcp-tool">
+                                <h4>task_ai_generate</h4>
+                                <p>Generate tasks using AI from descriptions</p>
+                                <ul class="parameter-list">
+                                    <li><span class="parameter-name">description</span> Task description</li>
+                                    <li><span class="parameter-name">maxTasks</span> Maximum tasks</li>
+                                    <li><span class="parameter-name">teamSize</span> Team size</li>
+                                    <li><span class="parameter-name">experience</span> Experience level</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mcp-tool">
+                                <h4>template_load</h4>
+                                <p>Load project templates with variables</p>
+                                <ul class="parameter-list">
+                                    <li><span class="parameter-name">template</span> Template name</li>
+                                    <li><span class="parameter-name">variables</span> Template variables</li>
+                                    <li><span class="parameter-name">project_name</span> Project name</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="mcp-tool">
+                                <h4>dependency_analyze</h4>
+                                <p>Analyze task dependencies and critical paths</p>
+                                <ul class="parameter-list">
+                                    <li><span class="parameter-name">format</span> Output format</li>
+                                    <li><span class="parameter-name">show_parallel</span> Show parallel tasks</li>
+                                    <li><span class="parameter-name">critical_path</span> Show critical path</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Critical Claude - Task Management CLI</p>
+            <div style="margin-top: 1rem;">
+                <a href="https://github.com/codyrobertson/critical-claude">GitHub</a>
+                <a href="https://www.npmjs.com/package/critical-claude">npm</a>
+                <a href="https://github.com/codyrobertson/critical-claude/blob/main/LICENSE">MIT License</a>
+                <a href="docs.html">Documentation</a>
+                <a href="templates.html">Templates</a>
+                <a href="api.html">API Reference</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.api-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.api-nav a').forEach(a => a.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Update active nav item on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.command-section');
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            if (current) {
+                document.querySelectorAll('.api-nav a').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

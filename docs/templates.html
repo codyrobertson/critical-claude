@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates - Critical Claude</title>
+    <meta name="description" content="Professional project templates for Critical Claude - web apps, APIs, mobile apps, CLI tools, microservices, and machine learning projects.">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero-templates {
+            padding: 6rem 0;
+            text-align: center;
+            background: var(--surface);
+        }
+        
+        .template-showcase {
+            padding: 6rem 0;
+        }
+        
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+        
+        .template-card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: all 0.2s;
+            background: var(--bg);
+        }
+        
+        .template-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,102,255,0.1);
+        }
+        
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .template-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .template-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .template-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+        
+        .template-description {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .template-features {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        
+        .template-features li {
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .template-features li::before {
+            content: "✅";
+            font-size: 0.75rem;
+        }
+        
+        .template-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .tag {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--code-bg);
+            border-radius: 9999px;
+            color: var(--text-muted);
+        }
+        
+        .template-usage {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .template-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .usage-section {
+            padding: 6rem 0;
+            background: var(--surface);
+        }
+        
+        .usage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .usage-card {
+            background: var(--bg);
+            padding: 2rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+        
+        .customization-section {
+            padding: 6rem 0;
+        }
+        
+        .variable-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        
+        .variable-table th,
+        .variable-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .variable-table th {
+            background: var(--surface);
+            font-weight: 600;
+        }
+        
+        .variable-table code {
+            background: var(--code-bg);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">Critical Claude</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="templates.html" class="active">Templates</a></li>
+                <li><a href="api.html">API Reference</a></li>
+                <li><a href="https://github.com/codyrobertson/critical-claude">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero-templates">
+        <div class="container">
+            <h1>Project Templates</h1>
+            <p class="subtitle">
+                Professional, battle-tested templates to jumpstart your projects.<br>
+                Each template includes task breakdowns, dependencies, and best practices.
+            </p>
+            <div class="code-block">
+                cc task template list
+            </div>
+        </div>
+    </section>
+    
+    <!-- Template Showcase -->
+    <section class="template-showcase">
+        <div class="container">
+            <div class="template-grid">
+                <!-- Web Application Template -->
+                <div class="template-card">
+                    <div class="template-icon">🌐</div>
+                    <div class="template-header">
+                        <div>
+                            <h3 class="template-title">Web Application</h3>
+                            <div class="template-meta">
+                                <span>11 tasks</span>
+                                <span>•</span>
+                                <span>3 phases</span>
+                                <span>•</span>
+                                <span>4-6 weeks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="template-description">
+                        Complete full-stack web application with modern frontend framework, 
+                        API backend, database integration, and deployment pipeline.
+                    </p>
+                    <ul class="template-features">
+                        <li>React/Vue/Angular frontend setup</li>
+                        <li>Node.js/Express backend API</li>
+                        <li>Database schema and migrations</li>
+                        <li>Authentication & authorization</li>
+                        <li>Testing and CI/CD pipeline</li>
+                        <li>Production deployment</li>
+                    </ul>
+                    <div class="template-tags">
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                    <div class="template-usage">cc task template webapp --framework react --database postgres</div>
+                    <div class="template-actions">
+                        <a href="#webapp-details" class="btn btn-primary">View Details</a>
+                        <a href="https://github.com/codyrobertson/critical-claude/blob/main/templates/webapp.toml" class="btn btn-secondary">Source</a>
+                    </div>
+                </div>
+                
+                <!-- API Template -->
+                <div class="template-card">
+                    <div class="template-icon">🔌</div>
+                    <div class="template-header">
+                        <div>
+                            <h3 class="template-title">REST API</h3>
+                            <div class="template-meta">
+                                <span>8 tasks</span>
+                                <span>•</span>
+                                <span>2 phases</span>
+                                <span>•</span>
+                                <span>2-3 weeks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="template-description">
+                        Production-ready RESTful API with authentication, validation, 
+                        documentation, and comprehensive testing suite.
+                    </p>
+                    <ul class="template-features">
+                        <li>Express.js server setup</li>
+                        <li>JWT authentication</li>
+                        <li>Input validation & sanitization</li>
+                        <li>OpenAPI/Swagger documentation</li>
+                        <li>Rate limiting & security</li>
+                        <li>Comprehensive test suite</li>
+                    </ul>
+                    <div class="template-tags">
+                        <span class="tag">Express</span>
+                        <span class="tag">JWT</span>
+                        <span class="tag">OpenAPI</span>
+                        <span class="tag">Jest</span>
+                    </div>
+                    <div class="template-usage">cc task template api --framework express --auth jwt</div>
+                    <div class="template-actions">
+                        <a href="#api-details" class="btn btn-primary">View Details</a>
+                        <a href="https://github.com/codyrobertson/critical-claude/blob/main/templates/api.toml" class="btn btn-secondary">Source</a>
+                    </div>
+                </div>
+                
+                <!-- Mobile App Template -->
+                <div class="template-card">
+                    <div class="template-icon">📱</div>
+                    <div class="template-header">
+                        <div>
+                            <h3 class="template-title">Mobile Application</h3>
+                            <div class="template-meta">
+                                <span>9 tasks</span>
+                                <span>•</span>
+                                <span>3 phases</span>
+                                <span>•</span>
+                                <span>5-7 weeks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="template-description">
+                        Cross-platform mobile app with native performance, offline support, 
+                        push notifications, and app store deployment.
+                    </p>
+                    <ul class="template-features">
+                        <li>React Native/Flutter setup</li>
+                        <li>Navigation & state management</li>
+                        <li>Native feature integration</li>
+                        <li>Offline data synchronization</li>
+                        <li>Push notification system</li>
+                        <li>App store deployment</li>
+                    </ul>
+                    <div class="template-tags">
+                        <span class="tag">React Native</span>
+                        <span class="tag">Redux</span>
+                        <span class="tag">iOS</span>
+                        <span class="tag">Android</span>
+                    </div>
+                    <div class="template-usage">cc task template mobile-app --platform react-native</div>
+                    <div class="template-actions">
+                        <a href="#mobile-details" class="btn btn-primary">View Details</a>
+                        <a href="https://github.com/codyrobertson/critical-claude/blob/main/templates/mobile-app.toml" class="btn btn-secondary">Source</a>
+                    </div>
+                </div>
+                
+                <!-- CLI Tool Template -->
+                <div class="template-card">
+                    <div class="template-icon">⚡</div>
+                    <div class="template-header">
+                        <div>
+                            <h3 class="template-title">CLI Tool</h3>
+                            <div class="template-meta">
+                                <span>8 tasks</span>
+                                <span>•</span>
+                                <span>2 phases</span>
+                                <span>•</span>
+                                <span>2-3 weeks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="template-description">
+                        Professional command-line interface with argument parsing, 
+                        configuration management, and interactive prompts.
+                    </p>
+                    <ul class="template-features">
+                        <li>Command-line argument parsing</li>
+                        <li>Interactive prompt system</li>
+                        <li>Configuration file support</li>
+                        <li>Help system & documentation</li>
+                        <li>Error handling & validation</li>
+                        <li>NPM package publishing</li>
+                    </ul>
+                    <div class="template-tags">
+                        <span class="tag">Node.js</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Commander</span>
+                        <span class="tag">npm</span>
+                    </div>
+                    <div class="template-usage">cc task template cli-tool --name mycli</div>
+                    <div class="template-actions">
+                        <a href="#cli-details" class="btn btn-primary">View Details</a>
+                        <a href="https://github.com/codyrobertson/critical-claude/blob/main/templates/cli-tool.toml" class="btn btn-secondary">Source</a>
+                    </div>
+                </div>
+                
+                <!-- Microservice Template -->
+                <div class="template-card">
+                    <div class="template-icon">🔗</div>
+                    <div class="template-header">
+                        <div>
+                            <h3 class="template-title">Microservice</h3>
+                            <div class="template-meta">
+                                <span>12 tasks</span>
+                                <span>•</span>
+                                <span>3 phases</span>
+                                <span>•</span>
+                                <span>4-5 weeks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="template-description">
+                        Event-driven microservice with message broker integration, 
+                        containerization, and Kubernetes deployment.
+                    </p>
+                    <ul class="template-features">
+                        <li>Dockerized service architecture</li>
+                        <li>Message broker integration</li>
+                        <li>Health checks & monitoring</li>
+                        <li>Configuration management</li>
+                        <li>Kubernetes deployment</li>
+                        <li>Service mesh integration</li>
+                    </ul>
+                    <div class="template-tags">
+                        <span class="tag">Docker</span>
+                        <span class="tag">Kubernetes</span>
+                        <span class="tag">RabbitMQ</span>
+                        <span class="tag">Prometheus</span>
+                    </div>
+                    <div class="template-usage">cc task template microservice --broker rabbitmq</div>
+                    <div class="template-actions">
+                        <a href="#microservice-details" class="btn btn-primary">View Details</a>
+                        <a href="https://github.com/codyrobertson/critical-claude/blob/main/templates/microservice.toml" class="btn btn-secondary">Source</a>
+                    </div>
+                </div>
+                
+                <!-- Machine Learning Template -->
+                <div class="template-card">
+                    <div class="template-icon">🤖</div>
+                    <div class="template-header">
+                        <div>
+                            <h3 class="template-title">Machine Learning</h3>
+                            <div class="template-meta">
+                                <span>16 tasks</span>
+                                <span>•</span>
+                                <span>4 phases</span>
+                                <span>•</span>
+                                <span>8-10 weeks</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="template-description">
+                        End-to-end ML project with data pipeline, model training, 
+                        evaluation, and production deployment with monitoring.
+                    </p>
+                    <ul class="template-features">
+                        <li>Data exploration & preprocessing</li>
+                        <li>Feature engineering pipeline</li>
+                        <li>Model architecture & training</li>
+                        <li>Hyperparameter optimization</li>
+                        <li>Model evaluation & validation</li>
+                        <li>Production deployment & monitoring</li>
+                    </ul>
+                    <div class="template-tags">
+                        <span class="tag">PyTorch</span>
+                        <span class="tag">MLOps</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">Docker</span>
+                    </div>
+                    <div class="template-usage">cc task template machine-learning --framework pytorch</div>
+                    <div class="template-actions">
+                        <a href="#ml-details" class="btn btn-primary">View Details</a>
+                        <a href="https://github.com/codyrobertson/critical-claude/blob/main/templates/machine-learning.toml" class="btn btn-secondary">Source</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Usage Guide -->
+    <section class="usage-section">
+        <div class="container">
+            <h2>Using Templates</h2>
+            <div class="usage-grid">
+                <div class="usage-card">
+                    <h3>📋 List All Templates</h3>
+                    <div class="code-block">cc task template list</div>
+                    <p>View all available templates with descriptions and task counts.</p>
+                </div>
+                <div class="usage-card">
+                    <h3>👀 Preview Template</h3>
+                    <div class="code-block">cc task template show webapp</div>
+                    <p>Examine template structure and variables before loading.</p>
+                </div>
+                <div class="usage-card">
+                    <h3>🚀 Load Template</h3>
+                    <div class="code-block">cc task template webapp --framework react</div>
+                    <p>Load template with custom variables and create tasks.</p>
+                </div>
+                <div class="usage-card">
+                    <h3>🔧 Customize Variables</h3>
+                    <div class="code-block">cc task template api --framework express --database mongodb --auth jwt</div>
+                    <p>Override default variables to match your project needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Customization -->
+    <section class="customization-section">
+        <div class="container">
+            <h2>Template Customization</h2>
+            
+            <h3>Common Variables</h3>
+            <table class="variable-table">
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Description</th>
+                        <th>Examples</th>
+                        <th>Templates</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>project_name</code></td>
+                        <td>Name of your project</td>
+                        <td>my-app, api-service</td>
+                        <td>All templates</td>
+                    </tr>
+                    <tr>
+                        <td><code>framework</code></td>
+                        <td>Primary framework to use</td>
+                        <td>react, vue, express</td>
+                        <td>webapp, api, mobile-app</td>
+                    </tr>
+                    <tr>
+                        <td><code>database</code></td>
+                        <td>Database system</td>
+                        <td>postgres, mongodb, mysql</td>
+                        <td>webapp, api, microservice</td>
+                    </tr>
+                    <tr>
+                        <td><code>auth_type</code></td>
+                        <td>Authentication method</td>
+                        <td>jwt, oauth2, session</td>
+                        <td>webapp, api</td>
+                    </tr>
+                    <tr>
+                        <td><code>ml_framework</code></td>
+                        <td>ML framework</td>
+                        <td>pytorch, tensorflow</td>
+                        <td>machine-learning</td>
+                    </tr>
+                    <tr>
+                        <td><code>deployment_target</code></td>
+                        <td>Deployment platform</td>
+                        <td>docker, kubernetes, aws</td>
+                        <td>webapp, api, microservice</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h3>Creating Custom Templates</h3>
+            <div class="code-block"># Create new template
+cc task template create my-template
+
+# Edit template file
+# Templates are stored in TOML format with metadata and tasks</div>
+            
+            <h3>Template Inheritance</h3>
+            <p>Templates can inherit from other templates, allowing you to build on existing structures:</p>
+            <div class="code-block"># In your custom template TOML file
+[metadata]
+inherits = "api"
+name = "my-custom-api"
+
+# Override or add tasks as needed</div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Critical Claude - Task Management CLI</p>
+            <div style="margin-top: 1rem;">
+                <a href="https://github.com/codyrobertson/critical-claude">GitHub</a>
+                <a href="https://www.npmjs.com/package/critical-claude">npm</a>
+                <a href="https://github.com/codyrobertson/critical-claude/blob/main/LICENSE">MIT License</a>
+                <a href="docs.html">Documentation</a>
+                <a href="templates.html">Templates</a>
+                <a href="api.html">API Reference</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

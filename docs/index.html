@@ -6,91 +6,12 @@
     <title>Critical Claude - Task Management CLI</title>
     <meta name="description" content="Enterprise-grade task management CLI with AI-powered automation. Features task templates, multi-agent research, and dependency management.">
     
+    <link rel="stylesheet" href="styles.css">
     <style>
-        :root {
-            --bg: #ffffff;
-            --text: #171717;
-            --text-muted: #737373;
-            --accent: #0066ff;
-            --accent-hover: #0052cc;
-            --border: #e5e5e5;
-            --surface: #fafafa;
-            --code-bg: #f3f4f6;
-            --radius: 0.5rem;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text);
-            background: var(--bg);
-            font-size: 16px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        /* Header */
-        header {
-            border-bottom: 1px solid var(--border);
-            padding: 2rem 0;
-            position: sticky;
-            top: 0;
-            background: var(--bg);
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 600;
-            text-decoration: none;
-            color: var(--text);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--text);
-        }
-        
-        /* Hero */
+        /* Hero specific styles */
         .hero {
             padding: 8rem 0;
             text-align: center;
-        }
-        
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
         }
         
         .subtitle {
@@ -107,37 +28,6 @@
             flex-wrap: wrap;
         }
         
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-        
-        .btn-primary {
-            background: var(--text);
-            color: var(--bg);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .btn-secondary {
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        
-        .btn-secondary:hover {
-            border-color: var(--text);
-        }
-        
-        /* Code snippet */
         .hero-code {
             margin: 4rem auto;
             max-width: 800px;
@@ -163,14 +53,6 @@
         .features {
             padding: 6rem 0;
             background: var(--surface);
-        }
-        
-        h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 4rem;
-            letter-spacing: -0.01em;
         }
         
         .feature-grid {
@@ -325,6 +207,68 @@
             text-decoration: underline;
         }
         
+        /* Additional sections */
+        .installation {
+            padding: 6rem 0;
+            background: var(--surface);
+        }
+        
+        .integration {
+            padding: 6rem 0;
+        }
+        
+        .quick-start {
+            padding: 6rem 0;
+            background: var(--surface);
+        }
+        
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            text-align: center;
+            padding: 2rem;
+            border-radius: var(--radius);
+            background: var(--bg);
+            border: 1px solid var(--border);
+        }
+        
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+        
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .integration-card {
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-align: center;
+        }
+        
+        .integration-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
@@ -342,6 +286,10 @@
             .example:nth-child(even) .example-code {
                 order: 1;
             }
+            
+            .nav-links {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -354,7 +302,10 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#templates">Templates</a></li>
                 <li><a href="#examples">Examples</a></li>
-                <li><a href="https://github.com/critical-claude/critical-claude">GitHub</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="templates.html">Templates</a></li>
+                <li><a href="api.html">API Reference</a></li>
+                <li><a href="https://github.com/codyrobertson/critical-claude">GitHub</a></li>
             </ul>
         </nav>
     </header>
@@ -368,7 +319,7 @@
         </p>
         
         <div class="hero-actions">
-            <a href="https://github.com/critical-claude/critical-claude" class="btn btn-primary">
+            <a href="https://github.com/codyrobertson/critical-claude" class="btn btn-primary">
                 Get Started →
             </a>
             <a href="#features" class="btn btn-secondary">
@@ -601,14 +552,75 @@ Use "cc task list" to see all tasks
         </div>
     </section>
     
+    <!-- Installation Section -->
+    <section class="installation">
+        <div class="container">
+            <h2>Get Started in Minutes</h2>
+            <div class="step-grid">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Install</h3>
+                    <div class="code-block">npm install -g critical-claude</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Initialize</h3>
+                    <div class="code-block">cc init</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Create Tasks</h3>
+                    <div class="code-block">cc task ai "Build REST API"</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Track Progress</h3>
+                    <div class="code-block">cc task list</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Integration Section -->
+    <section class="integration">
+        <div class="container">
+            <h2>Seamless Integration</h2>
+            <div class="integration-grid">
+                <div class="integration-card">
+                    <div class="integration-icon">🖥️</div>
+                    <h3>Claude Desktop</h3>
+                    <p>Native MCP integration for direct Claude Desktop access</p>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">🤖</div>
+                    <h3>OpenAI API</h3>
+                    <p>Full GPT-4 integration for task generation and analysis</p>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">🧠</div>
+                    <h3>Anthropic Claude</h3>
+                    <p>Direct Claude API integration for advanced reasoning</p>
+                </div>
+                <div class="integration-card">
+                    <div class="integration-icon">📊</div>
+                    <h3>Version Control</h3>
+                    <p>Git integration for task history and collaboration</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <!-- Footer -->
     <footer>
         <div class="container">
             <p>Critical Claude - Task Management CLI</p>
             <div style="margin-top: 1rem;">
-                <a href="https://github.com/critical-claude/critical-claude">GitHub</a>
+                <a href="https://github.com/codyrobertson/critical-claude">GitHub</a>
                 <a href="https://www.npmjs.com/package/critical-claude">npm</a>
-                <a href="https://github.com/critical-claude/critical-claude/blob/main/LICENSE">MIT License</a>
+                <a href="https://github.com/codyrobertson/critical-claude/blob/main/LICENSE">MIT License</a>
+                <a href="docs.html">Documentation</a>
+                <a href="templates.html">Templates</a>
+                <a href="api.html">API Reference</a>
             </div>
         </div>
     </footer>

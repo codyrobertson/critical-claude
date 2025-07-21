@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Critical Claude</title>
+    <meta name="description" content="Complete documentation for Critical Claude CLI - installation, configuration, commands, and examples.">
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .doc-nav {
+            position: fixed;
+            left: 0;
+            top: 80px;
+            width: 250px;
+            height: calc(100vh - 80px);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+        
+        .doc-nav ul {
+            list-style: none;
+        }
+        
+        .doc-nav a {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            text-decoration: none;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        
+        .doc-nav a:hover {
+            color: var(--text);
+            background: rgba(0, 102, 255, 0.1);
+        }
+        
+        .doc-nav a.active {
+            color: var(--accent);
+            background: rgba(0, 102, 255, 0.1);
+            border-right: 2px solid var(--accent);
+        }
+        
+        .doc-content {
+            margin-left: 250px;
+            padding: 4rem 2rem;
+            max-width: 800px;
+        }
+        
+        .doc-section {
+            margin-bottom: 4rem;
+        }
+        
+        .doc-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+        
+        .doc-section h3 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--accent);
+        }
+        
+        .doc-section h4 {
+            font-size: 1.25rem;
+            margin: 1.5rem 0 0.5rem;
+        }
+        
+        .code-block {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        }
+        
+        .command-example {
+            background: var(--text);
+            color: var(--bg);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        th {
+            background: var(--surface);
+            font-weight: 600;
+        }
+        
+        .warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+        }
+        
+        .info {
+            background: #dbeafe;
+            border: 1px solid var(--accent);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+        }
+        
+        @media (max-width: 768px) {
+            .doc-nav {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            
+            .doc-content {
+                margin-left: 0;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <a href="index.html" class="logo">Critical Claude</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html" class="active">Documentation</a></li>
+                <li><a href="templates.html">Templates</a></li>
+                <li><a href="api.html">API Reference</a></li>
+                <li><a href="https://github.com/codyrobertson/critical-claude">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Documentation Navigation -->
+    <div class="doc-nav">
+        <ul>
+            <li><a href="#installation" class="active">Installation</a></li>
+            <li><a href="#configuration">Configuration</a></li>
+            <li><a href="#basic-usage">Basic Usage</a></li>
+            <li><a href="#ai-features">AI Features</a></li>
+            <li><a href="#templates">Templates</a></li>
+            <li><a href="#dependency-management">Dependencies</a></li>
+            <li><a href="#claude-integration">Claude Integration</a></li>
+            <li><a href="#advanced-usage">Advanced Usage</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+        </ul>
+    </div>
+    
+    <!-- Documentation Content -->
+    <div class="doc-content">
+        <!-- Installation -->
+        <div id="installation" class="doc-section">
+            <h2>Installation</h2>
+            
+            <h3>Global Installation (Recommended)</h3>
+            <div class="command-example">npm install -g critical-claude</div>
+            
+            <h3>Verify Installation</h3>
+            <div class="command-example">cc --version</div>
+            
+            <h3>Local Development</h3>
+            <div class="code-block">git clone https://github.com/codyrobertson/critical-claude.git
+cd critical-claude
+npm install
+npm run build</div>
+            
+            <div class="info">
+                <strong>Note:</strong> Node.js 18+ is required for optimal performance.
+            </div>
+        </div>
+        
+        <!-- Configuration -->
+        <div id="configuration" class="doc-section">
+            <h2>Configuration</h2>
+            
+            <h3>Environment Setup</h3>
+            <p>Create a <code>cc.env</code> file in your project root:</p>
+            
+            <div class="code-block"># Option 1: OpenAI (Recommended for most users)
+OPENAI_API_KEY=sk-your-openai-api-key-here
+
+# Option 2: Anthropic Claude API
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-api-key-here
+
+# Project Settings (Optional)
+CC_PROJECT_NAME=my-project
+CC_TEAM_SIZE=5
+CC_EXPERIENCE_LEVEL=senior</div>
+            
+            <h3>Claude Desktop Integration</h3>
+            <p>Add to <code>~/.claude/settings.json</code>:</p>
+            
+            <div class="code-block">{
+  "mcpServers": {
+    "critical-claude": {
+      "command": "cc",
+      "args": ["mcp-server"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}</div>
+            
+            <div class="warning">
+                <strong>Security Note:</strong> Never commit API keys to version control. Add <code>cc.env</code> to your <code>.gitignore</code>.
+            </div>
+        </div>
+        
+        <!-- Basic Usage -->
+        <div id="basic-usage" class="doc-section">
+            <h2>Basic Usage</h2>
+            
+            <h3>Initialize Project</h3>
+            <div class="command-example">cc init</div>
+            
+            <h3>Create Tasks</h3>
+            <div class="command-example">cc task create "Implement user authentication"</div>
+            
+            <h3>List Tasks</h3>
+            <div class="command-example"># List all tasks
+cc task list
+
+# Filter by status
+cc task list --status in_progress
+
+# Filter by priority
+cc task list --priority high</div>
+            
+            <h3>Update Tasks</h3>
+            <div class="command-example"># Change status
+cc task edit task-123 --status done
+
+# Assign to team member
+cc task edit task-123 --assignee alice
+
+# Add labels
+cc task edit task-123 --labels "backend,api"</div>
+            
+            <h3>View Task Details</h3>
+            <div class="command-example">cc task view task-123</div>
+        </div>
+        
+        <!-- AI Features -->
+        <div id="ai-features" class="doc-section">
+            <h2>AI Features</h2>
+            
+            <h3>AI Task Generation</h3>
+            <div class="command-example">cc task ai "Build e-commerce checkout flow"</div>
+            <p>Generates 8-12 related tasks with dependencies automatically.</p>
+            
+            <h3>Task Expansion</h3>
+            <div class="command-example"># Expand a complex task into subtasks
+cc task expand task-123
+
+# Control expansion parameters
+cc task expand task-123 --maxTasks 8 --teamSize 3</div>
+            
+            <h3>Multi-Agent Research</h3>
+            <div class="command-example">cc task research "Implement real-time notifications"</div>
+            <p>Four specialized agents analyze and create actionable implementation tasks:</p>
+            <ul>
+                <li><strong>Planner:</strong> Breaks down requirements</li>
+                <li><strong>Researcher:</strong> Gathers technical information</li>
+                <li><strong>Analyst:</strong> Evaluates complexity and risks</li>
+                <li><strong>Writer:</strong> Creates actionable tasks</li>
+            </ul>
+            
+            <h3>Effort Estimation</h3>
+            <div class="command-example">cc task estimate task-123 --apply</div>
+            <p>Provides story points, hours estimate, and confidence level.</p>
+        </div>
+        
+        <!-- Templates -->
+        <div id="templates" class="doc-section">
+            <h2>Templates</h2>
+            
+            <h3>Available Templates</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Template</th>
+                            <th>Tasks</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>webapp</td>
+                            <td>11</td>
+                            <td>Full-stack web application</td>
+                        </tr>
+                        <tr>
+                            <td>api</td>
+                            <td>8</td>
+                            <td>RESTful API service</td>
+                        </tr>
+                        <tr>
+                            <td>mobile-app</td>
+                            <td>9</td>
+                            <td>Cross-platform mobile app</td>
+                        </tr>
+                        <tr>
+                            <td>cli-tool</td>
+                            <td>8</td>
+                            <td>Command-line interface tool</td>
+                        </tr>
+                        <tr>
+                            <td>microservice</td>
+                            <td>12</td>
+                            <td>Event-driven microservice</td>
+                        </tr>
+                        <tr>
+                            <td>machine-learning</td>
+                            <td>16</td>
+                            <td>ML project with pipeline</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>Using Templates</h3>
+            <div class="command-example"># List templates
+cc task template list
+
+# Show template details
+cc task template show webapp
+
+# Load template with variables
+cc task template webapp --framework react --database postgres</div>
+        </div>
+        
+        <!-- Dependency Management -->
+        <div id="dependency-management" class="doc-section">
+            <h2>Dependency Management</h2>
+            
+            <h3>Dependency Validation</h3>
+            <p>Critical Claude automatically validates task dependencies:</p>
+            
+            <div class="command-example">$ cc task edit task-123 --status done
+
+🔒 Checking dependencies...
+
+🚫 Dependency Guard: Status change blocked!
+
+Cannot move "Implement API endpoints" to "done" 
+because these dependencies are not complete:
+
+  • Setup database schema - Status: todo
+  • Create authentication - Status: in_progress
+
+💡 Complete dependencies first or use --force</div>
+            
+            <h3>Dependency Analysis</h3>
+            <div class="command-example">cc task deps</div>
+            <p>Provides:</p>
+            <ul>
+                <li>🎯 Critical path analysis</li>
+                <li>🚧 Bottleneck identification</li>
+                <li>💡 Parallelization opportunities</li>
+            </ul>
+            
+            <h3>Manual Dependencies</h3>
+            <div class="command-example"># Add dependency
+cc task edit task-123 --dependencies task-456,task-789
+
+# Remove dependency
+cc task edit task-123 --remove-dependencies task-456</div>
+        </div>
+        
+        <!-- Claude Integration -->
+        <div id="claude-integration" class="doc-section">
+            <h2>Claude Desktop Integration</h2>
+            
+            <h3>MCP Server</h3>
+            <p>Critical Claude provides native Model Context Protocol (MCP) integration:</p>
+            
+            <div class="command-example"># Start MCP server
+cc mcp-server</div>
+            
+            <h3>Available MCP Tools</h3>
+            <ul>
+                <li><strong>task_create:</strong> Create new tasks</li>
+                <li><strong>task_list:</strong> List and filter tasks</li>
+                <li><strong>task_update:</strong> Update task properties</li>
+                <li><strong>task_ai_generate:</strong> Generate tasks with AI</li>
+                <li><strong>template_load:</strong> Load project templates</li>
+            </ul>
+            
+            <div class="info">
+                <strong>Tip:</strong> Use Claude Desktop to naturally interact with your tasks using conversational language.
+            </div>
+        </div>
+        
+        <!-- Advanced Usage -->
+        <div id="advanced-usage" class="doc-section">
+            <h2>Advanced Usage</h2>
+            
+            <h3>Bulk Operations</h3>
+            <div class="command-example"># Archive completed tasks
+cc task list --status done | xargs -I {} cc task archive {}
+
+# Update multiple tasks
+cc task edit --status in_progress --assignee alice task-1 task-2 task-3</div>
+            
+            <h3>Export/Import</h3>
+            <div class="command-example"># Backup tasks
+cc task backup
+
+# Export to JSON
+cc task export --format json > tasks.json
+
+# Import from file
+cc task import tasks.json</div>
+            
+            <h3>Task Viewer</h3>
+            <div class="command-example">cc task view-ui</div>
+            <p>Interactive terminal UI with:</p>
+            <ul>
+                <li>Real-time task updates</li>
+                <li>Vim-style keybindings</li>
+                <li>Fuzzy search</li>
+                <li>Task detail views</li>
+            </ul>
+        </div>
+        
+        <!-- Troubleshooting -->
+        <div id="troubleshooting" class="doc-section">
+            <h2>Troubleshooting</h2>
+            
+            <h3>Common Issues</h3>
+            
+            <h4>AI Service Not Working</h4>
+            <div class="code-block"># Check configuration
+cc config check
+
+# Verify API key
+echo $OPENAI_API_KEY
+
+# Test AI connection
+cc task ai "test task" --dry-run</div>
+            
+            <h4>Template Loading Errors</h4>
+            <div class="code-block"># Validate template syntax
+cc task template validate webapp
+
+# Reset templates
+cc task template reset</div>
+            
+            <h4>Dependency Conflicts</h4>
+            <div class="code-block"># Force status change (use carefully)
+cc task edit task-123 --status done --force
+
+# Clear all dependencies
+cc task edit task-123 --clear-dependencies</div>
+            
+            <h3>Debug Mode</h3>
+            <div class="command-example"># Enable verbose logging
+CC_DEBUG=true cc task ai "debug test"
+
+# Check system info
+cc --info</div>
+            
+            <h3>Getting Help</h3>
+            <ul>
+                <li><a href="https://github.com/codyrobertson/critical-claude/issues">Report Issues</a></li>
+                <li><a href="https://github.com/codyrobertson/critical-claude/discussions">Community Discussions</a></li>
+                <li><a href="https://www.npmjs.com/package/critical-claude">NPM Package</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.doc-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+                
+                // Update active nav item
+                document.querySelectorAll('.doc-nav a').forEach(a => a.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+        
+        // Update active nav item on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.doc-section');
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            document.querySelectorAll('.doc-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
