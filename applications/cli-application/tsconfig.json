@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts"
+  ],
+  "references": [
+    { "path": "../../infrastructure/shared-kernel" },
+    { "path": "../../domains/task-management" },
+    { "path": "../../domains/research-intelligence" },
+    { "path": "../../domains/integration-layer" }
+  ]
+}
