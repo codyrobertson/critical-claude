@@ -10,7 +10,7 @@ import { TemplateService } from '../../../domains/template-system/dist/applicati
 import { TemplateRepository } from '../../../domains/template-system/dist/infrastructure/TemplateRepository.js';
 import { ResearchService } from '../../../domains/research-intelligence/dist/application/services/ResearchService.js';
 import { ViewerService } from '../../../domains/user-interface/dist/application/services/ViewerService.js';
-import { AnalyticsService } from '../../../domains/analytics/src/application/services/AnalyticsService.js';
+import { AnalyticsService } from '../../../domains/analytics/dist/index.js';
 import path from 'path';
 import os from 'os';
 class CLIApplication {
@@ -36,7 +36,7 @@ class CLIApplication {
         program
             .name('cc')
             .description('Critical Claude CLI - DDD Architecture')
-            .version('2.3.0');
+            .version('2.3.1');
         // Task management commands
         program
             .command('task')
@@ -118,6 +118,36 @@ class CLIApplication {
                 await this.handleAnalyticsCommand(action, options);
             }).catch(error => {
                 console.error('❌ Analytics operation failed:', error instanceof Error ? error.message : error);
+                process.exit(1);
+            });
+        });
+        // Help commands
+        program
+            .command('shortcuts')
+            .alias('keys')
+            .description('Show keyboard shortcuts and keybindings')
+            .action(async () => {
+            await this.analyticsService.withTracking('help', 'shortcuts', async () => {
+                await this.handleShortcutsCommand();
+            }).catch(error => {
+                console.error('❌ Help operation failed:', error instanceof Error ? error.message : error);
+                process.exit(1);
+            });
+        });
+        // Installation verification commands
+        program
+            .command('verify')
+            .alias('check')
+            .description('Verify Critical Claude installation')
+            .option('--health', 'Run health check instead of full verification')
+            .option('--skip-docker', 'Skip Docker-related tests')
+            .option('--skip-performance', 'Skip performance benchmarks')
+            .option('-v, --verbose', 'Enable verbose output')
+            .action(async (options) => {
+            await this.analyticsService.withTracking('system', 'verify', async () => {
+                await this.handleVerifyCommand(options);
+            }).catch(error => {
+                console.error('❌ Verification failed:', error instanceof Error ? error.message : error);
                 process.exit(1);
             });
         });
@@ -485,6 +515,106 @@ class CLIApplication {
                 console.error(`❌ Unknown analytics action: ${action}`);
                 console.log('Available actions: stats, export, clear');
                 process.exit(1);
+        }
+    }
+    async handleShortcutsCommand() {
+        console.log('🎮 Critical Claude Keyboard Shortcuts\n');
+        console.log('📋 VIEWER SHORTCUTS (cc viewer)');
+        console.log('================================\n');
+        // Import VimKeybindings dynamically to get help
+        try {
+            const { VimKeybindings } = await import('../../../domains/user-interface/dist/presentation/keybindings/VimKeybindings.js');
+            const vim = new VimKeybindings();
+            const help = vim.getKeybindingHelp();
+            help.forEach(line => console.log(line));
+        }
+        catch (error) {
+            console.log('Basic Viewer Controls:');
+            console.log('  j/k or ↑/↓      Navigate up/down');
+            console.log('  h/l or ←/→      Navigate left/right');
+            console.log('  /               Search tasks');
+            console.log('  f               Filter by status');
+            console.log('  Enter           Select task');
+            console.log('  Space           Toggle task status');
+            console.log('  q               Quit');
+            console.log('  ?               Show help');
+        }
+        console.log('\n💻 CLI SHORTCUTS');
+        console.log('================\n');
+        console.log('Quick Task Creation:');
+        console.log('  cc task create -t "Title" -d "Description"');
+        console.log('  cc task create -t "Bug fix" -p high -s todo');
+        console.log('');
+        console.log('Data Management:');
+        console.log('  cc task export --format json');
+        console.log('  cc task import --file backup.json');
+        console.log('  cc task backup');
+        console.log('');
+        console.log('Quick Filters:');
+        console.log('  cc task list --status todo');
+        console.log('  cc task list --priority high');
+        console.log('  cc task list --assignee user@example.com');
+        console.log('');
+        console.log('Analytics:');
+        console.log('  cc analytics stats');
+        console.log('  cc analytics export --format csv');
+        console.log('');
+        console.log('📖 For complete documentation:');
+        console.log('  View docs/KEYBOARD_SHORTCUTS.md');
+        console.log('  Run cc --help for command help');
+        console.log('  Run cc <command> --help for specific command help');
+    }
+    async handleVerifyCommand(options) {
+        console.log('🔍 Critical Claude Installation Verification\n');
+        if (options.health) {
+            // Run health check
+            console.log('Running health check...\n');
+            try {
+                const { default: HealthChecker } = await import('../../../scripts/health-check.js');
+                const checker = new HealthChecker();
+                const isHealthy = await checker.runAllChecks();
+                if (isHealthy) {
+                    console.log('\n🎉 Health check passed! Critical Claude is ready to use.');
+                }
+                else {
+                    console.log('\n⚠️  Health check found issues. See report above.');
+                    process.exit(1);
+                }
+            }
+            catch (error) {
+                console.error('❌ Health check failed to run:', error instanceof Error ? error.message : error);
+                process.exit(1);
+            }
+        }
+        else {
+            // Run full verification script
+            console.log('Running full installation verification...\n');
+            const { spawn } = await import('child_process');
+            const path = await import('path');
+            const scriptPath = path.join(process.cwd(), 'scripts', 'verify-installation.sh');
+            const args = [];
+            if (options.skipDocker)
+                args.push('--skip-docker');
+            if (options.skipPerformance)
+                args.push('--skip-performance');
+            if (options.verbose)
+                args.push('--verbose');
+            const verification = spawn('bash', [scriptPath, ...args], {
+                stdio: 'inherit'
+            });
+            verification.on('close', (code) => {
+                if (code === 0) {
+                    console.log('\n🎉 Installation verification completed successfully!');
+                }
+                else {
+                    console.log('\n⚠️  Installation verification found issues.');
+                    process.exit(code || 1);
+                }
+            });
+            verification.on('error', (error) => {
+                console.error('❌ Verification script failed to run:', error.message);
+                process.exit(1);
+            });
         }
     }
 }

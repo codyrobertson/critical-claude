@@ -43,7 +43,7 @@ class CLIApplication {
     program
       .name('cc')
       .description('Critical Claude CLI - DDD Architecture')
-      .version('2.3.0');
+      .version('2.3.1');
 
     // Task management commands
     program
