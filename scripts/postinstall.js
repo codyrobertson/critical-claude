@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
-const os = require('os');
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import os from 'os';
 
 // Skip if we're in development mode
 if (process.env.NODE_ENV === 'development' || fs.existsSync('.git')) {
