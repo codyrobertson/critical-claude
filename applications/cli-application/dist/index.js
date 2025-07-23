@@ -36,12 +36,12 @@ class CLIApplication {
         program
             .name('cc')
             .description('Critical Claude CLI - DDD Architecture')
-            .version('2.3.4');
+            .version('2.3.5');
         // Task management commands
         program
             .command('task')
             .description('Task management')
-            .argument('<action>', 'Action: create, list, view, update, delete, archive, export, import, backup')
+            .argument('<action>', 'Action: create, list, view, update, delete, archive, export, import, backup, ai, research')
             .argument('[args...]', 'Action arguments')
             .option('-t, --title <title>', 'Task title')
             .option('-d, --description <desc>', 'Task description')
@@ -332,9 +332,60 @@ class CLIApplication {
                     console.error(`❌ Backup failed: ${backupResult.error}`);
                 }
                 break;
+            case 'ai':
+                const aiQuery = args[0];
+                if (!aiQuery) {
+                    console.error('❌ AI query is required');
+                    console.log('Usage: cc task ai "Create tasks for building a web app"');
+                    process.exit(1);
+                }
+                console.log('🤖 Generating AI-powered task breakdown...');
+                console.log(`📝 Query: ${aiQuery}`);
+                const aiResult = await this.researchService.executeResearch({
+                    query: `Create a comprehensive task breakdown for: ${aiQuery}. Generate specific, actionable tasks with priorities, descriptions, and estimated hours. Focus on practical implementation steps.`,
+                    outputFormat: 'tasks',
+                    maxDepth: 2
+                });
+                if (aiResult.success) {
+                    console.log('✅ AI task generation completed');
+                    if (aiResult.tasksCreated) {
+                        console.log(`📋 Created ${aiResult.tasksCreated} tasks`);
+                    }
+                }
+                else {
+                    console.error(`❌ AI task generation failed: ${aiResult.error}`);
+                }
+                break;
+            case 'research':
+                const researchQuery = args[0];
+                if (!researchQuery) {
+                    console.error('❌ Research query is required');
+                    console.log('Usage: cc task research "Research modern web frameworks"');
+                    process.exit(1);
+                }
+                console.log('🔍 Conducting AI research and generating tasks...');
+                console.log(`📝 Query: ${researchQuery}`);
+                const researchResult = await this.researchService.executeResearch({
+                    query: researchQuery,
+                    outputFormat: 'both',
+                    maxDepth: 3
+                });
+                if (researchResult.success) {
+                    console.log('✅ Research completed successfully');
+                    if (researchResult.reportPath) {
+                        console.log(`📄 Report saved: ${researchResult.reportPath}`);
+                    }
+                    if (researchResult.tasksCreated) {
+                        console.log(`📋 Created ${researchResult.tasksCreated} tasks`);
+                    }
+                }
+                else {
+                    console.error(`❌ Research failed: ${researchResult.error}`);
+                }
+                break;
             default:
                 console.error(`❌ Unknown action: ${action}`);
-                console.log('Available actions: create, list, view, update, delete, archive, export, import, backup');
+                console.log('Available actions: create, list, view, update, delete, archive, export, import, backup, ai, research');
                 process.exit(1);
         }
     }
