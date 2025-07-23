@@ -2,7 +2,7 @@
   "id": "task-1753123297851-dpwurqegw",
   "title": "Split Pane Implementation",
   "description": "Create flexible pane management system with resizing and navigation capabilities",
-  "status": "done",
+  "status": "in_progress",
   "priority": "medium",
   "labels": [
     "ui",
@@ -21,7 +21,7 @@
     "synced-to-claude"
   ],
   "createdAt": "2025-07-21T18:41:37.851Z",
-  "updatedAt": "2025-07-21T19:08:14.596Z",
+  "updatedAt": "2025-07-21T23:33:34.349Z",
   "storyPoints": 5,
   "estimatedHours": "25",
   "dependencies": [

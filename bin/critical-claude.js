@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 
 // Critical Claude CLI Binary
-const path = require('path');
-const { spawn } = require('child_process');
+import path from 'path';
+import { spawn } from 'child_process';
+import { fileURLToPath } from 'url';
 
 // Get the installation directory
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const installDir = path.resolve(__dirname, '..');
-const targetScript = path.join(installDir, 'packages/critical-claude/dist/cli/unified-cc-router.js');
+const targetScript = path.join(installDir, 'applications/cli-application/dist/index.js');
 
 const args = process.argv.slice(2);
 
 // Check if target script exists
-const fs = require('fs');
+import fs from 'fs';
 if (!fs.existsSync(targetScript)) {
   console.error('❌ Critical Claude not properly installed. Please reinstall:');
   console.error('   npm install -g critical-claude');
@@ -20,7 +22,7 @@ if (!fs.existsSync(targetScript)) {
 
 const child = spawn('node', [targetScript, ...args], {
   stdio: 'inherit',
-  cwd: path.join(installDir, 'packages/critical-claude')
+  cwd: installDir
 });
 
 child.on('error', (error) => {

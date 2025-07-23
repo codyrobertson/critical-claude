@@ -1,0 +1,21 @@
+{
+  "id": "task-1753142970191-i4v7mzvip",
+  "title": "Integrate Advanced AI Functionalities",
+  "description": "Incorporate AI libraries like TensorFlow.js to enhance gameplay through dynamic challenge adaptation.",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "AI",
+    "gameplay",
+    "tensorflow",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:09:30.191Z",
+  "updatedAt": "2025-07-22T00:09:30.191Z",
+  "storyPoints": 8,
+  "estimatedHours": 40,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

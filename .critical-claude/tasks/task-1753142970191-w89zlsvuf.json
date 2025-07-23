@@ -1,0 +1,21 @@
+{
+  "id": "task-1753142970191-w89zlsvuf",
+  "title": "Organize Developer Training Sessions",
+  "description": "Arrange training sessions for the development team to ensure they are proficient in using the new tools and technologies.",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "training",
+    "development team",
+    "tools",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:09:30.191Z",
+  "updatedAt": "2025-07-22T00:09:30.191Z",
+  "storyPoints": 3,
+  "estimatedHours": 20,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

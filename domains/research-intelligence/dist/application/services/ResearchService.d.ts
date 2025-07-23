@@ -1,21 +1,28 @@
 /**
- * Research Service
- * Simplified research service that delegates to legacy implementation
+ * Research Service - Migrated from legacy research system
+ * 100% AI-Driven Multi-Agent Research System
  */
-import { Result } from '../../shared/types.js';
-export interface ResearchRequest {
-    query: string;
-    files?: string[];
-    outputFormat?: 'tasks' | 'report' | 'both';
-    maxDepth?: number;
-    teamSize?: number;
-}
-export interface ResearchResponse extends Result<string> {
+import { ResearchRequest } from '../../domain/entities/ResearchTypes.js';
+export interface ResearchResponse {
+    success: boolean;
+    data?: string;
+    error?: string;
     reportPath?: string;
     tasksCreated?: number;
 }
 export declare class ResearchService {
+    private executeResearchUseCase;
+    constructor();
     executeResearch(request: ResearchRequest): Promise<ResearchResponse>;
-    getResearchHistory(): Promise<Result<string[]>>;
+    getResearchHistory(): Promise<{
+        success: boolean;
+        data?: string[];
+        error?: string;
+    }>;
+    getResearchStatus(): Promise<{
+        success: boolean;
+        data?: any;
+        error?: string;
+    }>;
 }
 //# sourceMappingURL=ResearchService.d.ts.map

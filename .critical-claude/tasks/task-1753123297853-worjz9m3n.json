@@ -2,7 +2,7 @@
   "id": "task-1753123297853-worjz9m3n",
   "title": "Command System",
   "description": "Implement vim-style command system with command parsing and execution",
-  "status": "done",
+  "status": "blocked",
   "priority": "medium",
   "labels": [
     "feature",
@@ -21,7 +21,7 @@
     "synced-to-claude"
   ],
   "createdAt": "2025-07-21T18:41:37.853Z",
-  "updatedAt": "2025-07-21T19:08:14.598Z",
+  "updatedAt": "2025-07-21T23:22:33.655Z",
   "storyPoints": 5,
   "estimatedHours": "20",
   "dependencies": [

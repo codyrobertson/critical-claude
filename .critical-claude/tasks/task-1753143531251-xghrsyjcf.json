@@ -1,0 +1,21 @@
+{
+  "id": "task-1753143531251-xghrsyjcf",
+  "title": "Develop WebSocket Server Infrastructure for Real-Time Chess Game",
+  "description": "Set up a WebSocket server to handle real-time, low-latency communication for multiplayer chess games. This infrastructure must support high volumes of data and numerous concurrent users as specified in the research, ensuring game integrity and responsive user interactions.",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "Backend",
+    "WebSocket",
+    "RealTime",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:18:51.251Z",
+  "updatedAt": "2025-07-22T00:18:51.251Z",
+  "storyPoints": 5,
+  "estimatedHours": 20,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

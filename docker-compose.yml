@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  critical-claude:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    image: critical-claude:latest
+    container_name: critical-claude-cli
+    
+    # Environment configuration
+    environment:
+      - NODE_ENV=production
+      - CRITICAL_CLAUDE_HOME=/home/claude/.critical-claude
+      
+    # Volume mounts for data persistence
+    volumes:
+      - claude-data:/home/claude/.critical-claude
+      - ./config:/app/config:ro  # Optional: external config
+      
+    # Network configuration
+    networks:
+      - claude-network
+      
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+          
+    # Restart policy
+    restart: unless-stopped
+    
+    # Interactive mode for CLI usage
+    stdin_open: true
+    tty: true
+    
+    # Default command (can be overridden)
+    command: ["--help"]
+
+  # Development service with live reload
+  critical-claude-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    image: critical-claude:dev
+    container_name: critical-claude-dev
+    
+    environment:
+      - NODE_ENV=development
+      - CRITICAL_CLAUDE_HOME=/home/claude/.critical-claude
+      
+    volumes:
+      - .:/app
+      - claude-dev-data:/home/claude/.critical-claude
+      - /app/node_modules  # Anonymous volume for node_modules
+      
+    networks:
+      - claude-network
+      
+    stdin_open: true
+    tty: true
+    
+    # Development server
+    command: ["npm", "run", "dev"]
+    
+    # Only used in development
+    profiles:
+      - dev
+
+# Named volumes for data persistence
+volumes:
+  claude-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/data/production
+      
+  claude-dev-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/data/development
+
+# Networks
+networks:
+  claude-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

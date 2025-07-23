@@ -3,6 +3,9 @@
  * High-level application service orchestrating task operations
  */
 import { CreateTaskUseCase, ListTasksUseCase, ViewTaskUseCase, UpdateTaskUseCase, DeleteTaskUseCase, ArchiveTaskUseCase, GetTaskStatsUseCase } from '../use-cases/index.js';
+import { ExportTasksUseCase } from '../use-cases/ExportTasksUseCase.js';
+import { ImportTasksUseCase } from '../use-cases/ImportTasksUseCase.js';
+import { BackupTasksUseCase } from '../use-cases/BackupTasksUseCase.js';
 export class TaskService {
     createTaskUseCase;
     listTasksUseCase;
@@ -11,6 +14,9 @@ export class TaskService {
     deleteTaskUseCase;
     archiveTaskUseCase;
     getTaskStatsUseCase;
+    exportTasksUseCase;
+    importTasksUseCase;
+    backupTasksUseCase;
     constructor(taskRepository) {
         this.createTaskUseCase = new CreateTaskUseCase(taskRepository);
         this.listTasksUseCase = new ListTasksUseCase(taskRepository);
@@ -19,6 +25,9 @@ export class TaskService {
         this.deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
         this.archiveTaskUseCase = new ArchiveTaskUseCase(taskRepository);
         this.getTaskStatsUseCase = new GetTaskStatsUseCase(taskRepository);
+        this.exportTasksUseCase = new ExportTasksUseCase(taskRepository);
+        this.importTasksUseCase = new ImportTasksUseCase(taskRepository);
+        this.backupTasksUseCase = new BackupTasksUseCase(taskRepository);
     }
     // Core task operations
     async createTask(request) {
@@ -54,6 +63,19 @@ export class TaskService {
     async getTasksByAssignee(assignee) {
         const response = await this.listTasks({ assignee, includeArchived: false });
         return response.success ? response.tasks || [] : [];
+    }
+    // Data management operations
+    async exportTasks(request) {
+        return this.exportTasksUseCase.execute(request);
+    }
+    async importTasks(request) {
+        return this.importTasksUseCase.execute(request);
+    }
+    async backupTasks(request) {
+        return this.backupTasksUseCase.execute(request);
+    }
+    async listBackups(backupDir) {
+        return this.backupTasksUseCase.listBackups(backupDir);
     }
 }
 //# sourceMappingURL=TaskService.js.map

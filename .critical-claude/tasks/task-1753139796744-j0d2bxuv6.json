@@ -2,14 +2,14 @@
   "id": "task-1753139796744-j0d2bxuv6",
   "title": "TESTING",
   "description": "TESTING",
-  "status": "blocked",
+  "status": "in_progress",
   "priority": "high",
   "labels": [
     "memes",
     "testing"
   ],
   "createdAt": "2025-07-21T23:16:36.744Z",
-  "updatedAt": "2025-07-21T23:16:47.556Z",
+  "updatedAt": "2025-07-21T23:22:07.398Z",
   "estimatedHours": 2,
   "dependencies": [],
   "draft": false,

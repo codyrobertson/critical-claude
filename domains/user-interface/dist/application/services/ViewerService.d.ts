@@ -1,6 +1,5 @@
 /**
- * Viewer Service
- * Simplified viewer service that delegates to legacy implementation
+ * Viewer Service - Application service for launching the task viewer
  */
 import { Result } from '../../shared/types.js';
 export interface ViewerRequest {
@@ -11,7 +10,9 @@ export interface ViewerResponse extends Result<string> {
     viewerStarted?: boolean;
 }
 export declare class ViewerService {
+    private viewerApp;
     launchViewer(request?: ViewerRequest): Promise<ViewerResponse>;
+    stopViewer(): Promise<void>;
     getViewerStatus(): Promise<Result<boolean>>;
 }
 //# sourceMappingURL=ViewerService.d.ts.map

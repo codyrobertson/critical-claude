@@ -1,1 +1,0 @@
-{"version":3,"file":"viewer.d.ts","sourceRoot":"","sources":["../../../src/cli/commands/viewer.ts"],"names":[],"mappings":"AAAA;;;GAGG;AAMH,qBAAa,aAAa;IAClB,OAAO,CAAC,OAAO,EAAE,GAAG,GAAG,OAAO,CAAC,IAAI,CAAC;IA2B1C,OAAO,CAAC,WAAW;IAOnB,YAAY,IAAI,MAAM;CA8BvB"}

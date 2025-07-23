@@ -1,0 +1,1 @@
+export { type IResearchRepository } from './IResearchRepository.js';

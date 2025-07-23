@@ -1,0 +1,21 @@
+{
+  "id": "task-1753144093348-obantxzzz",
+  "title": "Integrate C++ modules for performance-critical game logic in TypeScript chess game",
+  "description": "To address the inefficiencies in runtime performance of TypeScript in game loops, integrating C++ for performance-critical components like game logic and AI computation will optimize the runtime performance. This hybrid approach will leverage TypeScript's maintainability with C++'s speed, fulfilling the strategic recommendation based on adversarial considerations and research insights.",
+  "status": "todo",
+  "priority": "medium",
+  "labels": [
+    "typescript",
+    "c++",
+    "performance-optimization",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:28:13.348Z",
+  "updatedAt": "2025-07-22T00:28:13.348Z",
+  "storyPoints": 5,
+  "estimatedHours": 20,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

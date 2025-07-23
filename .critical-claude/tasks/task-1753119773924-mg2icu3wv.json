@@ -2,7 +2,7 @@
   "id": "task-1753119773924-mg2icu3wv",
   "title": "Implement Avatar Upload UI",
   "description": "Create drag-and-drop interface and file input for avatar upload with preview functionality",
-  "status": "in_progress",
+  "status": "done",
   "priority": "high",
   "labels": [
     "UI",
@@ -27,7 +27,7 @@
     "synced-to-claude"
   ],
   "createdAt": "2025-07-21T17:42:53.924Z",
-  "updatedAt": "2025-07-21T19:08:14.597Z",
+  "updatedAt": "2025-07-21T23:33:36.064Z",
   "storyPoints": 5,
   "estimatedHours": "8",
   "dependencies": [

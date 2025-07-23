@@ -1,0 +1,34 @@
+{
+  "overview": "Comprehensive research strategy for TypeScript Phaser game",
+  "research_areas": [
+    {
+      "area": "Technical Architecture",
+      "importance": "Core foundation",
+      "depth_level": "deep",
+      "expected_findings": "Architectural patterns and solutions"
+    },
+    {
+      "area": "Implementation Approaches",
+      "importance": "Practical application",
+      "depth_level": "moderate",
+      "expected_findings": "Best practices and methodologies"
+    },
+    {
+      "area": "Tools and Technologies",
+      "importance": "Technology stack",
+      "depth_level": "moderate",
+      "expected_findings": "Recommended tools and frameworks"
+    }
+  ],
+  "methodology": "Multi-agent web research with AI analysis and synthesis",
+  "success_criteria": [
+    "Comprehensive coverage of topic",
+    "Actionable recommendations",
+    "Clear implementation guidance"
+  ],
+  "key_questions": [
+    "What are the key components of TypeScript Phaser game?",
+    "What are the best implementation approaches?",
+    "What tools and technologies are recommended?"
+  ]
+}

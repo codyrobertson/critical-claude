@@ -1,0 +1,21 @@
+{
+  "id": "task-1753144093347-844w3h88o",
+  "title": "Develop adaptive AI using machine learning for the TypeScript chess game",
+  "description": "To enhance AI's adaptability in the chess game, developing an adaptive AI model using machine learning techniques will allow the AI to adjust strategies based on player behavior. This task is aligned with the identified need for AI robustness in unpredictable gameplay scenarios, significantly contributing to a dynamic and challenging game experience.",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "ai-development",
+    "machine-learning",
+    "typescript",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:28:13.347Z",
+  "updatedAt": "2025-07-22T00:28:13.347Z",
+  "storyPoints": 13,
+  "estimatedHours": 40,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

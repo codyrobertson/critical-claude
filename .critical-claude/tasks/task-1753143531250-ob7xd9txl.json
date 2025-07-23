@@ -1,0 +1,21 @@
+{
+  "id": "task-1753143531250-ob7xd9txl",
+  "title": "Implement Minimax Algorithm with Alpha-Beta Pruning for Chess AI",
+  "description": "To achieve a balance of computational efficiency and strategic depth in the AI-powered TypeScript chess game, implement the Minimax algorithm enhanced with Alpha-Beta pruning. This task is foundational for creating a competitive AI that can make real-time decisions effectively, as highlighted in the research report.",
+  "status": "todo",
+  "priority": "critical",
+  "labels": [
+    "AI",
+    "ChessGame",
+    "Algorithm",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:18:51.250Z",
+  "updatedAt": "2025-07-22T00:18:51.250Z",
+  "storyPoints": 8,
+  "estimatedHours": 30,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": true,
+  "source": "ai-generation"
+}

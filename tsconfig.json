@@ -1,0 +1,68 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./infrastructure/shared-kernel"
+    },
+    {
+      "path": "./infrastructure/infrastructure"
+    },
+    {
+      "path": "./domains/task-management"
+    },
+    {
+      "path": "./domains/project-management"
+    },
+    {
+      "path": "./domains/research-intelligence"
+    },
+    {
+      "path": "./domains/template-system"
+    },
+    {
+      "path": "./domains/integration-layer"
+    },
+    {
+      "path": "./domains/user-interface"
+    },
+    {
+      "path": "./applications/cli-application"
+    },
+    {
+      "path": "./applications/web-application"
+    }
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@critical-claude/task-management/*": [
+        "./domains/task-management/src/*"
+      ],
+      "@critical-claude/project-management/*": [
+        "./domains/project-management/src/*"
+      ],
+      "@critical-claude/research-intelligence/*": [
+        "./domains/research-intelligence/src/*"
+      ],
+      "@critical-claude/template-system/*": [
+        "./domains/template-system/src/*"
+      ],
+      "@critical-claude/integration-layer/*": [
+        "./domains/integration-layer/src/*"
+      ],
+      "@critical-claude/user-interface/*": [
+        "./domains/user-interface/src/*"
+      ],
+      "@critical-claude/shared-kernel/*": [
+        "./infrastructure/shared-kernel/src/*"
+      ],
+      "@critical-claude/infrastructure/*": [
+        "./infrastructure/infrastructure/src/*"
+      ],
+      "@critical-claude/shared/*": [
+        "./shared/*"
+      ]
+    }
+  }
+}

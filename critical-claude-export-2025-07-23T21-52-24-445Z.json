@@ -1,0 +1,238 @@
+{
+  "exportedAt": "2025-07-23T21:52:24.444Z",
+  "version": "1.0",
+  "taskCount": 21,
+  "tasks": [
+    {
+      "id": "task-1753146967355-45yj738bp",
+      "title": "Test DDD Task",
+      "description": "Testing the new DDD architecture",
+      "status": "todo",
+      "priority": "high",
+      "labels": [],
+      "createdAt": "2025-07-22T01:16:07.355Z",
+      "updatedAt": "2025-07-22T01:16:07.355Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753147177182-692c5x96o",
+      "title": "Test DDD CLI",
+      "description": "Testing the proper DDD CLI",
+      "status": "todo",
+      "priority": "high",
+      "labels": [],
+      "createdAt": "2025-07-22T01:19:37.182Z",
+      "updatedAt": "2025-07-22T01:19:37.182Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753299410989-lmeo8rwez",
+      "title": "Test integration task",
+      "description": "Testing full integration",
+      "status": "todo",
+      "priority": "high",
+      "labels": [],
+      "createdAt": "2025-07-23T19:36:50.989Z",
+      "updatedAt": "2025-07-23T19:36:50.989Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753299470991-gy21amgj8",
+      "title": "Post-cleanup test",
+      "description": "Testing after removing packages",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T19:37:50.991Z",
+      "updatedAt": "2025-07-23T19:37:50.991Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753299838623-34jhen8dg",
+      "title": "Integration Test Task",
+      "description": "Testing full integration",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T19:43:58.623Z",
+      "updatedAt": "2025-07-23T19:43:58.623Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753305896154-b6a91301o",
+      "title": "Brutal Audit Test",
+      "description": "Testing every command",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:24:56.154Z",
+      "updatedAt": "2025-07-23T21:24:56.154Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306671540-bel4jbd9v",
+      "title": "Concurrent Test 1",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:37:51.540Z",
+      "updatedAt": "2025-07-23T21:37:51.540Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306671540-zuduttyuv",
+      "title": "Concurrent Test 2",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:37:51.540Z",
+      "updatedAt": "2025-07-23T21:37:51.540Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306703370-n2g33nn7f",
+      "title": "Offline Test",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:23.370Z",
+      "updatedAt": "2025-07-23T21:38:23.370Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306711524-7xceosrqv",
+      "title": "No Config Test",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:31.524Z",
+      "updatedAt": "2025-07-23T21:38:31.524Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728757-1vi3knl17",
+      "title": "Stress Test 6",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.757Z",
+      "updatedAt": "2025-07-23T21:38:48.757Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728757-t4eo9m5jg",
+      "title": "Stress Test 8",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.757Z",
+      "updatedAt": "2025-07-23T21:38:48.757Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728759-rxsp5bxpp",
+      "title": "Stress Test 3",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.759Z",
+      "updatedAt": "2025-07-23T21:38:48.759Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728760-tw4oza2cl",
+      "title": "Stress Test 4",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.760Z",
+      "updatedAt": "2025-07-23T21:38:48.760Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728762-nv1hvsp7g",
+      "title": "Stress Test 2",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.762Z",
+      "updatedAt": "2025-07-23T21:38:48.762Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728763-cihjtj3lo",
+      "title": "Stress Test 5",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.763Z",
+      "updatedAt": "2025-07-23T21:38:48.763Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728764-8fib872pd",
+      "title": "Stress Test 1",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.764Z",
+      "updatedAt": "2025-07-23T21:38:48.764Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728765-h3xhegtlh",
+      "title": "Stress Test 9",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.765Z",
+      "updatedAt": "2025-07-23T21:38:48.765Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728768-xmelbf5r6",
+      "title": "Stress Test 10",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.768Z",
+      "updatedAt": "2025-07-23T21:38:48.768Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753306728769-xzkurjv2l",
+      "title": "Stress Test 7",
+      "description": "",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:38:48.769Z",
+      "updatedAt": "2025-07-23T21:38:48.769Z",
+      "isArchived": false
+    },
+    {
+      "id": "task-1753307541112-n876s57qe",
+      "title": "Test export task",
+      "description": "This is a test task for export functionality",
+      "status": "todo",
+      "priority": "medium",
+      "labels": [],
+      "createdAt": "2025-07-23T21:52:21.112Z",
+      "updatedAt": "2025-07-23T21:52:21.112Z",
+      "isArchived": false
+    }
+  ]
+}

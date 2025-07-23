@@ -25,8 +25,11 @@ import {
   type ArchiveTaskResponse,
   type GetTaskStatsResponse
 } from '../use-cases/index.js';
-import { Repository } from '../../shared/types.js';
+import { ExportTasksUseCase, type ExportTasksRequest, type ExportTasksResponse } from '../use-cases/ExportTasksUseCase.js';
+import { ImportTasksUseCase, type ImportTasksRequest, type ImportTasksResponse } from '../use-cases/ImportTasksUseCase.js';
+import { BackupTasksUseCase, type BackupTasksRequest, type BackupTasksResponse } from '../use-cases/BackupTasksUseCase.js';
 import { Task } from '../../domain/entities/Task.js';
+import { ITaskRepository } from '../../domain/repositories/ITaskRepository.js';
 
 export class TaskService {
   private createTaskUseCase: CreateTaskUseCase;
@@ -36,8 +39,11 @@ export class TaskService {
   private deleteTaskUseCase: DeleteTaskUseCase;
   private archiveTaskUseCase: ArchiveTaskUseCase;
   private getTaskStatsUseCase: GetTaskStatsUseCase;
+  private exportTasksUseCase: ExportTasksUseCase;
+  private importTasksUseCase: ImportTasksUseCase;
+  private backupTasksUseCase: BackupTasksUseCase;
 
-  constructor(taskRepository: Repository<Task>) {
+  constructor(taskRepository: ITaskRepository) {
     this.createTaskUseCase = new CreateTaskUseCase(taskRepository);
     this.listTasksUseCase = new ListTasksUseCase(taskRepository);
     this.viewTaskUseCase = new ViewTaskUseCase(taskRepository);
@@ -45,6 +51,9 @@ export class TaskService {
     this.deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
     this.archiveTaskUseCase = new ArchiveTaskUseCase(taskRepository);
     this.getTaskStatsUseCase = new GetTaskStatsUseCase(taskRepository);
+    this.exportTasksUseCase = new ExportTasksUseCase(taskRepository);
+    this.importTasksUseCase = new ImportTasksUseCase(taskRepository);
+    this.backupTasksUseCase = new BackupTasksUseCase(taskRepository);
   }
 
   // Core task operations
@@ -90,5 +99,22 @@ export class TaskService {
   async getTasksByAssignee(assignee: string): Promise<Task[]> {
     const response = await this.listTasks({ assignee, includeArchived: false });
     return response.success ? response.tasks || [] : [];
+  }
+
+  // Data management operations
+  async exportTasks(request: ExportTasksRequest): Promise<ExportTasksResponse> {
+    return this.exportTasksUseCase.execute(request);
+  }
+
+  async importTasks(request: ImportTasksRequest): Promise<ImportTasksResponse> {
+    return this.importTasksUseCase.execute(request);
+  }
+
+  async backupTasks(request?: BackupTasksRequest): Promise<BackupTasksResponse> {
+    return this.backupTasksUseCase.execute(request);
+  }
+
+  async listBackups(backupDir?: string): Promise<{success: boolean, backups?: string[], error?: string}> {
+    return this.backupTasksUseCase.listBackups(backupDir);
   }
 }

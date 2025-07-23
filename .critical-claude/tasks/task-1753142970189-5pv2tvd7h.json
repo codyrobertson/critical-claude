@@ -1,0 +1,21 @@
+{
+  "id": "task-1753142970189-5pv2tvd7h",
+  "title": "Establish Modular Game Architecture",
+  "description": "Design and implement a modular architecture for TypeScript Phaser games to ensure scalability and maintainability.",
+  "status": "todo",
+  "priority": "critical",
+  "labels": [
+    "architecture",
+    "modularity",
+    "typescript",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:09:30.189Z",
+  "updatedAt": "2025-07-22T00:09:30.189Z",
+  "storyPoints": 8,
+  "estimatedHours": 40,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "task-1753142970190-v5l5tv0bc",
+  "title": "Select Development Tools and IDEs",
+  "description": "Evaluate and standardize on development tools and IDEs that are best suited for TypeScript Phaser game development.",
+  "status": "todo",
+  "priority": "high",
+  "labels": [
+    "tools",
+    "ide",
+    "typescript",
+    "phaser",
+    "ai-research-generated"
+  ],
+  "createdAt": "2025-07-22T00:09:30.190Z",
+  "updatedAt": "2025-07-22T00:09:30.190Z",
+  "storyPoints": 5,
+  "estimatedHours": 30,
+  "dependencies": [],
+  "draft": false,
+  "aiGenerated": false,
+  "source": "manual"
+}
