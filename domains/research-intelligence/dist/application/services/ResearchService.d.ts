@@ -13,6 +13,7 @@ export interface ResearchResponse {
 export declare class ResearchService {
     private executeResearchUseCase;
     constructor();
+    private getExecuteResearchUseCase;
     executeResearch(request: ResearchRequest): Promise<ResearchResponse>;
     getResearchHistory(): Promise<{
         success: boolean;

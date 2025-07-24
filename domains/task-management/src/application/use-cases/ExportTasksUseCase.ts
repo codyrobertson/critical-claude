@@ -157,6 +157,18 @@ export class ExportTasksUseCase {
 
   private async writeExportFile(path: string, content: string): Promise<void> {
     const fs = await import('fs/promises');
-    await fs.writeFile(path, content, 'utf-8');
+    const pathModule = await import('path');
+    
+    // Resolve relative paths to absolute paths relative to current working directory
+    const absolutePath = pathModule.isAbsolute(path) 
+      ? path 
+      : pathModule.resolve(process.cwd(), path);
+    
+    // Ensure directory exists
+    const dirname = pathModule.dirname(absolutePath);
+    await fs.mkdir(dirname, { recursive: true });
+    
+    // Write the file
+    await fs.writeFile(absolutePath, content, 'utf-8');
   }
 }

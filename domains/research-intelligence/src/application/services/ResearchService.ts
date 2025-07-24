@@ -15,27 +15,34 @@ export interface ResearchResponse {
 }
 
 export class ResearchService {
-  private executeResearchUseCase: ExecuteResearchUseCase;
+  private executeResearchUseCase: ExecuteResearchUseCase | null = null;
 
   constructor() {
-    this.executeResearchUseCase = new ExecuteResearchUseCase();
+    // Lazy-load the use case only when needed for AI operations
+  }
+
+  private getExecuteResearchUseCase(): ExecuteResearchUseCase {
+    if (!this.executeResearchUseCase) {
+      this.executeResearchUseCase = new ExecuteResearchUseCase();
+    }
+    return this.executeResearchUseCase;
   }
 
   async executeResearch(request: ResearchRequest): Promise<ResearchResponse> {
     try {
-      const result = await this.executeResearchUseCase.execute(request);
+      const result = await this.getExecuteResearchUseCase().execute(request);
       
       if (result.success && result.data) {
         return {
           success: true,
-          data: result.data.executive_summary,
+          data: result.data.executive_summary || 'Research completed successfully',
           reportPath: result.reportPath,
           tasksCreated: result.tasksCreated
         };
       } else {
         return {
           success: false,
-          error: result.error
+          error: result.error || 'Research execution failed'
         };
       }
     } catch (error) {

@@ -1,0 +1,62 @@
+{
+  "exportedAt": "2025-07-24T00:00:00.000Z",
+  "version": "1.0",
+  "taskCount": 5,
+  "tasks": [
+    {
+      "id": "test-task-1",
+      "title": "Sample Task 1",
+      "description": "This is a sample task for testing import functionality",
+      "status": "todo",
+      "priority": "high",
+      "labels": ["testing", "sample"],
+      "createdAt": "2025-07-24T00:00:00.000Z",
+      "updatedAt": "2025-07-24T00:00:00.000Z",
+      "isArchived": false
+    },
+    {
+      "id": "test-task-2", 
+      "title": "Sample Task 2",
+      "description": "Another sample task with different priority",
+      "status": "in_progress",
+      "priority": "medium",
+      "labels": ["testing"],
+      "createdAt": "2025-07-24T00:00:00.000Z",
+      "updatedAt": "2025-07-24T00:00:00.000Z",
+      "isArchived": false
+    },
+    {
+      "id": "test-task-3",
+      "title": "Completed Sample Task", 
+      "description": "A completed task for testing",
+      "status": "done",
+      "priority": "low",
+      "labels": ["testing", "completed"],
+      "createdAt": "2025-07-23T00:00:00.000Z",
+      "updatedAt": "2025-07-24T00:00:00.000Z",
+      "isArchived": false
+    },
+    {
+      "id": "test-task-4",
+      "title": "Blocked Task",
+      "description": "A task that is blocked for testing",
+      "status": "blocked", 
+      "priority": "critical",
+      "labels": ["testing", "blocked"],
+      "createdAt": "2025-07-23T00:00:00.000Z",
+      "updatedAt": "2025-07-24T00:00:00.000Z",
+      "isArchived": false
+    },
+    {
+      "id": "test-task-5",
+      "title": "Archived Task",
+      "description": "An archived task for testing",
+      "status": "done",
+      "priority": "medium",
+      "labels": ["testing", "archived"],
+      "createdAt": "2025-07-22T00:00:00.000Z", 
+      "updatedAt": "2025-07-23T00:00:00.000Z",
+      "isArchived": true
+    }
+  ]
+}

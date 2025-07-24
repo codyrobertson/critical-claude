@@ -4,17 +4,23 @@
  */
 import { ExecuteResearchUseCase } from '../use-cases/ExecuteResearchUseCase.js';
 export class ResearchService {
-    executeResearchUseCase;
+    executeResearchUseCase = null;
     constructor() {
-        this.executeResearchUseCase = new ExecuteResearchUseCase();
+        // Lazy-load the use case only when needed for AI operations
+    }
+    getExecuteResearchUseCase() {
+        if (!this.executeResearchUseCase) {
+            this.executeResearchUseCase = new ExecuteResearchUseCase();
+        }
+        return this.executeResearchUseCase;
     }
     async executeResearch(request) {
         try {
-            const result = await this.executeResearchUseCase.execute(request);
+            const result = await this.getExecuteResearchUseCase().execute(request);
             if (result.success && result.data) {
                 return {
                     success: true,
-                    data: result.data.executive_summary,
+                    data: result.data.executive_summary || 'Research completed successfully',
                     reportPath: result.reportPath,
                     tasksCreated: result.tasksCreated
                 };
@@ -22,7 +28,7 @@ export class ResearchService {
             else {
                 return {
                     success: false,
-                    error: result.error
+                    error: result.error || 'Research execution failed'
                 };
             }
         }

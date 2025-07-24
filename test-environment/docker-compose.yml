@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  critical-claude-test:
+    build: .
+    container_name: critical-claude-test-env
+    volumes:
+      - ./results:/test-env/results
+      - ./test-data:/test-env/test-data
+    environment:
+      - NODE_ENV=test
+      - CC_TEST_MODE=true
+    working_dir: /test-env
+    command: /test-env/test-scripts/run-all-tests.sh
+    
+  # Alternative service for interactive testing
+  critical-claude-interactive:
+    build: .
+    container_name: critical-claude-interactive
+    volumes:
+      - ./results:/test-env/results
+      - ./test-data:/test-env/test-data
+    environment:
+      - NODE_ENV=test
+      - CC_TEST_MODE=true
+    working_dir: /test-env
+    stdin_open: true
+    tty: true
+    command: /bin/bash

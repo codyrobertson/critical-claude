@@ -43,7 +43,7 @@ class CLIApplication {
     program
       .name('cc')
       .description('Critical Claude CLI - DDD Architecture')
-      .version('2.3.5');
+      .version('2.3.9');
 
     // Task management commands
     program
@@ -191,6 +191,7 @@ class CLIApplication {
           console.log(`   ID: ${createResult.task.id.value}`);
         } else {
           console.error(`❌ Failed to create task: ${createResult.error}`);
+          process.exit(1);
         }
         break;
 
@@ -212,6 +213,7 @@ class CLIApplication {
           });
         } else {
           console.error(`❌ Failed to list tasks: ${listResult.error}`);
+          process.exit(1);
         }
         break;
 
@@ -237,6 +239,7 @@ class CLIApplication {
           if (task.labels.length > 0) console.log(`   Labels: ${task.labels.join(', ')}`);
         } else {
           console.error(`❌ Task not found: ${taskId}`);
+          process.exit(1);
         }
         break;
 
@@ -261,6 +264,7 @@ class CLIApplication {
           console.log(`✅ Updated task: ${updateResult.task.title}`);
         } else {
           console.error(`❌ Failed to update task: ${updateResult.error}`);
+          process.exit(1);
         }
         break;
 
@@ -276,6 +280,7 @@ class CLIApplication {
           console.log(`✅ Deleted task: ${deleteId}`);
         } else {
           console.error(`❌ Failed to delete task: ${deleteResult.error}`);
+          process.exit(1);
         }
         break;
 
@@ -401,6 +406,7 @@ class CLIApplication {
           }
         } else {
           console.error(`❌ Research failed: ${researchResult.error}`);
+          process.exit(1);
         }
         break;
 
@@ -536,23 +542,27 @@ class CLIApplication {
   }
 
   private async handleResearchCommand(query: string, options: any) {
-    const result = await this.researchService.executeResearch({
-      query,
-      files: options.files,
-      outputFormat: options.format,
-      maxDepth: options.depth
-    });
+    try {
+      const result = await this.researchService.executeResearch({
+        query,
+        files: options.files,
+        outputFormat: options.format,
+        maxDepth: options.depth
+      });
 
-    if (result.success) {
-      console.log(`✅ Research completed successfully`);
-      if (result.reportPath) {
-        console.log(`   Report: ${result.reportPath}`);
+      if (result.success) {
+        console.log(`✅ Research completed successfully`);
+        if (result.reportPath) {
+          console.log(`   Report: ${result.reportPath}`);
+        }
+        if (result.tasksCreated) {
+          console.log(`   Tasks created: ${result.tasksCreated}`);
+        }
+      } else {
+        console.error(`❌ ${result.error || 'Research failed'}`);
       }
-      if (result.tasksCreated) {
-        console.log(`   Tasks created: ${result.tasksCreated}`);
-      }
-    } else {
-      console.error(`❌ ${result.error}`);
+    } catch (error) {
+      console.error(`❌ Research operation failed: ${error instanceof Error ? error.message : error}`);
     }
   }
 

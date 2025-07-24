@@ -4,6 +4,8 @@
  */
 import fs from 'fs';
 import path from 'path';
+// Global provider detection cache
+let globalProviderDetected = false;
 export class AIService {
     config;
     initialized = false;
@@ -11,9 +13,10 @@ export class AIService {
         this.config = config;
         // Load configuration from cc.env file if it exists (sync)
         this.loadEnvConfigSync();
-        // Auto-detect best available provider - prioritize API keys over Claude Code
-        if (config.provider === 'mock') {
+        // Only auto-detect provider if not already detected globally and not explicitly configured
+        if (config.provider === 'mock' && !globalProviderDetected) {
             console.log('🔍 Auto-detecting AI provider...');
+            globalProviderDetected = true;
             // Check for direct API keys first (most reliable)
             if (process.env.OPENAI_API_KEY) {
                 console.log('🤖 Found OpenAI API key, using OpenAI provider');
@@ -31,7 +34,25 @@ export class AIService {
                 console.log('🤖 No API keys found, will attempt Claude Code CLI as fallback...');
                 this.config.provider = 'claude-code';
             }
-            // Apply cc.env overrides
+        }
+        else if (config.provider === 'mock' && globalProviderDetected) {
+            // Use previously detected provider silently
+            if (process.env.OPENAI_API_KEY) {
+                this.config.provider = 'openai';
+                this.config.apiKey = process.env.OPENAI_API_KEY;
+                this.config.model = process.env.CC_AI_MODEL || this.config.model;
+            }
+            else if (process.env.ANTHROPIC_API_KEY) {
+                this.config.provider = 'anthropic';
+                this.config.apiKey = process.env.ANTHROPIC_API_KEY;
+                this.config.model = process.env.CC_AI_MODEL || this.config.model;
+            }
+            else {
+                this.config.provider = 'claude-code';
+            }
+        }
+        // Apply cc.env overrides
+        if (config.provider === 'mock') {
             this.config.temperature = process.env.CC_AI_TEMPERATURE ?
                 parseFloat(process.env.CC_AI_TEMPERATURE) : this.config.temperature;
             this.config.maxTokens = process.env.CC_AI_MAX_TOKENS ?
