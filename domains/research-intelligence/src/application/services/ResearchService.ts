@@ -5,6 +5,9 @@
 
 import { ExecuteResearchUseCase, ExecuteResearchResponse } from '../use-cases/ExecuteResearchUseCase.js';
 import { ResearchRequest } from '../../domain/entities/ResearchTypes.js';
+import { IAIProvider } from '../../domain/services/IAIProvider.js';
+import { ILogger } from '../../domain/services/ILogger.js';
+import { AIService } from '../../infrastructure/services/AIService.js';
 
 export interface ResearchResponse {
   success: boolean;
@@ -14,16 +17,57 @@ export interface ResearchResponse {
   tasksCreated?: number;
 }
 
+/**
+ * Console Logger Implementation
+ */
+class ConsoleLogger implements ILogger {
+  debug(message: string, context?: Record<string, unknown>): void {
+    console.debug(`[DEBUG] ${message}`, context || '');
+  }
+  
+  info(message: string, context?: Record<string, unknown>): void {
+    console.log(`ℹ️ ${message}`, context ? JSON.stringify(context) : '');
+  }
+  
+  warn(message: string, context?: Record<string, unknown>): void {
+    console.warn(`⚠️ ${message}`, context ? JSON.stringify(context) : '');
+  }
+  
+  error(message: string, error?: Error, context?: Record<string, unknown>): void {
+    console.error(`❌ ${message}`, error || '', context ? JSON.stringify(context) : '');
+  }
+}
+
 export class ResearchService {
   private executeResearchUseCase: ExecuteResearchUseCase | null = null;
+  private aiProvider: IAIProvider;
+  private logger: ILogger;
 
-  constructor() {
-    // Lazy-load the use case only when needed for AI operations
+  constructor(aiProvider?: IAIProvider, logger?: ILogger) {
+    this.logger = logger || new ConsoleLogger();
+    
+    // Provider priority: Claude Code CLI first, then API keys if user explicitly opts out
+    const forceClaudeCode = process.env.CC_AI_PROVIDER === 'claude-code';
+    const forceApiKeys = process.env.CC_AI_PROVIDER === 'api-keys';
+    const hasOpenAI = !!process.env.OPENAI_API_KEY;
+    const hasAnthropic = !!process.env.ANTHROPIC_API_KEY;
+    
+    let defaultConfig;
+    if (forceApiKeys && (hasAnthropic || hasOpenAI)) {
+      // User explicitly wants API keys
+      defaultConfig = hasAnthropic 
+        ? { provider: 'anthropic' as const, apiKey: process.env.ANTHROPIC_API_KEY }
+        : { provider: 'openai' as const, apiKey: process.env.OPENAI_API_KEY };
+    } else {
+      // Default to Claude Code CLI (preferred)
+      defaultConfig = { provider: 'claude-code' as const, model: process.env.CC_AI_MODEL || 'sonnet' };
+    }
+    this.aiProvider = aiProvider || new AIService(defaultConfig, this.logger);
   }
 
   private getExecuteResearchUseCase(): ExecuteResearchUseCase {
     if (!this.executeResearchUseCase) {
-      this.executeResearchUseCase = new ExecuteResearchUseCase();
+      this.executeResearchUseCase = new ExecuteResearchUseCase(this.aiProvider, this.logger);
     }
     return this.executeResearchUseCase;
   }
