@@ -3,16 +3,15 @@
  * Essential shared types used across domains
  */
 
+// Import canonical domain types
+export * from './domain-types';
+
 // Simple Result Pattern
 export interface Result<T> {
   success: boolean;
   data?: T;
   error?: string;
 }
-
-// Common Types
-export type Priority = 'critical' | 'high' | 'medium' | 'low';
-export type TaskStatus = 'todo' | 'in_progress' | 'done' | 'blocked' | 'archived';
 
 // Simple Repository Interface
 export interface Repository<T> {

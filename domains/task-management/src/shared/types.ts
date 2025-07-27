@@ -1,7 +1,10 @@
 /**
  * Local Types for Task Management Domain
- * Copied from shared common-types to avoid cross-domain dependencies
+ * Using canonical domain types from shared kernel
  */
+
+// Import canonical types
+export * from '../../../../shared/domain-types';
 
 // Simple Result Pattern
 export interface Result<T> {
@@ -9,10 +12,6 @@ export interface Result<T> {
   data?: T;
   error?: string;
 }
-
-// Common Types
-export type Priority = 'critical' | 'high' | 'medium' | 'low';
-export type TaskStatus = 'todo' | 'in_progress' | 'done' | 'blocked' | 'archived';
 
 // Simple Repository Interface
 export interface Repository<T> {
