@@ -1,6 +1,6 @@
 {
   "name": "critical-claude",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "type": "module",
   "description": "Production-ready task management CLI with unified Claude Code integration via MCP. Features bidirectional TodoWrite sync, centralized hook system, and AI-powered task analysis.",
   "private": false,
