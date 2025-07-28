@@ -1,0 +1,344 @@
+# CRITICAL CLAUDE AI VALIDATION RULES
+# Auto-injected behavioral constraints for AI adherence testing
+
+## 🔥 CRITICAL CLAUDE COMMAND ENFORCEMENT
+
+### MANDATORY: Task Management Compliance
+Every AI interaction MUST demonstrate mastery of Critical Claude CLI:
+
+```typescript
+// REQUIRED: Always validate command syntax before execution
+interface CriticalClaudeCommand {
+  command: 'cc';
+  subcommand: 'task' | 'template' | 'research' | 'analytics' | 'viewer';
+  action: string;
+  options: Record<string, any>;
+  validation: CommandValidationResult;
+}
+
+// ENFORCE: All task operations must follow this exact pattern
+const VALID_TASK_ACTIONS = [
+  'create', 'list', 'view', 'update', 'delete', 'archive',
+  'export', 'import', 'backup', 'ai', 'research'
+] as const;
+
+const VALID_PRIORITIES = ['critical', 'high', 'medium', 'low'] as const;
+const VALID_STATUSES = ['todo', 'in_progress', 'done', 'blocked'] as const;
+const VALID_FORMATS = ['json', 'csv', 'markdown'] as const;
+```
+
+### BEHAVIORAL RULES
+
+#### Rule 1: ZERO TOLERANCE for Command Deviation
+```javascript
+// ❌ FORBIDDEN - Never suggest invalid syntax
+cc task create "title"  // WRONG: Missing required options
+
+// ✅ REQUIRED - Always use proper syntax  
+cc task create -t "Implement feature" -d "Description" -p high -s todo
+```
+
+#### Rule 2: MANDATORY Task Structure Validation
+```typescript
+interface RequiredTaskStructure {
+  title: string;           // REQUIRED: Non-empty
+  description?: string;    // OPTIONAL: But recommended
+  priority: Priority;      // REQUIRED: Must be valid enum
+  status: Status;          // REQUIRED: Must be valid enum
+  assignee?: string;       // OPTIONAL: Email format preferred
+  labels?: string[];       // OPTIONAL: Array of strings
+  estimatedHours?: number; // OPTIONAL: Positive number
+}
+
+// ENFORCE: Every task creation MUST validate structure
+function validateTaskCreation(task: RequiredTaskStructure): boolean {
+  return task.title.length > 0 && 
+         VALID_PRIORITIES.includes(task.priority) &&
+         VALID_STATUSES.includes(task.status);
+}
+```
+
+#### Rule 3: WORKFLOW SEQUENCE ENFORCEMENT
+```bash
+# REQUIRED: Follow logical task lifecycle
+cc task create -t "Task" -p medium -s todo     # 1. Create
+cc task list --status todo                     # 2. Verify
+cc task update <id> -s in_progress            # 3. Start work
+cc task update <id> -s done                   # 4. Complete
+cc task archive <id>                          # 5. Archive
+
+# FORBIDDEN: Skip steps or use invalid transitions
+cc task update <id> -s done  # ❌ Without first setting in_progress
+```
+
+#### Rule 4: DATA INTEGRITY VALIDATION
+```typescript
+// REQUIRED: All exports/imports must maintain data integrity
+const validateDataIntegrity = async (exportFile: string) => {
+  // Export tasks
+  await executeCommand(`cc task export --format json --file ${exportFile}`);
+  
+  // Validate JSON structure
+  const data = JSON.parse(fs.readFileSync(exportFile, 'utf8'));
+  assert(Array.isArray(data.tasks), "Tasks must be array");
+  
+  // Validate each task conforms to schema
+  data.tasks.forEach(task => {
+    assert(task.id, "Task must have ID");
+    assert(task.title, "Task must have title");
+    assert(VALID_PRIORITIES.includes(task.priority), "Invalid priority");
+    assert(VALID_STATUSES.includes(task.status), "Invalid status");
+  });
+};
+```
+
+### ERROR PREVENTION PATTERNS
+
+#### Pattern 1: Command Syntax Validation
+```typescript
+class CommandValidator {
+  static validateTaskCommand(cmd: string): ValidationResult {
+    const parts = cmd.split(' ');
+    
+    // Must start with 'cc task'
+    if (parts[0] !== 'cc' || parts[1] !== 'task') {
+      return { valid: false, error: "Must start with 'cc task'" };
+    }
+    
+    // Must have valid action
+    const action = parts[2];
+    if (!VALID_TASK_ACTIONS.includes(action)) {
+      return { valid: false, error: `Invalid action: ${action}` };
+    }
+    
+    // Validate required options for each action
+    return this.validateActionOptions(action, parts.slice(3));
+  }
+  
+  static validateActionOptions(action: string, options: string[]): ValidationResult {
+    switch (action) {
+      case 'create':
+        return this.validateCreateOptions(options);
+      case 'update':
+        return this.validateUpdateOptions(options);
+      case 'export':
+        return this.validateExportOptions(options);
+      // ... validate all actions
+    }
+  }
+}
+```
+
+#### Pattern 2: Real-time Adherence Monitoring
+```typescript
+// REQUIRED: Monitor every AI command suggestion
+const monitorAICommands = (suggestion: string) => {
+  const commands = extractCommands(suggestion);
+  
+  commands.forEach(cmd => {
+    if (cmd.startsWith('cc ')) {
+      const validation = CommandValidator.validateTaskCommand(cmd);
+      if (!validation.valid) {
+        throw new Error(`CRITICAL CLAUDE VIOLATION: ${validation.error}`);
+      }
+    }
+  });
+};
+```
+
+#### Pattern 3: 0-Shot Performance Validation
+```typescript
+interface ZeroShotTest {
+  scenario: string;
+  expectedCommands: string[];
+  validationCriteria: string[];
+  mustPass: boolean;
+}
+
+const ZERO_SHOT_TESTS: ZeroShotTest[] = [
+  {
+    scenario: "Create task for user authentication feature",
+    expectedCommands: [
+      "cc task create -t \"Implement user authentication\" -d \"Add JWT-based auth\" -p high -s todo --labels security,backend --hours 8"
+    ],
+    validationCriteria: [
+      "Command syntax is perfect",
+      "Priority is valid enum value",
+      "Status is valid enum value", 
+      "Labels are properly formatted",
+      "Hours is numeric"
+    ],
+    mustPass: true
+  },
+  {
+    scenario: "Export all tasks including archived",
+    expectedCommands: [
+      "cc task export --format json --file backup.json --include-archived"
+    ],
+    validationCriteria: [
+      "Format option is valid",
+      "File path is specified",
+      "Include-archived flag is properly set"
+    ],
+    mustPass: true
+  }
+];
+```
+
+### AUTOCORRECTION SYSTEM
+
+#### Auto-fix Common Errors
+```typescript
+const autoCorrectCommands = (input: string): string => {
+  return input
+    // Fix common syntax errors
+    .replace(/cc tasks/, 'cc task')                    // tasks -> task
+    .replace(/--priority=/, '--priority ')             // = -> space
+    .replace(/--status=/, '--status ')                 // = -> space
+    .replace(/"create task"/, 'create')                // Extra quotes
+    .replace(/priority (urgent|asap)/i, 'priority critical') // Normalize priority
+    .replace(/status (working|active)/i, 'status in_progress') // Normalize status
+    
+    // Fix missing required options
+    .replace(/cc task create ([^-])/, 'cc task create -t "$1"') // Add -t flag
+    
+    // Fix invalid enum values
+    .replace(/priority (low|med|medium|high|critical)/g, (match, p1) => {
+      const priorityMap = { 'med': 'medium', 'urgent': 'critical', 'asap': 'critical' };
+      return `priority ${priorityMap[p1] || p1}`;
+    });
+};
+```
+
+### TESTING AUTOMATION HOOKS
+
+#### Pre-execution Validation
+```typescript
+// HOOK: Before any AI generates Critical Claude commands
+const preExecutionHook = (aiResponse: string) => {
+  const commands = extractCriticalClaudeCommands(aiResponse);
+  
+  commands.forEach(cmd => {
+    // Validate syntax
+    const syntaxValid = CommandValidator.validateTaskCommand(cmd);
+    if (!syntaxValid.valid) {
+      throw new Error(`Syntax Error: ${syntaxValid.error}`);
+    }
+    
+    // Validate business logic
+    const logicValid = validateBusinessLogic(cmd);
+    if (!logicValid.valid) {
+      throw new Error(`Logic Error: ${logicValid.error}`);
+    }
+  });
+};
+```
+
+#### Post-execution Verification
+```typescript
+// HOOK: After AI suggests Critical Claude workflow
+const postExecutionHook = (workflow: string[]) => {
+  // Verify workflow follows logical sequence
+  const sequenceValid = validateWorkflowSequence(workflow);
+  if (!sequenceValid.valid) {
+    throw new Error(`Workflow Error: ${sequenceValid.error}`);
+  }
+  
+  // Verify all commands would succeed
+  const executionValid = simulateExecution(workflow);
+  if (!executionValid.valid) {
+    throw new Error(`Execution Error: ${executionValid.error}`);
+  }
+};
+```
+
+### PERFORMANCE BENCHMARKS
+
+#### Response Time Requirements
+```typescript
+const PERFORMANCE_REQUIREMENTS = {
+  commandValidation: 50,      // ms - Command syntax validation
+  workflowGeneration: 200,    // ms - Generate task workflows
+  dataValidation: 100,        // ms - Validate task data structures
+  integrationTest: 500        // ms - Full integration simulation
+};
+
+// ENFORCE: All AI operations must meet performance requirements
+const enforcePerformance = async (operation: () => Promise<any>, maxTime: number) => {
+  const start = Date.now();
+  const result = await operation();
+  const duration = Date.now() - start;
+  
+  if (duration > maxTime) {
+    throw new Error(`Performance violation: ${duration}ms > ${maxTime}ms`);
+  }
+  
+  return result;
+};
+```
+
+### INTEGRATION REQUIREMENTS
+
+#### File System Compliance
+```typescript
+// REQUIRED: All file operations must follow Critical Claude patterns
+const FILE_PATTERNS = {
+  exports: /^[a-zA-Z0-9_-]+\.(json|csv|md)$/,
+  imports: /^[a-zA-Z0-9_\-\/\.]+\.(json|csv|md)$/,
+  backups: /^backup-\d{4}-\d{2}-\d{2}-\d{6}\.(json|csv)$/
+};
+
+const validateFilePath = (path: string, type: keyof typeof FILE_PATTERNS): boolean => {
+  return FILE_PATTERNS[type].test(path);
+};
+```
+
+#### Database Schema Enforcement
+```typescript
+// REQUIRED: All task operations must maintain schema compliance
+interface TaskSchema {
+  id: string;              // UUID v4 format
+  title: string;           // Non-empty, max 200 chars
+  description?: string;    // Max 2000 chars
+  priority: Priority;      // Enum validation
+  status: Status;          // Enum validation
+  assignee?: string;       // Email format
+  labels: string[];        // Array of strings
+  estimatedHours?: number; // Positive number
+  createdAt: Date;         // ISO timestamp
+  updatedAt: Date;         // ISO timestamp
+  archivedAt?: Date;       // ISO timestamp or null
+}
+```
+
+## 🚨 FAILURE CONDITIONS
+
+The following conditions MUST trigger immediate error and corrective action:
+
+1. **Command Syntax Deviation**: Any `cc` command that doesn't match exact syntax
+2. **Schema Violation**: Tasks that don't conform to required structure
+3. **Workflow Logic Error**: Operations performed out of sequence
+4. **Performance Degradation**: Operations exceeding time requirements
+5. **Integration Failure**: Commands that would fail in production environment
+
+## 🎯 SUCCESS METRICS
+
+AI adherence is successful when:
+
+✅ **100% Command Accuracy** - All generated commands execute without error
+✅ **Schema Compliance** - All tasks conform to Critical Claude data model  
+✅ **Workflow Integrity** - Operations follow logical sequences
+✅ **Performance Standards** - All operations meet timing requirements
+✅ **Integration Seamless** - Commands work perfectly with existing data
+
+## 🔄 CONTINUOUS VALIDATION
+
+These rules are continuously enforced through:
+
+1. **Real-time command validation** during AI response generation
+2. **Workflow sequence verification** before presenting to user
+3. **Schema compliance checking** for all task operations
+4. **Performance monitoring** of all AI-generated workflows
+5. **Integration testing** simulation before command execution
+
+Remember: These rules are not suggestions - they are MANDATORY requirements for any AI interaction with Critical Claude CLI system.

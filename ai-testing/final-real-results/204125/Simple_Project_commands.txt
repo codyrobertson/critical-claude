@@ -1,0 +1,2 @@
+cc template apply basic-project -v project_name="Web Development Project"
+cc task create -t "Frontend Development" -d "Build React frontend with responsive design, user authentication, and dashboard components" -p high -s todo --labels frontend,react,ui,responsive --hours 32

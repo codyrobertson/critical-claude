@@ -1,0 +1,11 @@
+cc task create -t "Implement user authentication system" -p high -s todo
+cc task create -t "Design database schema" -p medium -s todo
+cc task create -t "Setup CI/CD pipeline" -p low -s todo
+cc task list
+cc task update 1 --status in_progress
+cc task update 2 --status in_progress
+cc task update 3 --status in_progress
+cc task update 1 --status done
+cc task update 2 --status done
+cc task update 3 --status done
+cc task export --format json

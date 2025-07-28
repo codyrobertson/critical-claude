@@ -1,0 +1,1 @@
+Generated command: cc task create -t "Implement user authentication" -d "Add user authentication system with login, registration, and session management" -p high -s todo

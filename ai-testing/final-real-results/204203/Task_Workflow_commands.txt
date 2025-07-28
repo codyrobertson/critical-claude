@@ -1,0 +1,9 @@
+cc task create -t "Implement User Authentication" -d "Build login/logout functionality with JWT tokens and session management" -p high -s todo --labels backend,auth,security --hours 16
+cc task create -t "Database Setup and Configuration" -d "Set up PostgreSQL database with migrations, connection pooling, and initial schema" -p high -s todo --labels backend,database,setup --hours 12
+cc task create -t "API Development" -d "Create RESTful API endpoints for CRUD operations with proper error handling and validation" -p medium -s todo --labels backend,api,rest --hours 24
+cc task list
+cc task list --priority high
+cc task list --status todo
+cc task update <task-id> -s in_progress
+cc task update <task-id> -s done
+cc template apply basic-project -v project_name="Team Project"

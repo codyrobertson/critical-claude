@@ -3,6 +3,29 @@
  * Provides search capabilities using multiple search providers
  */
 
+import { ILogger } from '../../domain/services/ILogger.js';
+
+/**
+ * Console Logger Implementation
+ */
+class ConsoleLogger implements ILogger {
+  debug(message: string, context?: Record<string, unknown>): void {
+    console.debug(`[DEBUG] ${message}`, context || '');
+  }
+  
+  info(message: string, context?: Record<string, unknown>): void {
+    console.log(`ℹ️ ${message}`, context ? JSON.stringify(context) : '');
+  }
+  
+  warn(message: string, context?: Record<string, unknown>): void {
+    console.warn(`⚠️ ${message}`, context ? JSON.stringify(context) : '');
+  }
+  
+  error(message: string, error?: Error, context?: Record<string, unknown>): void {
+    console.error(`❌ ${message}`, error || '', context ? JSON.stringify(context) : '');
+  }
+}
+
 export interface SearchOptions {
   maxResults?: number;
   includeSnippets?: boolean;
@@ -20,8 +43,11 @@ export interface SearchResult {
 
 export class WebSearch {
   private apiKey?: string;
+  private logger: ILogger;
 
-  constructor() {
+  constructor(logger?: ILogger) {
+    this.logger = logger || new ConsoleLogger();
+    
     // Try to get search API key from environment - support multiple providers
     this.apiKey = process.env.SEARCH_API_KEY || 
                   process.env.SERP_API_KEY || 
@@ -42,11 +68,11 @@ export class WebSearch {
       if (this.apiKey) {
         return await this.realSearch(query, options);
       } else {
-        console.warn('No search API key available, using simulated results');
+        this.logger.warn('No search API key available, using simulated results');
         return this.simulateSearch(query, maxResults, includeSnippets);
       }
     } catch (error) {
-      console.warn(`Search failed for query: ${query}, falling back to simulation`);
+      this.logger.warn(`Search failed for query: ${query}, falling back to simulation`);
       return this.simulateSearch(query, maxResults, includeSnippets);
     }
   }
@@ -124,7 +150,7 @@ export class WebSearch {
         relevanceScore: r.position ? (1 - r.position * 0.05) : 0.5
       })));
     } catch (error) {
-      console.warn('SerpApi search failed, using simulation');
+      this.logger.warn('SerpApi search failed, using simulation');
       return this.simulateSearch(query, options.maxResults || 10, options.includeSnippets !== false);
     }
   }
@@ -159,7 +185,7 @@ export class WebSearch {
         relevanceScore: r.position ? (1 - r.position * 0.05) : 0.5
       }));
     } catch (error) {
-      console.warn('SerpApi search failed, using simulation');
+      this.logger.warn('SerpApi search failed, using simulation');
       return this.simulateSearchStructured(query, options);
     }
   }

@@ -1,0 +1,44 @@
+✅ Created task: "Complete
+   ID: task-1753327430270-t3debyxz3
+error: unknown option '--breakdown'
+error: unknown option '--parent'
+error: unknown option '--parent'
+error: unknown option '--parent'
+🔍 Conducting AI research and generating tasks...
+📝 Query: "modern
+🔍 Auto-detecting AI provider...
+🤖 No API keys found, will attempt Claude Code CLI as fallback...
+🔬 Starting 100% AI-Driven Multi-Agent Research System...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Claude Code CLI detected and available
+📋 Research Topic: "modern
+
+🧠 PLANNER AGENT: AI creating research strategy...
+🤖 Using Claude Code CLI subprocess...
+🤖 Generating AI-powered task breakdown...
+📝 Query: "Generate
+🔍 Auto-detecting AI provider...
+🤖 No API keys found, will attempt Claude Code CLI as fallback...
+🔬 Starting 100% AI-Driven Multi-Agent Research System...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Claude Code CLI detected and available
+📋 Research Topic: Create a comprehensive task breakdown for: "Generate. Generate specific, actionable tasks with priorities, descriptions, and estimated hours. Focus on practical implementation steps.
+
+🧠 PLANNER AGENT: AI creating research strategy...
+🤖 Using Claude Code CLI subprocess...
+✅ Created task: "Automated
+   ID: task-1753327451149-ycotar46r
+error: unknown option '--breakdown'
+✅ Created task: "Security
+   ID: task-1753327451480-4n7nvgn39
+✅ Created task: "Observability
+   ID: task-1753327451646-3wsmlo58w
+❌ Unknown action: start
+Available actions: create, list, view, update, delete, archive, export, import, backup, ai, research
+error: unknown option '--parent'
+❌ Template not found: devops-pipeline
+error: unknown option '--add'
+error: unknown option '--add'
+error: unknown option '--add'
+❌ Unknown action: suggest
+Available actions: create, list, view, update, delete, archive, export, import, backup, ai, research

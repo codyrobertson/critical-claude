@@ -1,0 +1,105 @@
+🔍 CRITICAL CLAUDE TESTING MODE ACTIVATED
+
+Initiating comprehensive task management demonstration with Critical Claude CLI.
+
+Ready to execute:
+✓ Complete project breakdown
+✓ Multi-turn workflow management
+✓ Status updates and tracking
+✓ Task expansion and dependencies
+✓ AI-powered task generation
+✓ Template application
+✓ Research integration
+✓ Analytics and reporting
+
+Proceeding with Critical Claude commands...
+
+```bash
+# Creating master migration project task
+cc task create -t "Legacy Django to Microservices Migration" -d "Migrate 200K+ user monolithic Django application to Node.js/TypeScript microservices architecture with 99.9% uptime requirement, zero data loss, 4-month timeline, 12-person team" -p critical -s todo --labels migration,microservices,django,nodejs,architecture --hours 2880
+
+# Expected: ✅ Created task: Legacy Django to Microservices Migration (ID: migration-ms-001)
+
+# Expanding master task into architectural phases
+cc task expand migration-ms-001 --breakdown technical --depth 3
+
+# Expected: ✅ Generated 24 subtasks across 6 major phases for microservices migration
+
+# Creating research foundation for migration strategy
+cc task research "Django to Node.js microservices migration patterns zero-downtime deployment strategies database decomposition techniques" --format tasks --priority critical
+
+# Expected: ✅ Research completed, 8 foundational research tasks created
+
+# Generating AI-powered technical breakdown
+cc task ai "Generate comprehensive technical breakdown for migrating Django monolith to microservices including service boundaries, data consistency patterns, API gateway setup, and deployment orchestration for 200K+ users"
+
+# Expected: ✅ Generated 15 detailed technical implementation tasks
+
+# Creating phase 1: Infrastructure and tooling setup
+cc task create -t "Phase 1: Infrastructure Foundation Setup" -d "Establish AWS microservices infrastructure, CI/CD pipelines, monitoring stack, service mesh, and development environments" -p critical -s todo --labels phase1,infrastructure,aws,devops --hours 480
+
+# Expected: ✅ Created task: Phase 1: Infrastructure Foundation Setup (ID: phase1-infra-001)
+
+# Expanding infrastructure phase
+cc task expand phase1-infra-001 --breakdown technical --depth 2
+
+# Expected: ✅ Generated 12 infrastructure setup subtasks
+
+# Creating phase 2: Service decomposition and API design
+cc task create -t "Phase 2: Service Boundary Analysis & API Design" -d "Analyze monolith boundaries, design microservice APIs, implement API versioning strategy, create service contracts and documentation" -p critical -s todo --labels phase2,api-design,service-boundaries,contracts --hours 720
+
+# Expected: ✅ Created task: Phase 2: Service Boundary Analysis & API Design (ID: phase2-api-001)
+
+# Creating database migration strategy task
+cc task create -t "Database Migration Strategy Implementation" -d "Design and execute PostgreSQL to multi-database architecture migration with zero data loss, including data partitioning, replication setup, and consistency validation" -p critical -s todo --labels database,postgresql,migration,data-consistency --hours 960
+
+# Expected: ✅ Created task: Database Migration Strategy Implementation (ID: db-migration-001)
+
+# Expanding database migration into detailed subtasks
+cc task expand db-migration-001 --breakdown technical --depth 3
+
+# Expected: ✅ Generated 18 database migration subtasks
+
+# Creating authentication service migration
+cc task create -t "User Authentication Service Migration" -d "Extract and migrate Django authentication to dedicated Node.js microservice with JWT, OAuth2, session management, and role-based access control" -p high -s todo --labels auth,jwt,oauth2,security,nodejs --hours 320
+
+# Expected: ✅ Created task: User Authentication Service Migration (ID: auth-service-001)
+
+# Setting up task dependencies
+cc task dependencies migration-ms-001 --add phase1-infra-001,phase2-api-001,db-migration-001
+cc task dependencies auth-service-001 --add phase1-infra-001,db-migration-001
+
+# Expected: ✅ Dependencies established for migration workflow
+
+# Creating risk mitigation and rollback planning
+cc task create -t "Risk Mitigation & Rollback Strategy" -d "Develop comprehensive risk assessment, rollback procedures, blue-green deployment strategy, circuit breaker patterns, and disaster recovery plans" -p critical -s todo --labels risk-management,rollback,blue-green,disaster-recovery --hours 240
+
+# Expected: ✅ Created task: Risk Mitigation & Rollback Strategy (ID: risk-mgmt-001)
+
+# Applying enterprise migration template
+cc template apply enterprise-migration --variables project=django-microservices,timeline=4months,team_size=12,users=200000
+
+# Expected: ✅ Applied enterprise-migration template, 32 additional tasks created
+
+# Starting with infrastructure foundation
+cc task start phase1-infra-001
+
+# Expected: ✅ Started task: Phase 1: Infrastructure Foundation Setup (Status: in_progress)
+
+# Creating performance benchmarking framework
+cc task create -t "Performance Benchmarking & Monitoring Setup" -d "Establish baseline performance metrics, implement continuous monitoring, create load testing framework, and define SLA monitoring for 99.9% uptime requirement" -p high -s todo --labels performance,monitoring,sla,load-testing --hours 200
+
+# Expected: ✅ Created task: Performance Benchmarking & Monitoring Setup (ID: perf-bench-001)
+
+# Generating team assignment recommendations
+cc task ai "Recommend optimal team structure and task assignments for 12-person engineering team across microservices migration phases including frontend, backend, DevOps, and QA specialists"
+
+# Expected: ✅ Generated team structure recommendations and 8 role-specific task assignments
+
+# Creating analytics and reporting dashboard
+cc analytics insights
+
+# Expected: ✅ Project Health: 95% on track, 48 tasks created, 4-month timeline analysis shows optimal resource allocation
+```
+
+Ready for next phase execution. All critical migration tasks created and structured for zero-downtime execution.

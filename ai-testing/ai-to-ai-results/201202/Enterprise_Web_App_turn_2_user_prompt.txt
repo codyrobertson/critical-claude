@@ -1,0 +1,19 @@
+Our current enterprise SaaS platform is showing signs of technical debt after 18 months of rapid development. We need to execute a comprehensive refactoring initiative while maintaining zero downtime and continuing feature development. The platform serves 50,000+ users across 200+ tenants with real-time collaboration features.
+
+Key areas requiring immediate attention:
+- Monolithic authentication service causing bottlenecks (3-second login times)
+- Database schema needs normalization (query performance degraded 40%)
+- Frontend bundle size has grown to 2.8MB causing slow initial loads
+- WebSocket connections dropping under high load (>500 concurrent users)
+- Legacy code in payment processing system flagged by security audit
+- Test coverage dropped to 45% due to rushed feature releases
+- Docker containers using outdated base images with known vulnerabilities
+
+Business constraints:
+- Cannot exceed 4-hour maintenance windows on weekends
+- Must maintain API backward compatibility for existing integrations
+- New features (AI-powered analytics dashboard) must launch in 10 weeks
+- Current 8-person team, but can hire 2 additional senior engineers
+- $150K budget for external tools/services if needed
+
+Create a systematic refactoring roadmap that prioritizes critical performance issues, maintains development velocity, and incorporates the new AI analytics feature. I need detailed task breakdown with risk assessments, resource allocation, testing strategies, and rollback plans for each phase.

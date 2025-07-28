@@ -45,4 +45,3 @@ export const INFRASTRUCTURE_REGISTRY = {
     'shared-kernel': 'shared-kernel',
     'infrastructure': 'infrastructure'
 };
-//# sourceMappingURL=path-resolver.js.map

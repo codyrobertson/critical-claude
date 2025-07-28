@@ -1,0 +1,7 @@
+Scenario: DevOps Infrastructure Migration
+Total Commands: 88
+Create Commands: 30
+Expand Commands: 10
+Update Commands: 5
+AI Commands: 10
+Turns Completed: 6

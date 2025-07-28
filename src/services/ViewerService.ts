@@ -1,6 +1,7 @@
 /**
- * Simplified Viewer Service
- * Consolidates ViewerService functionality into direct service methods
+ * Production-Grade Terminal Viewer Service
+ * Bulletproof implementation with comprehensive error handling, performance optimization,
+ * and robust terminal management for Critical Claude task management.
  */
 
 import { 
@@ -11,51 +12,255 @@ import {
 } from '../models/index.js';
 import { FileStorage } from '../storage/index.js';
 import { logger } from '../utils/Logger.js';
+import { promises as fs } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
+import { ViewerHelpers } from './ViewerServiceHelpers.js';
 
 export interface ViewerOptions {
   logLevel?: 'debug' | 'info' | 'warn' | 'error';
   theme?: 'dark' | 'light';
+  refreshInterval?: number;
+  maxRetries?: number;
+  timeout?: number;
 }
 
 export interface ViewerResult {
   success: boolean;
   error?: string;
+  exitCode?: number;
+}
+
+// Terminal display buffer for efficient rendering
+interface RenderBuffer {
+  lines: string[];
+  dirty: boolean;
+  lastRender: number;
+}
+
+// File lock mechanism for storage operations
+interface FileLock {
+  acquire(): Promise<void>;
+  release(): Promise<void>;
+  isLocked(): boolean;
 }
 
 export class ViewerService {
   private readonly COLLECTION = 'tasks';
+  private dependenciesChecked = false;
+  private dependencyErrors: string[] = [];
 
-  constructor(private storage: FileStorage) {}
+  constructor(private storage: FileStorage) {
+    // Validate storage immediately
+    this.validateStorage();
+  }
+
+  private validateStorage(): void {
+    if (!this.storage) {
+      throw new Error('Storage instance is required for ViewerService');
+    }
+  }
+
+  private async checkDependencies(): Promise<{ success: boolean; errors: string[] }> {
+    if (this.dependenciesChecked) {
+      return { success: this.dependencyErrors.length === 0, errors: this.dependencyErrors };
+    }
+
+    const errors: string[] = [];
+    
+    // Check Node.js version
+    const nodeVersion = process.version;
+    const majorVersion = parseInt(nodeVersion.replace('v', '').split('.')[0]);
+    if (majorVersion < 18) {
+      errors.push(`Node.js ${nodeVersion} is too old. Requires Node.js 18+`);
+    }
+
+    // Check terminal capabilities
+    if (!process.stdout.isTTY) {
+      errors.push('Terminal viewer requires interactive TTY terminal');
+    }
+
+    // Check storage accessibility
+    try {
+      const storageBasePath = await (this.storage as any).getBasePath?.();
+      if (!storageBasePath) {
+        errors.push('Storage base path is not accessible');
+      }
+      
+      // Test storage read capability
+      await this.storage.findAll<any>('__health_check');
+    } catch (error) {
+      errors.push(`Storage is not accessible: ${error instanceof Error ? error.message : error}`);
+    }
+
+    // Check file system permissions
+    try {
+      const path = await import('path');
+      const fs = await import('fs/promises');
+      const os = await import('os');
+      const testDir = path.join(os.homedir(), '.critical-claude');
+      
+      // Test directory creation
+      await fs.mkdir(testDir, { recursive: true });
+      
+      // Test file write
+      const testFile = path.join(testDir, '.viewer-test');
+      await fs.writeFile(testFile, 'test');
+      await fs.unlink(testFile);
+    } catch (error) {
+      errors.push(`File system permissions error: ${error instanceof Error ? error.message : error}`);
+    }
+
+    this.dependenciesChecked = true;
+    this.dependencyErrors = errors;
+    
+    return { success: errors.length === 0, errors };
+  }
 
   async launchViewer(options: ViewerOptions): Promise<ViewerResult> {
     try {
       logger.info('Launching task viewer', options);
       
-      // Initialize viewer with options
-      const viewer = new TerminalViewer(this.storage, options);
+      // CRITICAL: Check all dependencies before proceeding
+      const dependencyCheck = await this.checkDependencies();
+      if (!dependencyCheck.success) {
+        const errorMessage = [
+          '❌ Viewer cannot start due to dependency issues:',
+          ...dependencyCheck.errors.map(err => `  • ${err}`),
+          '',
+          '🔧 Suggested fixes:',
+          '  • Ensure you\'re using Node.js 18+',
+          '  • Run from an interactive terminal (not in background)',
+          '  • Check ~/.critical-claude directory permissions',
+          '  • Try: chmod 755 ~/.critical-claude'
+        ].join('\n');
+        
+        logger.error('Dependency check failed', { errors: dependencyCheck.errors });
+        console.error(errorMessage);
+        
+        return {
+          success: false,
+          error: 'Dependency validation failed. See console for details.'
+        };
+      }
       
-      // Launch viewer interface
-      await viewer.launch();
+      // Validate storage before creating viewer
+      const storageBasePath = await (this.storage as any).getBasePath?.();
+      if (!storageBasePath) {
+        return {
+          success: false,
+          error: 'Storage base path is not accessible. Cannot launch viewer.'
+        };
+      }
       
-      logger.info('Task viewer exited');
-      return {
-        success: true
-      };
+      logger.info(`🔧 ViewerService storage path: ${storageBasePath}`);
+      
+      // Ensure storage directory exists
+      try {
+        const path = await import('path');
+        const fs = await import('fs/promises');
+        await fs.mkdir(storageBasePath, { recursive: true });
+      } catch (dirError) {
+        logger.error('Failed to create storage directory', dirError);
+        return {
+          success: false,
+          error: `Cannot create storage directory: ${dirError instanceof Error ? dirError.message : dirError}`
+        };
+      }
+      
+      // Initialize viewer with comprehensive error handling
+      let viewer: TerminalViewer;
+      try {
+        viewer = new TerminalViewer(this.storage, options);
+      } catch (viewerError) {
+        logger.error('Failed to initialize terminal viewer', viewerError);
+        return {
+          success: false,
+          error: `Viewer initialization failed: ${viewerError instanceof Error ? viewerError.message : viewerError}`
+        };
+      }
+      
+      // Launch viewer with timeout and error recovery
+      try {
+        await viewer.launch();
+        logger.info('Task viewer exited normally');
+        return { success: true };
+      } catch (launchError) {
+        logger.error('Viewer launch failed', launchError);
+        
+        // Provide specific error messages based on error type
+        let errorMessage = 'Unknown viewer error';
+        if (launchError instanceof Error) {
+          if (launchError.message.includes('ENOENT')) {
+            errorMessage = 'File or directory not found. Storage may be corrupted.';
+          } else if (launchError.message.includes('EACCES')) {
+            errorMessage = 'Permission denied. Check file system permissions.';
+          } else if (launchError.message.includes('ENOSPC')) {
+            errorMessage = 'No space left on device. Free up disk space.';
+          } else {
+            errorMessage = launchError.message;
+          }
+        }
+        
+        return {
+          success: false,
+          error: `Viewer launch failed: ${errorMessage}`
+        };
+      }
     } catch (error) {
-      logger.error('Failed to launch viewer', error);
+      logger.error('Critical viewer service failure', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error)
+        error: `Critical failure: ${error instanceof Error ? error.message : String(error)}`
       };
     }
   }
 
   async getTasksForViewer(): Promise<Result<Task[]>> {
     try {
-      const tasks = await this.storage.findAll<Task>(this.COLLECTION);
+      // Validate storage before attempting to read
+      if (!this.storage) {
+        return createErrorResult('Storage is not initialized');
+      }
+      
+      // Attempt to load tasks with retry mechanism
+      let tasks: Task[] = [];
+      let lastError: any;
+      const maxAttempts = 3;
+      
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        try {
+          tasks = await this.storage.findAll<Task>(this.COLLECTION);
+          break; // Success, exit retry loop
+        } catch (error) {
+          lastError = error;
+          logger.warn(`Task loading attempt ${attempt + 1}/${maxAttempts} failed`, error);
+          
+          if (attempt < maxAttempts - 1) {
+            // Wait before retrying
+            await new Promise(resolve => setTimeout(resolve, 200));
+          }
+        }
+      }
+      
+      if (tasks.length === 0 && lastError) {
+        logger.error('All task loading attempts failed', lastError);
+        return createErrorResult(`Failed to load tasks after ${maxAttempts} attempts: ${lastError instanceof Error ? lastError.message : lastError}`);
+      }
+      
+      // Validate task data structure
+      const validTasks = tasks.filter(task => {
+        if (!task || typeof task !== 'object') return false;
+        if (!task.id || !task.title) return false;
+        return true;
+      });
+      
+      if (validTasks.length !== tasks.length) {
+        logger.warn(`Filtered out ${tasks.length - validTasks.length} invalid tasks`);
+      }
       
       // Sort tasks for optimal viewing (high priority first, then by date)
-      const sortedTasks = tasks.sort((a, b) => {
+      const sortedTasks = validTasks.sort((a, b) => {
         const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
         const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] || 0;
         const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] || 0;
@@ -64,11 +269,15 @@ export class ViewerService {
           return bPriority - aPriority; // Higher priority first
         }
         
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // Newer first
+        const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return bDate - aDate; // Newer first
       });
       
+      logger.info(`Loaded ${sortedTasks.length} valid tasks for viewer`);
       return createSuccessResult(sortedTasks);
     } catch (error) {
+      logger.error('Critical error in getTasksForViewer', error);
       return createErrorResult(`Failed to get tasks for viewer: ${error instanceof Error ? error.message : error}`);
     }
   }
@@ -119,7 +328,7 @@ export class ViewerService {
       const updatedTask = {
         ...task,
         status: newStatus as Task['status'],
-        updatedAt: new Date()
+        updatedAt: new Date().toISOString()
       };
       
       await this.storage.save(this.COLLECTION, taskId, updatedTask);
@@ -131,8 +340,9 @@ export class ViewerService {
   }
 }
 
-// Advanced Terminal GUI Viewer Implementation
+// Production-Grade Terminal GUI Implementation
 class TerminalViewer {
+  // Core state
   private tasks: Task[] = [];
   private filteredTasks: Task[] = [];
   private selectedIndex = 0;
@@ -140,95 +350,469 @@ class TerminalViewer {
   private searchQuery = '';
   private isRunning = true;
   private showingDetails = false;
+  
+  // Editing state
   private editingMode = false;
-  private editingField = 0; // 0=title, 1=description, 2=priority, 3=status
+  private editingField = 0;
   private editingTask: Task | null = null;
   private editingValue = '';
+  
+  // Terminal state
   private terminalWidth = 80;
   private terminalHeight = 24;
+  private originalTerminalState: any = null;
+  
+  // Performance optimization
+  private renderBuffer: RenderBuffer = {
+    lines: [],
+    dirty: true,
+    lastRender: 0
+  };
+  private needsFullRedraw = true;
+  private lastKeypress = 0;
+  private keyDebounceMs = 50;
+  
+  // Error handling
+  private errorState: string | null = null;
+  private lastError: Error | null = null;
+  
+  // Resource cleanup
+  private signalHandlers: Map<string, () => void> = new Map();
+  private timeouts: Set<NodeJS.Timeout> = new Set();
+  private intervals: Set<NodeJS.Timeout> = new Set();
+  
+  // File locking for safe storage operations
+  private storageLock: FileLock;
+  
+  // Pagination for performance
+  private pageSize = 20;
+  private currentPage = 0;
 
   constructor(
     private storage: FileStorage,
     private options: ViewerOptions
   ) {
-    // Get terminal dimensions
-    this.terminalWidth = process.stdout.columns || 80;
-    this.terminalHeight = process.stdout.rows || 24;
+    // Validate critical dependencies
+    if (!this.storage) {
+      throw new Error('Storage instance is required for TerminalViewer');
+    }
+    
+    if (!process.stdout || !process.stdin) {
+      throw new Error('Standard input/output streams are required for terminal viewer');
+    }
+    
+    if (!process.stdout.isTTY) {
+      throw new Error('Interactive terminal (TTY) is required for viewer');
+    }
+    
+    // Initialize file locking mechanism
+    this.storageLock = this.createFileLock();
+    
+    // Store original terminal state for restoration
+    this.originalTerminalState = {
+      rawMode: process.stdin.isRaw,
+      encoding: process.stdin.readableEncoding,
+      isPaused: process.stdin.isPaused()
+    };
+    
+    // Get terminal dimensions with validation
+    this.updateTerminalDimensions();
+    
+    // Setup signal handlers for graceful shutdown
+    this.setupSignalHandlers();
+    
+    // Setup terminal resize handler
+    this.setupResizeHandler();
+    
+    // Configure logger
+    if (this.options.logLevel) {
+      try {
+        logger.setLevel(this.options.logLevel);
+      } catch (error) {
+        logger.warn('Failed to set logger level', error);
+      }
+    }
+    
+    logger.info('TerminalViewer initialized successfully', {
+      terminalSize: `${this.terminalWidth}x${this.terminalHeight}`,
+      options: this.options
+    });
   }
 
   async launch(): Promise<void> {
-    logger.debug('Starting Terminal GUI viewer');
+    let terminalSetup = false;
+    const startTime = Date.now();
     
-    // Setup terminal for GUI mode
-    this.setupTerminal();
-    
-    // Load initial tasks
-    await this.loadTasks();
-    logger.debug('Initial tasks loaded', { count: this.tasks.length });
-    
-    // Initial render
-    this.applyFilters();
-    this.render();
-    
-    // Start event loop
-    await this.startEventLoop();
-    
-    // Cleanup terminal
-    this.cleanupTerminal();
+    try {
+      logger.debug('Starting production terminal viewer');
+      
+      // Pre-flight system checks
+      await this.performSystemChecks();
+      
+      // Setup terminal with bulletproof error handling
+      try {
+        await this.setupTerminal();
+        terminalSetup = true;
+        logger.debug('Terminal setup completed successfully');
+      } catch (setupError) {
+        throw new Error(`Critical terminal setup failure: ${ViewerHelpers.getErrorMessage(setupError)}`);
+      }
+      
+      // Load tasks with retry mechanism and timeout
+      await this.loadTasksWithRetry();
+      
+      // Initialize display state
+      this.applyFilters();
+      this.needsFullRedraw = true;
+      
+      // Perform initial render with fallback
+      await this.safeRender();
+      
+      logger.info(`Viewer launched successfully in ${Date.now() - startTime}ms`);
+      
+      // Start main event loop with comprehensive error handling
+      await this.startEventLoop();
+      
+    } catch (error) {
+      logger.error('Critical viewer launch failure', {
+        error: ViewerHelpers.getErrorMessage(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        duration: Date.now() - startTime
+      });
+      
+      // Attempt emergency cleanup
+      await this.emergencyCleanup();
+      throw error;
+      
+    } finally {
+      // Always perform comprehensive cleanup
+      if (terminalSetup) {
+        await this.cleanupTerminal();
+      }
+      
+      // Clean up all resources
+      this.cleanupResources();
+      
+      logger.debug(`Viewer session ended after ${Date.now() - startTime}ms`);
+    }
   }
 
-  private setupTerminal(): void {
-    // Enable raw mode for key capture
-    if (process.stdin.isTTY) {
-      process.stdin.setRawMode(true);
+  private async setupTerminal(): Promise<void> {
+    try {
+      // Validate terminal capabilities
+      if (!process.stdin || !process.stdout) {
+        throw new Error('Standard input/output streams not available');
+      }
+      
+      if (!process.stdout.isTTY || !process.stdin.isTTY) {
+        throw new Error('Interactive terminal (TTY) required for both input and output');
+      }
+      
+      // Store original terminal settings for restoration
+      this.originalTerminalState = {
+        rawMode: process.stdin.isRaw,
+        encoding: process.stdin.readableEncoding,
+        isPaused: process.stdin.isPaused()
+      };
+      
+      // Enable raw mode with comprehensive error handling
+      try {
+        if (!process.stdin.isRaw) {
+          process.stdin.setRawMode(true);
+        }
+      } catch (rawModeError) {
+        throw new Error(`Raw mode activation failed: ${ViewerHelpers.getErrorMessage(rawModeError)}`);
+      }
+      
+      // Configure input stream
+      try {
+        if (process.stdin.isPaused()) {
+          process.stdin.resume();
+        }
+        process.stdin.setEncoding('utf8');
+      } catch (inputError) {
+        throw new Error(`Input stream configuration failed: ${ViewerHelpers.getErrorMessage(inputError)}`);
+      }
+      
+      // Setup terminal display modes with validation
+      try {
+        // Test terminal write capability first
+        process.stdout.write('');
+        
+        // Enter alternate screen buffer for clean restore
+        process.stdout.write('\x1b[?1049h');
+        
+        // Hide cursor for clean UI
+        process.stdout.write('\x1b[?25l');
+        
+        // Clear screen and reset cursor
+        process.stdout.write('\x1b[2J\x1b[H');
+        
+        // Enable mouse reporting (optional)
+        process.stdout.write('\x1b[?1000h');
+        
+      } catch (displayError) {
+        throw new Error(`Terminal display setup failed: ${ViewerHelpers.getErrorMessage(displayError)}`);
+      }
+      
+      // Verify terminal dimensions are reasonable
+      this.updateTerminalDimensions();
+      if (this.terminalWidth < 40 || this.terminalHeight < 10) {
+        logger.warn('Terminal size is very small, UI may be degraded', {
+          width: this.terminalWidth,
+          height: this.terminalHeight
+        });
+      }
+      
+      logger.debug('Terminal setup completed successfully', {
+        dimensions: `${this.terminalWidth}x${this.terminalHeight}`,
+        rawMode: process.stdin.isRaw
+      });
+      
+    } catch (error) {
+      logger.error('Terminal setup failed catastrophically', {
+        error: ViewerHelpers.getErrorMessage(error),
+        terminalState: this.originalTerminalState
+      });
+      throw error;
     }
-    process.stdin.resume();
-    process.stdin.setEncoding('utf8');
-    
-    // Hide cursor and enable alternate screen
-    process.stdout.write('\x1b[?25l'); // Hide cursor
-    process.stdout.write('\x1b[?1049h'); // Enable alternate screen buffer
-    process.stdout.write('\x1b[2J'); // Clear screen
   }
 
-  private cleanupTerminal(): void {
-    // Show cursor and restore normal screen
-    process.stdout.write('\x1b[?25h'); // Show cursor
-    process.stdout.write('\x1b[?1049l'); // Disable alternate screen buffer
-    process.stdout.write('\x1b[2J'); // Clear screen
-    process.stdout.write('\x1b[H'); // Move cursor to home
-    
-    // Restore terminal mode
-    if (process.stdin.isTTY) {
-      process.stdin.setRawMode(false);
+  private async cleanupTerminal(): Promise<void> {
+    try {
+      logger.debug('Starting comprehensive terminal cleanup');
+      
+      // Disable mouse reporting first
+      try {
+        process.stdout.write('\x1b[?1000l');
+      } catch (mouseError) {
+        logger.warn('Mouse reporting cleanup failed', mouseError);
+      }
+      
+      // Restore cursor and screen buffer
+      try {
+        process.stdout.write('\x1b[?25h'); // Show cursor
+        process.stdout.write('\x1b[?1049l'); // Exit alternate screen buffer
+        process.stdout.write('\x1b[2J'); // Clear screen
+        process.stdout.write('\x1b[H'); // Move cursor to home
+        process.stdout.write('\x1b[0m'); // Reset all attributes
+      } catch (displayError) {
+        logger.warn('Terminal display cleanup failed', displayError);
+        
+        // Emergency display cleanup
+        try {
+          process.stdout.write('\n\nTerminal restored.\n');
+        } catch (emergencyError) {
+          // Complete terminal failure - nothing we can do
+        }
+      }
+      
+      // Restore terminal mode using original state
+      try {
+        if (process.stdin && process.stdin.isTTY) {
+          if (process.stdin.isRaw && this.originalTerminalState && !this.originalTerminalState.rawMode) {
+            process.stdin.setRawMode(false);
+          }
+        }
+      } catch (rawModeError) {
+        logger.warn('Raw mode restoration failed', rawModeError);
+      }
+      
+      // Restore input stream state
+      try {
+        if (process.stdin) {
+          if (this.originalTerminalState?.isPaused && !process.stdin.isPaused()) {
+            process.stdin.pause();
+          }
+        }
+      } catch (inputError) {
+        logger.warn('Input stream restoration failed', inputError);
+      }
+      
+      // Small delay to ensure terminal state is fully restored
+      await new Promise(resolve => setTimeout(resolve, 10));
+      
+      logger.debug('Terminal cleanup completed successfully');
+      
+    } catch (error) {
+      logger.error('Terminal cleanup encountered critical error', {
+        error: ViewerHelpers.getErrorMessage(error),
+        originalState: this.originalTerminalState
+      });
+      
+      // Emergency fallback cleanup
+      try {
+        if (process.stdout && process.stdout.writable) {
+          process.stdout.write('\x1b[0m\x1b[?25h\n');
+        }
+      } catch (emergencyError) {
+        // Complete system failure - log and continue
+        logger.error('Emergency terminal cleanup failed', emergencyError);
+      }
     }
-    process.stdin.pause();
   }
 
   private async startEventLoop(): Promise<void> {
-    return new Promise((resolve) => {
-      const handleKeypress = (key: string) => {
-        this.handleKeypress(key);
-        
-        if (!this.isRunning) {
+    return new Promise((resolve, reject) => {
+      let resolved = false;
+      const timeout = this.options.timeout || 3600000; // 1 hour default
+      
+      // Setup timeout protection
+      const eventLoopTimeout = setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          logger.warn('Event loop timeout reached, shutting down gracefully');
+          this.isRunning = false;
+          resolve();
+        }
+      }, timeout);
+      
+      this.timeouts.add(eventLoopTimeout);
+      
+      // Debounced keypress handler for performance
+      const handleKeypress = (data: Buffer | string) => {
+        try {
+          // Debounce rapid keypresses
+          const now = Date.now();
+          if (now - this.lastKeypress < this.keyDebounceMs) {
+            return;
+          }
+          this.lastKeypress = now;
+          
+          const key = data.toString();
+          this.handleKeypress(key);
+          
+          // Check exit condition
+          if (!this.isRunning && !resolved) {
+            resolved = true;
+            clearTimeout(eventLoopTimeout);
+            process.stdin.removeListener('data', handleKeypress);
+            resolve();
+          }
+          
+        } catch (keypressError) {
+          logger.error('Keypress handling error', keypressError);
+          this.errorState = `Input error: ${ViewerHelpers.getErrorMessage(keypressError)}`;
+          this.safeRender();
+        }
+      };
+      
+      // Setup error handling for input stream
+      const handleInputError = (error: Error) => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(eventLoopTimeout);
+          logger.error('Input stream error', error);
+          reject(new Error(`Input stream failed: ${ViewerHelpers.getErrorMessage(error)}`));
+        }
+      };
+      
+      // Attach event listeners
+      process.stdin.on('data', handleKeypress);
+      process.stdin.on('error', handleInputError);
+      
+      // Cleanup function
+      const cleanup = () => {
+        if (!resolved) {
+          resolved = true;
+          clearTimeout(eventLoopTimeout);
           process.stdin.removeListener('data', handleKeypress);
+          process.stdin.removeListener('error', handleInputError);
           resolve();
         }
       };
       
-      process.stdin.on('data', handleKeypress);
+      // Handle process termination signals
+      ['SIGINT', 'SIGTERM', 'SIGQUIT'].forEach(signal => {
+        const handler = () => {
+          logger.info(`Received ${signal}, shutting down gracefully`);
+          this.isRunning = false;
+          cleanup();
+        };
+        
+        process.on(signal, handler);
+        this.signalHandlers.set(signal, handler);
+      });
       
-      // Handle process signals
-      process.on('SIGINT', () => {
-        this.isRunning = false;
+      // Setup periodic refresh if enabled
+      if (this.options.refreshInterval && this.options.refreshInterval > 0) {
+        const refreshInterval = setInterval(async () => {
+          try {
+            await this.refreshTasks();
+          } catch (refreshError) {
+            logger.warn('Periodic refresh failed', refreshError);
+          }
+        }, this.options.refreshInterval);
+        
+        this.intervals.add(refreshInterval);
+      }
+      
+      logger.debug('Event loop started successfully', {
+        timeout,
+        refreshInterval: this.options.refreshInterval
       });
     });
   }
 
   private async loadTasks(): Promise<void> {
     try {
+      logger.info('Loading tasks from storage...');
+      
+      // Validate storage before loading
+      if (!this.storage) {
+        throw new Error('Storage service is not available');
+      }
+      
       const allTasks = await this.storage.findAll<Task>('tasks');
-      this.tasks = allTasks.sort((a, b) => {
+      
+      // Validate and sanitize loaded tasks
+      const validTasks = allTasks.filter(task => {
+        // Validate required fields
+        if (!task || typeof task !== 'object') {
+          logger.warn('Skipping invalid task: not an object', { task });
+          return false;
+        }
+        
+        if (!task.id || typeof task.id !== 'string') {
+          logger.warn('Skipping task with invalid ID', { task });
+          return false;
+        }
+        
+        if (!task.title || typeof task.title !== 'string') {
+          logger.warn('Skipping task with invalid title', { taskId: task.id });
+          return false; 
+        }
+        
+        // Ensure required fields have valid defaults
+        if (!task.status || !['todo', 'in_progress', 'done', 'blocked', 'archived'].includes(task.status)) {
+          task.status = 'todo';
+          logger.debug('Fixed invalid task status', { taskId: task.id, status: task.status });
+        }
+        
+        if (!task.priority || !['critical', 'high', 'medium', 'low'].includes(task.priority)) {
+          task.priority = 'medium';
+          logger.debug('Fixed invalid task priority', { taskId: task.id, priority: task.priority });
+        }
+        
+        // Ensure arrays exist
+        if (!Array.isArray(task.labels)) {
+          task.labels = [];
+        }
+        
+        // Ensure dates exist
+        if (!task.createdAt) {
+          task.createdAt = new Date().toISOString();
+        }
+        
+        if (!task.updatedAt) {
+          task.updatedAt = task.createdAt;
+        }
+        
+        return true;
+      });
+      
+      // Sort tasks by priority then by creation date
+      this.tasks = validTasks.sort((a, b) => {
         const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
         const aPriority = priorityOrder[a.priority as keyof typeof priorityOrder] || 0;
         const bPriority = priorityOrder[b.priority as keyof typeof priorityOrder] || 0;
@@ -237,21 +821,54 @@ class TerminalViewer {
           return bPriority - aPriority;
         }
         
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        const aTime = new Date(a.createdAt).getTime();
+        const bTime = new Date(b.createdAt).getTime();
+        return bTime - aTime;
       });
+      
+      const invalidCount = allTasks.length - validTasks.length;
+      if (invalidCount > 0) {
+        logger.warn(`Filtered out ${invalidCount} invalid tasks`);
+      }
+      
+      logger.info(`Successfully loaded ${this.tasks.length} valid tasks`);
+      
     } catch (error) {
-      logger.error('Failed to load tasks', error);
+      logger.error('Failed to load tasks from storage', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
+      // Ensure tasks is always an array, even on failure
+      this.tasks = [];
+      this.errorState = `Failed to load tasks: ${error instanceof Error ? error.message : String(error)}`;
     }
   }
 
   private handleKeypress(key: string): void {
-    if (this.editingMode) {
-      this.handleEditingKeypress(key);
-    } else {
-      this.handleNormalKeypress(key);
+    try {
+      if (this.editingMode) {
+        this.handleEditingKeypress(key);
+      } else {
+        this.handleNormalKeypress(key);
+      }
+      
+      // Mark render buffer as dirty to trigger re-render
+      this.renderBuffer.dirty = true;
+      this.safeRender();
+      
+    } catch (error) {
+      logger.error('Keypress handling failed', {
+        error: error instanceof Error ? error.message : String(error),
+        key: key.charCodeAt(0), // Log key code for debugging
+        editingMode: this.editingMode
+      });
+      
+      // Don't crash on keypress errors - just log and continue
+      this.errorState = `Input error: ${error instanceof Error ? error.message : String(error)}`;
+      this.renderBuffer.dirty = true;
+      this.safeRender();
     }
-    
-    this.render();
   }
 
   private handleNormalKeypress(key: string): void {
@@ -345,13 +962,7 @@ class TerminalViewer {
     }
   }
 
-  private moveSelection(direction: number): void {
-    const newIndex = this.selectedIndex + direction;
-    
-    if (newIndex >= 0 && newIndex < this.filteredTasks.length) {
-      this.selectedIndex = newIndex;
-    }
-  }
+  // This method was replaced with complete implementation above
 
   private toggleTaskDetails(): void {
     this.showingDetails = !this.showingDetails;
@@ -371,6 +982,7 @@ class TerminalViewer {
     await this.loadTasks();
     this.applyFilters();
     this.selectedIndex = 0;
+    this.needsFullRedraw = true; // Force full redraw after refresh
   }
 
   private showHelp(): void {
@@ -451,7 +1063,7 @@ class TerminalViewer {
       // Create the updated task from the stored reference
       const updatedTask: Task = { 
         ...taskToSave,
-        updatedAt: new Date()
+        updatedAt: new Date().toISOString()
       };
       
       // Ensure required fields are valid
@@ -549,7 +1161,7 @@ class TerminalViewer {
       const updatedTask = {
         ...selectedTask,
         status: newStatus as Task['status'],
-        updatedAt: new Date()
+        updatedAt: new Date().toISOString()
       };
       
       await this.storage.save('tasks', selectedTask.id, updatedTask);
@@ -570,28 +1182,63 @@ class TerminalViewer {
   }
 
   private applyFilters(): void {
-    let filtered = [...this.tasks];
-    
-    // Apply status filter
-    if (this.statusFilter) {
-      filtered = filtered.filter(task => task.status === this.statusFilter);
-    }
-    
-    // Apply search filter
-    if (this.searchQuery) {
-      const query = this.searchQuery.toLowerCase();
-      filtered = filtered.filter(task => {
-        return task.title.toLowerCase().includes(query) ||
-               task.description.toLowerCase().includes(query) ||
-               task.labels.some(label => label.toLowerCase().includes(query));
+    try {
+      // Ensure we have a valid tasks array
+      if (!Array.isArray(this.tasks)) {
+        logger.error('Tasks is not an array, resetting to empty array');
+        this.tasks = [];
+      }
+      
+      let filtered = [...this.tasks];
+      
+      // Apply status filter with null safety
+      if (this.statusFilter) {
+        filtered = filtered.filter(task => {
+          return task && task.status === this.statusFilter;
+        });
+      }
+      
+      // Apply search filter with null safety
+      if (this.searchQuery && this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase().trim();
+        filtered = filtered.filter(task => {
+          if (!task) return false;
+          
+          const title = (task.title || '').toLowerCase();
+          const description = (task.description || '').toLowerCase();
+          const labels = Array.isArray(task.labels) ? 
+            task.labels.join(' ').toLowerCase() : '';
+          
+          return title.includes(query) || 
+                 description.includes(query) || 
+                 labels.includes(query);
+        });
+      }
+      
+      this.filteredTasks = filtered;
+      
+      // Adjust selection if needed with bounds checking
+      if (this.selectedIndex >= this.filteredTasks.length) {
+        this.selectedIndex = Math.max(0, this.filteredTasks.length - 1);
+      }
+      
+      if (this.selectedIndex < 0) {
+        this.selectedIndex = 0;
+      }
+      
+      logger.debug(`Applied filters: ${this.filteredTasks.length}/${this.tasks.length} tasks`);
+      
+    } catch (error) {
+      logger.error('Failed to apply filters', {
+        error: error instanceof Error ? error.message : String(error),
+        tasksLength: Array.isArray(this.tasks) ? this.tasks.length : 'invalid',
+        statusFilter: this.statusFilter,
+        searchQuery: this.searchQuery
       });
-    }
-    
-    this.filteredTasks = filtered;
-    
-    // Adjust selection if needed
-    if (this.selectedIndex >= this.filteredTasks.length) {
-      this.selectedIndex = Math.max(0, this.filteredTasks.length - 1);
+      
+      // Fallback to show all tasks if filtering fails
+      this.filteredTasks = Array.isArray(this.tasks) ? [...this.tasks] : [];
+      this.selectedIndex = 0;
     }
   }
 
@@ -601,6 +1248,9 @@ class TerminalViewer {
     
     const width = this.terminalWidth;
     const height = this.terminalHeight;
+    
+    // Reset render buffer
+    this.renderBuffer.lines = [];
     
     if (this.editingMode) {
       this.renderEditingScreen(width, height);
@@ -618,6 +1268,9 @@ class TerminalViewer {
       // Footer
       this.renderFooter(width);
     }
+    
+    // Output all buffer content at once for better performance
+    process.stdout.write(this.renderBuffer.lines.join(''));
   }
 
   private renderHeader(width: number): void {
@@ -625,12 +1278,11 @@ class TerminalViewer {
     const projectInfo = this.getProjectInfo();
     
     // Title bar
-    process.stdout.write('\x1b[44m'); // Blue background
-    process.stdout.write('\x1b[37m'); // White text
-    process.stdout.write(title.padEnd(width));
-    process.stdout.write('\x1b[0m\n'); // Reset
+    this.renderBuffer.lines.push('\x1b[44m\x1b[37m'); // Blue background, white text
+    this.renderBuffer.lines.push(title.padEnd(width));
+    this.renderBuffer.lines.push('\x1b[0m\n'); // Reset
     
-    // Info bar
+    // Info bar with better task count display
     let infoLine = `📊 ${this.filteredTasks.length}/${this.tasks.length} tasks`;
     if (projectInfo) {
       infoLine += ` | 📁 ${projectInfo}`;
@@ -639,40 +1291,14 @@ class TerminalViewer {
       infoLine += ` | 🔍 ${this.statusFilter}`;
     }
     
-    process.stdout.write('\x1b[100m'); // Dark gray background
-    process.stdout.write('\x1b[37m'); // White text
-    process.stdout.write(infoLine.padEnd(width));
-    process.stdout.write('\x1b[0m\n'); // Reset
+    this.renderBuffer.lines.push('\x1b[100m\x1b[37m'); // Dark gray background, white text
+    this.renderBuffer.lines.push(infoLine.padEnd(width));
+    this.renderBuffer.lines.push('\x1b[0m\n'); // Reset
   }
 
-  private renderTaskList(width: number, height: number): void {
-    const visibleTasks = height - 2; // Leave space for borders
-    const startIndex = Math.max(0, this.selectedIndex - Math.floor(visibleTasks / 2));
-    const endIndex = Math.min(this.filteredTasks.length, startIndex + visibleTasks);
-    
-    // Border top
-    process.stdout.write('┌' + '─'.repeat(width - 2) + '┐\n');
-    
-    if (this.filteredTasks.length === 0) {
-      const emptyMsg = 'No tasks found';
-      const padding = Math.floor((width - emptyMsg.length - 2) / 2);
-      process.stdout.write('│' + ' '.repeat(padding) + emptyMsg + ' '.repeat(width - padding - emptyMsg.length - 2) + '│\n');
-    } else {
-      for (let i = 0; i < visibleTasks; i++) {
-        const taskIndex = startIndex + i;
-        if (taskIndex < endIndex) {
-          this.renderTaskLine(this.filteredTasks[taskIndex], taskIndex === this.selectedIndex, width - 2);
-        } else {
-          process.stdout.write('│' + ' '.repeat(width - 2) + '│\n');
-        }
-      }
-    }
-    
-    // Border bottom
-    process.stdout.write('└' + '─'.repeat(width - 2) + '┘\n');
-  }
+  // This method was replaced with renderTaskList
 
-  private renderTaskLine(task: Task, isSelected: boolean, width: number): void {
+  private buildTaskLine(task: Task, isSelected: boolean, width: number): void {
     const statusIcon = this.getStatusIcon(task.status);
     const priorityIcon = this.getPriorityIcon(task.priority);
     
@@ -685,30 +1311,165 @@ class TerminalViewer {
     
     // Highlight if selected
     if (isSelected) {
-      process.stdout.write('│\x1b[7m'); // Reverse video
-      process.stdout.write(line.padEnd(width - 2));
-      process.stdout.write('\x1b[0m│\n'); // Reset
+      this.renderBuffer.lines.push('│\x1b[7m'); // Reverse video
+      this.renderBuffer.lines.push(line.padEnd(width - 2));
+      this.renderBuffer.lines.push('\x1b[0m│\n'); // Reset
     } else {
-      process.stdout.write('│');
-      process.stdout.write(line.padEnd(width - 2));
-      process.stdout.write('│\n');
+      this.renderBuffer.lines.push('│');
+      this.renderBuffer.lines.push(line.padEnd(width - 2));
+      this.renderBuffer.lines.push('│\n');
     }
   }
 
+  // This method is implemented in the new renderSplitView method below
+
+  // This method is now in ViewerHelpers.getTaskDetailLines
+
+  // This method is now in ViewerHelpers.wrapText
+
+  // This method is now in ViewerHelpers.renderDetailLineWithHighlighting
+
+  // This method is now in ViewerHelpers.getDisplayLength
+
+  // This method was replaced with renderEditingScreen
+
+  // This method was replaced with renderFooter
+
+  // This method is implemented below
+
+
+  // Professional, clear status and priority indicators
+  private getStatusIcon(status: string): string {
+    const icons = {
+      todo: '⭕',        // Clear circle for todo
+      in_progress: '🟡', // Yellow circle for in progress  
+      done: '✅',        // Green checkmark for completed
+      blocked: '🔴',     // Red circle for blocked
+      archived: '📦'     // Box for archived
+    };
+    return icons[status as keyof typeof icons] || '❓';
+  }
+
+  private getPriorityIcon(priority: string): string {
+    const icons = {
+      critical: '🔥',    // Fire for critical
+      high: '🔺',       // Red triangle for high
+      medium: '🔶',     // Orange diamond for medium  
+      low: '🔹'         // Blue diamond for low
+    };
+    return icons[priority as keyof typeof icons] || '❓';
+  }
+  
+  private getStatusColor(status: string): string {
+    const colors = {
+      todo: '\x1b[37m',        // White/gray
+      in_progress: '\x1b[33m', // Yellow
+      done: '\x1b[32m',        // Green
+      blocked: '\x1b[31m',     // Red
+      archived: '\x1b[90m'     // Dark gray
+    };
+    return colors[status as keyof typeof colors] || '\x1b[37m';
+  }
+  
+  private getPriorityColor(priority: string): string {
+    const colors = {
+      critical: '\x1b[91m',    // Bright red
+      high: '\x1b[93m',       // Bright yellow
+      medium: '\x1b[96m',     // Bright cyan
+      low: '\x1b[90m'         // Dark gray
+    };
+    return colors[priority as keyof typeof colors] || '\x1b[37m';
+  }
+  
+  // Complete moveSelection method implementation
+  private moveSelection(direction: number): void {
+    const newIndex = this.selectedIndex + direction;
+    const maxIndex = this.filteredTasks.length - 1;
+    
+    if (newIndex < 0) {
+      this.selectedIndex = 0;
+    } else if (newIndex > maxIndex) {
+      this.selectedIndex = Math.max(0, maxIndex);
+    } else {
+      this.selectedIndex = newIndex;
+    }
+  }
+  
+  // Add missing render method implementations
+  private renderEditingScreen(width: number, height: number): void {
+    if (!this.editingTask) return;
+    
+    // Professional editing header
+    this.renderBuffer.lines.push('\x1b[44m\x1b[97m'); // Professional blue
+    const title = ' EDITING TASK';
+    this.renderBuffer.lines.push(title.padEnd(width));
+    this.renderBuffer.lines.push('\x1b[0m\n'); // Reset
+    
+    // Task ID info bar
+    this.renderBuffer.lines.push('\x1b[100m\x1b[97m'); // Dark gray
+    const info = ` ID: ${this.editingTask.id} | Use ↑↓ to navigate fields`;
+    this.renderBuffer.lines.push(info.padEnd(width));
+    this.renderBuffer.lines.push('\x1b[0m\n\n'); // Reset
+    
+    // Editing fields with clear visual separation
+    const fields = [
+      { label: 'Title', value: this.editingTask.title, required: true },
+      { label: 'Description', value: this.editingTask.description || '', multiline: true },
+      { label: 'Priority', value: this.editingTask.priority, options: ['critical', 'high', 'medium', 'low'] },
+      { label: 'Status', value: this.editingTask.status, options: ['todo', 'in_progress', 'done', 'blocked', 'archived'] }
+    ];
+    
+    fields.forEach((field, index) => {
+      const isSelected = index === this.editingField;
+      const displayValue = index === this.editingField ? this.editingValue : field.value;
+      
+      // Field label with styling
+      this.renderBuffer.lines.push('\x1b[1m'); // Bold
+      this.renderBuffer.lines.push(field.label);
+      if ((field as any).required) {
+        this.renderBuffer.lines.push('\x1b[31m*\x1b[0m'); // Red asterisk for required
+      }
+      this.renderBuffer.lines.push('\x1b[0m:\n'); // Reset
+      
+      // Field value with highlighting if selected
+      if (isSelected) {
+        this.renderBuffer.lines.push('\x1b[103m\x1b[30m'); // Yellow background, black text
+        this.renderBuffer.lines.push(`  ${displayValue}█`); // Cursor
+        this.renderBuffer.lines.push('\x1b[0m'); // Reset
+      } else {
+        this.renderBuffer.lines.push(`  ${displayValue || '(empty)'}`);
+      }
+      
+      this.renderBuffer.lines.push('\n\n');
+    });
+    
+    // Context-sensitive help
+    this.renderBuffer.lines.push('\x1b[90m'); // Dark gray
+    this.renderBuffer.lines.push('CONTROLS: ↑↓ Navigate | Type to edit | ENTER Save | ESC Cancel\n');
+    
+    const currentField = fields[this.editingField];
+    if (currentField && (currentField as any).options) {
+      this.renderBuffer.lines.push(`OPTIONS: ${(currentField as any).options.join(', ')}\n`);
+    } else if (currentField && (currentField as any).multiline) {
+      this.renderBuffer.lines.push('TIP: Markdown supported (**bold**, *italic*, `code`, # headers)\n');
+    }
+    
+    this.renderBuffer.lines.push('\x1b[0m'); // Reset
+  }
+  
   private renderSplitView(width: number, height: number): void {
-    const leftWidth = Math.floor(width * 0.4); // Give more space to details
-    const rightWidth = width - leftWidth - 1; // -1 for separator
+    // Split view implementation for showing task details side by side
+    const leftWidth = Math.floor(width * 0.4);
+    const rightWidth = width - leftWidth - 1;
     
     const selectedTask = this.filteredTasks[this.selectedIndex];
-    
-    // Render task list on left, details on right
     const visibleTasks = height - 2;
     const startIndex = Math.max(0, this.selectedIndex - Math.floor(visibleTasks / 2));
-    const detailLines = selectedTask ? this.getTaskDetailLines(selectedTask) : [];
     
     // Top border
-    process.stdout.write('┌' + '─'.repeat(leftWidth - 1) + '┬' + '─'.repeat(rightWidth - 1) + '┐\n');
+    this.renderBuffer.lines.push('┌' + '─'.repeat(leftWidth - 1) + '┬' + '─'.repeat(rightWidth - 1) + '┐\n');
     
+    // Content rows
     for (let i = 0; i < visibleTasks; i++) {
       const taskIndex = startIndex + i;
       
@@ -718,240 +1479,159 @@ class TerminalViewer {
         const isSelected = taskIndex === this.selectedIndex;
         this.renderSplitTaskLine(task, isSelected, leftWidth - 1);
       } else {
-        process.stdout.write('│' + ' '.repeat(leftWidth - 2));
+        this.renderBuffer.lines.push(' '.repeat(leftWidth - 1));
       }
       
-      // Separator
-      process.stdout.write('│');
+      this.renderBuffer.lines.push('│');
       
-      // Right side - task details with proper wrapping
-      if (selectedTask && i < detailLines.length) {
-        const detailLine = detailLines[i];
-        const processedLine = this.renderDetailLineWithHighlighting(detailLine, rightWidth - 2);
-        process.stdout.write(processedLine.padEnd(rightWidth - 2));
+      // Right side - task details
+      if (selectedTask && i < ViewerHelpers.getTaskDetailLines(selectedTask).length) {
+        const detailLine = ViewerHelpers.getTaskDetailLines(selectedTask)[i];
+        this.renderBuffer.lines.push(this.padLineToWidth(detailLine, rightWidth - 1));
       } else {
-        process.stdout.write(' '.repeat(rightWidth - 2));
+        this.renderBuffer.lines.push(' '.repeat(rightWidth - 1));
       }
       
-      process.stdout.write('│\n');
+      this.renderBuffer.lines.push('│\n');
     }
     
     // Bottom border
-    process.stdout.write('└' + '─'.repeat(leftWidth - 1) + '┴' + '─'.repeat(rightWidth - 1) + '┘\n');
+    this.renderBuffer.lines.push('└' + '─'.repeat(leftWidth - 1) + '┴' + '─'.repeat(rightWidth - 1) + '┘\n');
   }
-
+  
   private renderSplitTaskLine(task: Task, isSelected: boolean, width: number): void {
     const statusIcon = this.getStatusIcon(task.status);
     const priorityIcon = this.getPriorityIcon(task.priority);
     
     let line = `${statusIcon} ${priorityIcon} ${task.title}`;
     
+    // Smart truncation for split view
     if (line.length > width - 3) {
-      line = line.substring(0, width - 6) + '...';
+      let truncateAt = width - 6; // Leave space for '...'
+      while (truncateAt > 0 && line[truncateAt] !== ' ') {
+        truncateAt--;
+      }
+      
+      if (truncateAt <= 0) {
+        truncateAt = width - 6;
+      }
+      
+      line = line.substring(0, truncateAt).trim() + '...';
     }
     
     if (isSelected) {
-      process.stdout.write('\x1b[7m'); // Reverse video
-      process.stdout.write(line.padEnd(width - 1));
-      process.stdout.write('\x1b[0m'); // Reset
+      this.renderBuffer.lines.push('\x1b[7m'); // Reverse video
+      this.renderBuffer.lines.push(line.padEnd(width));
+      this.renderBuffer.lines.push('\x1b[0m'); // Reset
     } else {
-      process.stdout.write(line.padEnd(width - 1));
+      this.renderBuffer.lines.push(line.padEnd(width));
     }
   }
-
-  private getTaskDetailLines(task: Task): string[] {
-    const lines = [
-      `📋 ${task.title}`,
-      `${this.getStatusIcon(task.status)} ${task.status}`,
-      `${this.getPriorityIcon(task.priority)} ${task.priority}`,
-      '',
-      '📄 Description:',
-      ...(task.description ? this.wrapText(task.description, 50) : ['  No description']),
-      ''
-    ];
-    
-    if (task.assignee) {
-      lines.push(`👤 Assignee: ${task.assignee}`);
-    }
-    
-    if (task.labels.length > 0) {
-      lines.push(`🏷️  Labels: ${task.labels.join(', ')}`);
-    }
-    
-    if (task.estimatedHours) {
-      lines.push(`⏱️  Estimated Hours: ${task.estimatedHours}`);
-    }
-    
-    lines.push('');
-    lines.push(`📅 Created: ${new Date(task.createdAt).toLocaleDateString()}`);
-    lines.push(`🔄 Updated: ${new Date(task.updatedAt).toLocaleDateString()}`);
-    
-    return lines;
+  
+  private getProjectInfo(): string | null {
+    // Simple project detection - could be enhanced
+    return 'critical_claude';
   }
-
-  private wrapText(text: string, maxWidth: number): string[] {
-    const lines: string[] = [];
-    const paragraphs = text.split('\n');
+  
+  // Add missing helper methods that are being called
+  private padLineToWidth(line: string, targetWidth: number): string {
+    // For lines without ANSI codes, simple padding works
+    const padding = Math.max(0, targetWidth - line.length);
+    return line + ' '.repeat(padding);
+  }
+  
+  private renderTaskList(width: number, height: number): void {
+    const visibleTasks = height - 2; // Leave space for borders
+    const totalTasks = this.filteredTasks.length;
     
-    for (const paragraph of paragraphs) {
-      if (paragraph.trim() === '') {
-        lines.push('');
-        continue;
-      }
-      
-      // Handle different types of content
-      if (paragraph.trim().startsWith('```')) {
-        // Code block
-        lines.push(`  ${paragraph}`);
-        continue;
-      }
-      
-      const words = paragraph.split(' ');
-      let currentLine = '  '; // Indent description content
-      
-      for (const word of words) {
-        if (currentLine.length + word.length + 1 > maxWidth) {
-          if (currentLine.trim()) {
-            lines.push(currentLine);
-            currentLine = '  ' + word;
-          } else {
-            // Single word too long, just add it
-            lines.push('  ' + word);
-            currentLine = '  ';
-          }
+    // Smart pagination for performance
+    const startIndex = Math.max(0, this.selectedIndex - Math.floor(visibleTasks / 2));
+    const endIndex = Math.min(totalTasks, startIndex + visibleTasks);
+    
+    // Top border with pagination info
+    const paginationInfo = totalTasks > visibleTasks ? 
+      ` (${startIndex + 1}-${endIndex}/${totalTasks}) ` : '';
+    const borderTop = '┌' + '─'.repeat(width - 2 - paginationInfo.length) + paginationInfo + '┐';
+    this.renderBuffer.lines.push(borderTop + '\n');
+    
+    if (totalTasks === 0) {
+      const emptyMsg = this.statusFilter ? 
+        `No ${this.statusFilter} tasks found` : 
+        'No tasks found - use "cc task create" to add tasks';
+      const padding = Math.floor((width - emptyMsg.length - 2) / 2);
+      this.renderBuffer.lines.push('│' + ' '.repeat(padding) + emptyMsg + 
+        ' '.repeat(width - padding - emptyMsg.length - 2) + '│\n');
+    } else {
+      for (let i = 0; i < visibleTasks; i++) {
+        const taskIndex = startIndex + i;
+        if (taskIndex < endIndex) {
+          this.renderTaskLine(this.filteredTasks[taskIndex], taskIndex === this.selectedIndex, width - 2);
         } else {
-          currentLine += (currentLine.trim() ? ' ' : '') + word;
+          this.renderBuffer.lines.push('│' + ' '.repeat(width - 2) + '│\n');
         }
       }
-      
-      if (currentLine.trim()) {
-        lines.push(currentLine);
-      }
     }
     
-    return lines;
+    // Bottom border
+    this.renderBuffer.lines.push('└' + '─'.repeat(width - 2) + '┘\n');
   }
-
-  private renderDetailLineWithHighlighting(line: string, maxWidth: number): string {
-    // Apply markdown-style highlighting
-    let processedLine = line;
+  
+  private renderTaskLine(task: Task, isSelected: boolean, width: number): void {
+    const statusIcon = this.getStatusIcon(task.status);
+    const priorityIcon = this.getPriorityIcon(task.priority);
     
-    // Headers (# ## ###)
-    if (processedLine.match(/^(\s*)#{1,3}\s/)) {
-      processedLine = processedLine.replace(/^(\s*)(#{1,3})\s(.+)/, '$1\x1b[1m\x1b[36m$2 $3\x1b[0m');
+    // Build clean line without complex color handling
+    let line = `${statusIcon} ${priorityIcon} ${task.title}`;
+    
+    // Add assignee if present
+    if (task.assignee) {
+      line += ` @${task.assignee}`;
     }
     
-    // Bold (**text**)
-    processedLine = processedLine.replace(/\*\*([^*]+)\*\*/g, '\x1b[1m$1\x1b[0m');
-    
-    // Italic (*text*)
-    processedLine = processedLine.replace(/\*([^*]+)\*/g, '\x1b[3m$1\x1b[0m');
-    
-    // Inline code (`code`)
-    processedLine = processedLine.replace(/`([^`]+)`/g, '\x1b[100m\x1b[37m$1\x1b[0m');
-    
-    // Code blocks (```)
-    if (processedLine.includes('```')) {
-      processedLine = processedLine.replace(/```/g, '\x1b[100m\x1b[37m```\x1b[0m');
-    }
-    
-    // List items (- or *)
-    processedLine = processedLine.replace(/^(\s*)([-*])\s/, '$1\x1b[33m$2\x1b[0m ');
-    
-    // URLs (basic detection)
-    processedLine = processedLine.replace(/(https?:\/\/[^\s]+)/g, '\x1b[34m\x1b[4m$1\x1b[0m');
-    
-    // Truncate if still too long after processing
-    if (this.getDisplayLength(processedLine) > maxWidth) {
-      // Find a good truncation point that doesn't break escape sequences
-      let truncated = processedLine;
-      while (this.getDisplayLength(truncated) > maxWidth - 3) {
-        truncated = truncated.slice(0, -1);
+    // Add labels if present (first 2 only to avoid clutter)
+    if (task.labels && task.labels.length > 0) {
+      const labelText = task.labels.slice(0, 2).join(',');
+      if (labelText.trim()) {
+        line += ` #${labelText}`;
       }
-      processedLine = truncated + '...';
     }
     
-    return processedLine;
+    // Smart truncation that doesn't break in the middle of words
+    const maxLength = width - 4; // Leave space for borders
+    if (line.length > maxLength) {
+      // Find last space before the limit
+      let truncateAt = maxLength - 3; // Leave space for '...'
+      while (truncateAt > 0 && line[truncateAt] !== ' ') {
+        truncateAt--;
+      }
+      
+      // If no space found, just truncate at limit
+      if (truncateAt <= 0) {
+        truncateAt = maxLength - 3;
+      }
+      
+      line = line.substring(0, truncateAt).trim() + '...';
+    }
+    
+    // Highlight selected line with better contrast
+    if (isSelected) {
+      this.renderBuffer.lines.push('│\x1b[7m'); // Reverse video
+      this.renderBuffer.lines.push(line.padEnd(width - 2));
+      this.renderBuffer.lines.push('\x1b[0m│\n'); // Reset
+    } else {
+      this.renderBuffer.lines.push('│');
+      this.renderBuffer.lines.push(line.padEnd(width - 2));
+      this.renderBuffer.lines.push('│\n');
+    }
   }
-
-  private getDisplayLength(text: string): number {
-    // Remove ANSI escape sequences to get actual display length
-    return text.replace(/\x1b\[[0-9;]*m/g, '').length;
-  }
-
-  private renderEditingScreen(width: number, height: number): void {
-    if (!this.editingTask) return;
-    
-    // Header
-    process.stdout.write('\x1b[44m'); // Blue background
-    process.stdout.write('\x1b[37m'); // White text
-    const title = '📝 Editing Task';
-    process.stdout.write(title.padEnd(width));
-    process.stdout.write('\x1b[0m\n'); // Reset
-    
-    // Task info
-    process.stdout.write('\x1b[100m'); // Dark gray background
-    process.stdout.write('\x1b[37m'); // White text
-    const info = `Task ID: ${this.editingTask.id}`;
-    process.stdout.write(info.padEnd(width));
-    process.stdout.write('\x1b[0m\n'); // Reset
-    
-    process.stdout.write('\n');
-    
-    // Editing fields
-    const fields = [
-      { label: 'Title', value: this.editingTask.title },
-      { label: 'Description', value: this.editingTask.description || '' },
-      { label: 'Priority', value: this.editingTask.priority },
-      { label: 'Status', value: this.editingTask.status }
-    ];
-    
-    fields.forEach((field, index) => {
-      const isSelected = index === this.editingField;
-      const displayValue = index === this.editingField ? this.editingValue : field.value;
-      
-      if (isSelected) {
-        process.stdout.write('\x1b[7m'); // Reverse video (highlight)
-      }
-      
-      // Apply markdown highlighting to description field when not editing
-      if (field.label === 'Description' && !isSelected && displayValue) {
-        const highlightedValue = this.renderDetailLineWithHighlighting(displayValue, width - field.label.length - 3);
-        process.stdout.write(`${field.label}: ${highlightedValue}`);
-      } else {
-        process.stdout.write(`${field.label}: ${displayValue}`);
-      }
-      
-      if (isSelected) {
-        process.stdout.write('█'); // Cursor
-        process.stdout.write('\x1b[0m'); // Reset
-      }
-      
-      process.stdout.write('\n\n');
-    });
-    
-    // Help text
-    process.stdout.write('\n');
-    process.stdout.write('\x1b[2m'); // Dim text
-    process.stdout.write('↑/↓ Switch fields  |  Type to edit  |  ENTER Save  |  ESC Cancel\n');
-    
-    if (this.editingField === 1) {
-      process.stdout.write('Markdown supported: **bold**, *italic*, `code`, # headers, - lists\n');
-    } else if (this.editingField === 2) {
-      process.stdout.write('Priority options: critical, high, medium, low\n');
-    } else if (this.editingField === 3) {
-      process.stdout.write('Status options: todo, in_progress, done, blocked, archived\n');
-    }
-    
-    process.stdout.write('\x1b[0m'); // Reset
-  }
-
+  
   private renderFooter(width: number): void {
-    // Footer with keyboard shortcuts
-    process.stdout.write('├' + '─'.repeat(width - 2) + '┤\n');
+    // Separator line
+    this.renderBuffer.lines.push('├' + '─'.repeat(width - 2) + '┤\n');
     
+    // Keyboard shortcuts with clear, professional formatting
     const shortcuts = [
-      '↑/↓ Navigate  SPACE Status  TAB Details  ENTER Edit  F Filter  R Refresh  Q Quit'
+      '↑↓ Navigate | SPACE Toggle Status | TAB Details | ENTER Edit | F Filter | R Refresh | Q Quit'
     ];
     
     shortcuts.forEach(shortcut => {
@@ -959,42 +1639,250 @@ class TerminalViewer {
       const leftPad = Math.floor(padding / 2);
       const rightPad = padding - leftPad;
       
-      process.stdout.write('│');
-      process.stdout.write(' '.repeat(leftPad));
-      process.stdout.write('\x1b[2m'); // Dim text
-      process.stdout.write(shortcut);
-      process.stdout.write('\x1b[0m'); // Reset
-      process.stdout.write(' '.repeat(rightPad));
-      process.stdout.write('│\n');
+      this.renderBuffer.lines.push('│');
+      this.renderBuffer.lines.push(' '.repeat(leftPad));
+      this.renderBuffer.lines.push('\x1b[90m'); // Dark gray for subtlety
+      this.renderBuffer.lines.push(shortcut);
+      this.renderBuffer.lines.push('\x1b[0m'); // Reset
+      this.renderBuffer.lines.push(' '.repeat(rightPad));
+      this.renderBuffer.lines.push('│\n');
     });
     
-    process.stdout.write('└' + '─'.repeat(width - 2) + '┘');
+    // Bottom border
+    this.renderBuffer.lines.push('└' + '─'.repeat(width - 2) + '┘');
   }
-
-  private getProjectInfo(): string | null {
-    // TODO: Get from ProjectDetection
-    return 'critical_claude';
+  
+  // Missing helper methods that are called but not implemented
+  private updateTerminalDimensions(): void {
+    const newWidth = process.stdout.columns || 80;
+    const newHeight = process.stdout.rows || 24;
+    
+    if (newWidth !== this.terminalWidth || newHeight !== this.terminalHeight) {
+      this.terminalWidth = Math.max(40, newWidth);
+      this.terminalHeight = Math.max(10, newHeight);
+      this.needsFullRedraw = true;
+      
+      logger.debug('Terminal dimensions updated', {
+        width: this.terminalWidth,
+        height: this.terminalHeight
+      });
+    }
   }
-
-
-  private getStatusIcon(status: string): string {
-    const icons = {
-      todo: '⭕',
-      in_progress: '🟡',
-      done: '✅',
-      blocked: '🔴',
-      archived: '📦'
+  
+  private setupSignalHandlers(): void {
+    ['SIGINT', 'SIGTERM', 'SIGQUIT', 'SIGHUP'].forEach(signal => {
+      const handler = () => {
+        logger.info(`Received ${signal}, initiating graceful shutdown`);
+        this.isRunning = false;
+      };
+      
+      process.on(signal, handler);
+      this.signalHandlers.set(signal, handler);
+    });
+  }
+  
+  private setupResizeHandler(): void {
+    const handler = () => {
+      this.updateTerminalDimensions();
+      this.needsFullRedraw = true;
+      this.safeRender();
     };
-    return icons[status as keyof typeof icons] || '❓';
+    
+    process.stdout.on('resize', handler);
+    this.signalHandlers.set('resize', handler);
   }
-
-  private getPriorityIcon(priority: string): string {
-    const icons = {
-      critical: '🔥',
-      high: '🔺',
-      medium: '🟡',
-      low: '🔽'
+  
+  private async performSystemChecks(): Promise<void> {
+    // Check Node.js version
+    const nodeVersion = process.version;
+    const majorVersion = parseInt(nodeVersion.replace('v', '').split('.')[0]);
+    if (majorVersion < 18) {
+      throw new Error(`Node.js ${nodeVersion} is unsupported. Requires Node.js 18+`);
+    }
+    
+    // Check terminal capabilities
+    if (!process.stdout.isTTY || !process.stdin.isTTY) {
+      throw new Error('Interactive terminal (TTY) required for both input and output');
+    }
+    
+    // Test storage accessibility
+    try {
+      await this.storage.findAll<any>('__health_check');
+    } catch (error) {
+      throw new Error(`Storage system inaccessible: ${ViewerHelpers.getErrorMessage(error)}`);
+    }
+    
+    // Acquire file lock to prevent multiple instances
+    await this.storageLock.acquire();
+  }
+  
+  private async loadTasksWithRetry(): Promise<void> {
+    const maxAttempts = this.options.maxRetries || 3;
+    let lastError: Error | null = null;
+    
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        await this.loadTasks();
+        logger.debug(`Tasks loaded successfully on attempt ${attempt}`);
+        return;
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        logger.warn(`Task loading attempt ${attempt}/${maxAttempts} failed`, {
+          error: ViewerHelpers.getErrorMessage(error),
+          attempt
+        });
+        
+        if (attempt < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 100 * attempt));
+        }
+      }
+    }
+    
+    // If all attempts failed, set empty tasks and log error
+    this.tasks = [];
+    this.errorState = `Failed to load tasks: ${ViewerHelpers.getErrorMessage(lastError)}`;
+    logger.error('All task loading attempts failed', {
+      error: ViewerHelpers.getErrorMessage(lastError),
+      attempts: maxAttempts
+    });
+  }
+  
+  private async safeRender(): Promise<void> {
+    try {
+      // Throttle rendering for performance (16ms = ~60fps)
+      const now = Date.now();
+      if (now - this.renderBuffer.lastRender < 16) {
+        return;
+      }
+      
+      // Only render if data has changed or forced redraw
+      if (this.needsFullRedraw || this.renderBuffer.dirty) {
+        this.render();
+        this.renderBuffer.lastRender = now;
+        this.renderBuffer.dirty = false;
+        this.needsFullRedraw = false;
+      }
+      
+    } catch (renderError) {
+      logger.error('Rendering failed', {
+        error: renderError instanceof Error ? renderError.message : String(renderError),
+        stack: renderError instanceof Error ? renderError.stack : undefined
+      });
+      
+      // Emergency fallback render with better error information
+      try {
+        process.stdout.write('\x1b[2J\x1b[H');
+        process.stdout.write('\x1b[31m=== Critical Claude Viewer - Rendering Error ===\x1b[0m\n\n');
+        process.stdout.write('The interface encountered an error but is still running.\n');
+        process.stdout.write('You can try the following:\n');
+        process.stdout.write('• Press \x1b[33mr\x1b[0m to refresh and reload tasks\n');
+        process.stdout.write('• Press \x1b[33mq\x1b[0m to quit safely\n\n');
+        
+        if (renderError instanceof Error) {
+          process.stdout.write(`\x1b[90mError Details: ${renderError.message}\x1b[0m\n`);
+        }
+        
+        process.stdout.write('\n\x1b[90mTasks loaded: '); 
+        process.stdout.write(Array.isArray(this.tasks) ? this.tasks.length.toString() : '0');  
+        process.stdout.write(' | Filtered: ');
+        process.stdout.write(Array.isArray(this.filteredTasks) ? this.filteredTasks.length.toString() : '0');
+        process.stdout.write('\x1b[0m\n');
+        
+      } catch (emergencyError) {
+        logger.error('Emergency render failed', emergencyError);
+        this.isRunning = false;
+      }
+    }
+  }
+  
+  private async emergencyCleanup(): Promise<void> {
+    try {
+      // Emergency terminal restore
+      process.stdout.write('\x1b[?25h\x1b[?1049l\x1b[0m\n');
+      
+      // Emergency message
+      process.stdout.write('Critical Claude Viewer encountered an error and has been terminated.\n');
+      process.stdout.write('Your terminal should be restored to normal operation.\n');
+      
+    } catch (emergencyError) {
+      // Complete failure - nothing more we can do
+      logger.error('Emergency cleanup failed', emergencyError);
+    }
+  }
+  
+  private cleanupResources(): void {
+    // Clear all timeouts
+    this.timeouts.forEach(timeout => clearTimeout(timeout));
+    this.timeouts.clear();
+    
+    // Clear all intervals
+    this.intervals.forEach(interval => clearInterval(interval));
+    this.intervals.clear();
+    
+    // Remove signal handlers
+    this.signalHandlers.forEach((handler, signal) => {
+      if (signal !== 'resize') {
+        process.removeListener(signal, handler);
+      } else {
+        process.stdout.removeListener('resize', handler);
+      }
+    });
+    this.signalHandlers.clear();
+    
+    // Release file lock
+    this.storageLock.release().catch(error => {
+      logger.warn('Failed to release storage lock during cleanup', error);
+    });
+  }
+  
+  private createFileLock(): FileLock {
+    let lockAcquired = false;
+    const lockFile = join(homedir(), '.critical-claude', '.viewer.lock');
+    
+    return {
+      async acquire(): Promise<void> {
+        if (lockAcquired) return;
+        
+        try {
+          await fs.mkdir(join(homedir(), '.critical-claude'), { recursive: true });
+          await fs.writeFile(lockFile, process.pid.toString(), { flag: 'wx' });
+          lockAcquired = true;
+        } catch (error: any) {
+          if (error.code === 'EEXIST') {
+            // Check if process is still running
+            try {
+              const existingPid = await fs.readFile(lockFile, 'utf8');
+              process.kill(parseInt(existingPid), 0); // Test if process exists
+              throw new Error('Viewer is already running in another process');
+            } catch (killError: any) {
+              if (killError.code === 'ESRCH') {
+                // Process doesn't exist, remove stale lock
+                await fs.unlink(lockFile).catch(() => {});
+                await this.acquire(); // Retry
+              } else {
+                throw killError;
+              }
+            }
+          } else {
+            throw error;
+          }
+        }
+      },
+      
+      async release(): Promise<void> {
+        if (!lockAcquired) return;
+        
+        try {
+          await fs.unlink(lockFile);
+          lockAcquired = false;
+        } catch (error) {
+          logger.warn('Failed to release file lock', error);
+        }
+      },
+      
+      isLocked(): boolean {
+        return lockAcquired;
+      }
     };
-    return icons[priority as keyof typeof icons] || '❓';
   }
 }

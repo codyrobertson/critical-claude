@@ -1,0 +1,18 @@
+I need to build a comprehensive enterprise SaaS application for project portfolio management. The system needs to handle multi-tenant architecture with role-based access control, real-time collaboration features, advanced analytics dashboards, and integration with external tools like Jira, GitHub, and Slack. 
+
+Key requirements:
+- Multi-tenant SaaS architecture with tenant isolation
+- JWT-based authentication with SSO integration (SAML, OAuth2)
+- Real-time collaborative project boards using WebSockets
+- Advanced reporting engine with custom dashboard builder
+- RESTful API with GraphQL layer for complex queries
+- Microservices backend (Node.js/TypeScript) with event-driven architecture
+- React frontend with state management and offline capabilities
+- PostgreSQL with Redis caching and Elasticsearch for search
+- CI/CD pipeline with automated testing, security scanning, and blue-green deployments
+- Monitoring, logging, and alerting infrastructure
+- Mobile-responsive design with progressive web app features
+
+The timeline is 6 months with a team of 8 developers (2 frontend, 3 backend, 1 DevOps, 1 QA, 1 architect). I need this broken down into sprints with clear dependencies, risk assessments, and resource allocation. Also include research tasks for technology evaluation and proof-of-concept development.
+
+Create a comprehensive project plan that accounts for technical debt management, performance optimization milestones, security audits, and user acceptance testing phases.

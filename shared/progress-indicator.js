@@ -3,11 +3,10 @@
  * Simple progress indicators for long-running CLI operations
  */
 export class ProgressIndicator {
-    interval = null;
-    frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-    currentFrame = 0;
-    message;
     constructor(message = 'Processing...') {
+        this.interval = null;
+        this.frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+        this.currentFrame = 0;
         this.message = message;
     }
     start() {
@@ -41,11 +40,9 @@ export class ProgressIndicator {
     }
 }
 export class ProgressBar {
-    total;
-    current = 0;
-    width = 40;
-    message;
     constructor(total, message = 'Progress') {
+        this.current = 0;
+        this.width = 40;
         this.total = total;
         this.message = message;
     }
@@ -89,4 +86,3 @@ export const withProgressBar = async (items, processor, message = 'Processing it
     }
     bar.complete();
 };
-//# sourceMappingURL=progress-indicator.js.map

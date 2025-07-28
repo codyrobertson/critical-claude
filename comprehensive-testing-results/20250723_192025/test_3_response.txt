@@ -1,0 +1,1 @@
+I need permission to run bash commands. Once you grant permission, I'll create the project directory and tasks.txt file for you immediately.

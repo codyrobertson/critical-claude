@@ -1,0 +1,13 @@
+I need to review and adjust the Phase 3 service extraction plan. The AI-generated breakdown looks good, but I want to modify the containerization strategy and add specific security requirements. 
+
+First, show me the current status of all Phase 3 tasks, then I need to:
+
+1. Update the containerization approach to use multi-stage Docker builds with distroless base images for better security
+2. Add comprehensive API security testing including OWASP compliance checks
+3. Create specific tasks for database migration scripts and rollback procedures
+4. Add performance benchmarking tasks to ensure each extracted service meets SLA requirements
+5. Include chaos engineering tests to validate service resilience
+
+Also, I noticed we're behind schedule on the infrastructure tasks. Can you generate a recovery plan that identifies which tasks can be parallelized and create updated time estimates? We need to compress the timeline by 3 weeks without compromising quality.
+
+Finally, create a comprehensive testing strategy that covers unit tests, integration tests, contract testing between services, and end-to-end testing scenarios. The testing should include load testing for 2x our current traffic volume since we're expecting growth during the migration period.

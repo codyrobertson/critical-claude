@@ -1,0 +1,8 @@
+I cannot create Jira tickets as I don't have access to Jira systems or APIs. I'm Claude Code, a CLI tool for software engineering tasks within your local codebase.
+
+To create a Jira ticket, you'll need to:
+1. Log into your Jira instance directly
+2. Use Jira's web interface or their official CLI tool
+3. Use their REST API if you want to automate ticket creation
+
+If you'd like help with implementing OAuth authentication in your codebase instead, I can assist with that.

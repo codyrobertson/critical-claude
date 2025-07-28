@@ -4,7 +4,9 @@
  */
 // Simple service registry - no overcomplicated DI framework
 export class ServiceRegistry {
-    services = new Map();
+    constructor() {
+        this.services = new Map();
+    }
     register(name, service) {
         this.services.set(name, service);
     }
@@ -19,6 +21,5 @@ export class ServiceRegistry {
         return this.services.has(name);
     }
 }
-// Global registry instance
-export const services = new ServiceRegistry();
-//# sourceMappingURL=dependency-injection.js.map
+// Factory function to create service registry instances
+export const createServiceRegistry = () => new ServiceRegistry();

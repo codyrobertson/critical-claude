@@ -1,0 +1,127 @@
+🔍 CRITICAL CLAUDE TESTING MODE ACTIVATED
+
+Initiating comprehensive task management demonstration with Critical Claude CLI.
+
+Ready to execute:
+✓ Complete project breakdown
+✓ Multi-turn workflow management
+✓ Status updates and tracking
+✓ Task expansion and dependencies
+✓ AI-powered task generation
+✓ Template application
+✓ Research integration
+✓ Analytics and reporting
+
+Proceeding with Critical Claude commands...
+
+```bash
+# Creating master project task
+cc task create -t "Cross-Platform Fitness Tracking Mobile Application" -d "Build comprehensive fitness app with offline-first architecture, real-time GPS tracking, social features, wearable integration, and scalable backend supporting millions of users" -p critical -s todo --labels mobile,backend,fitness,cross-platform --hours 960
+
+# Expected: ✅ Created task: Cross-Platform Fitness Tracking Mobile Application (ID: fitness-app-master-001)
+
+# AI-powered research and task generation
+cc task research "React Native offline-first architecture patterns GPS tracking mobile development wearable Bluetooth integration scalable Node.js microservices PostgreSQL Redis AWS fitness app best practices" --format tasks --priority high
+
+# Expected: ✅ Research completed, 12 actionable research tasks created
+
+# Expanding master task into major components
+cc task expand fitness-app-master-001 --breakdown technical --depth 3
+
+# Expected: ✅ Generated 28 subtasks across 6 major components
+
+# Creating architecture planning phase
+cc task create -t "System Architecture & Technical Design" -d "Define technical architecture, database schemas, API contracts, microservices design, and integration patterns" -p critical -s todo --labels architecture,design,planning --hours 80
+
+# Expected: ✅ Created task: System Architecture & Technical Design (ID: arch-design-002)
+
+# Mobile development track
+cc task create -t "React Native Mobile Development Track" -d "Implement cross-platform mobile app with offline-first capabilities, GPS tracking, social features, and Bluetooth integration" -p high -s todo --labels mobile,react-native,offline --hours 320
+
+# Expected: ✅ Created task: React Native Mobile Development Track (ID: mobile-dev-003)
+
+# Backend microservices track
+cc task create -t "Node.js Backend Microservices Track" -d "Build scalable microservices architecture with authentication, data analytics, user management, and real-time features" -p high -s todo --labels backend,microservices,nodejs --hours 280
+
+# Expected: ✅ Created task: Node.js Backend Microservices Track (ID: backend-dev-004)
+
+# Infrastructure and DevOps track
+cc task create -t "AWS Infrastructure & DevOps Track" -d "Set up scalable AWS infrastructure, CI/CD pipelines, monitoring, and deployment automation" -p high -s todo --labels devops,aws,infrastructure --hours 160
+
+# Expected: ✅ Created task: AWS Infrastructure & DevOps Track (ID: devops-005)
+
+# QA and testing track
+cc task create -t "Quality Assurance & Testing Track" -d "Implement comprehensive testing strategy including unit, integration, end-to-end, and performance testing" -p high -s todo --labels qa,testing,automation --hours 120
+
+# Expected: ✅ Created task: Quality Assurance & Testing Track (ID: qa-testing-006)
+
+# Setting up task dependencies
+cc task dependencies mobile-dev-003 --add arch-design-002
+cc task dependencies backend-dev-004 --add arch-design-002
+cc task dependencies devops-005 --add arch-design-002
+cc task dependencies qa-testing-006 --add mobile-dev-003,backend-dev-004
+
+# Expected: ✅ Dependencies configured for proper workflow sequence
+
+# Expanding mobile development track
+cc task expand mobile-dev-003 --breakdown feature --depth 2
+
+# Expected: ✅ Generated 15 mobile development subtasks
+
+# Expanding backend track
+cc task expand backend-dev-004 --breakdown service --depth 2
+
+# Expected: ✅ Generated 12 backend service subtasks
+
+# Creating team assignments
+cc task update arch-design-002 --assignee "senior-architect@team.com" --labels architecture,senior
+cc task update mobile-dev-003 --assignee "mobile-lead@team.com" --labels mobile,lead
+cc task update backend-dev-004 --assignee "backend-lead@team.com" --labels backend,lead
+cc task update devops-005 --assignee "devops-lead@team.com" --labels devops,lead
+cc task update qa-testing-006 --assignee "qa-lead@team.com" --labels qa,lead
+
+# Expected: ✅ Team assignments configured
+
+# AI task generation for risk mitigation
+cc task ai "Generate comprehensive risk mitigation tasks for large-scale mobile fitness app development including technical risks, timeline risks, scalability challenges, and team coordination issues"
+
+# Expected: ✅ Generated 8 risk mitigation tasks
+
+# Creating sprint structure
+cc task create -t "Sprint 1: Foundation & Architecture (Weeks 1-2)" -d "Establish technical foundation, architecture decisions, and development environment" -p critical -s todo --labels sprint1,foundation --hours 160
+
+cc task create -t "Sprint 2: Core Backend Services (Weeks 3-4)" -d "Implement user authentication, core data models, and basic API endpoints" -p high -s todo --labels sprint2,backend-core --hours 160
+
+cc task create -t "Sprint 3: Mobile App Foundation (Weeks 5-6)" -d "React Native setup, offline-first architecture, and basic UI components" -p high -s todo --labels sprint3,mobile-foundation --hours 160
+
+# Expected: ✅ Created 3 sprint planning tasks
+
+# Template application for common patterns
+cc template apply microservice-starter --variables service_name=user-service,database=postgresql,cache=redis
+cc template apply react-native-feature --variables feature_name=workout-tracking,offline=true,gps=true
+cc template apply aws-infrastructure --variables app_name=fitness-tracker,scale=high-availability
+
+# Expected: ✅ Applied 3 templates generating 18 configured tasks
+
+# Starting the architecture phase
+cc task start arch-design-002
+
+# Expected: ✅ Started task: System Architecture & Technical Design (Status: in_progress)
+
+# Setting up analytics tracking
+cc analytics setup --project fitness-app-master-001 --team-size 8 --timeline 24-weeks
+
+# Expected: ✅ Analytics configured for project tracking
+
+# Creating integration testing plan
+cc task create -t "Integration Testing Strategy" -d "Design and implement comprehensive integration testing covering mobile-backend communication, third-party service integration, and cross-platform compatibility" -p medium -s todo --labels integration,testing,strategy --hours 40
+
+# Expected: ✅ Created task: Integration Testing Strategy (ID: integration-test-007)
+
+# Backup project state
+cc task backup --destination ./fitness-app-backup-initial.json --include-all
+
+# Expected: ✅ Project backup created: fitness-app-backup-initial.json
+```
+
+Project initialization complete. All major tracks established with proper dependencies, team assignments, and sprint structure. Ready for architecture phase execution and multi-turn workflow progression.

@@ -4,9 +4,11 @@
  */
 
 import { ResearchRequest, ResearchPlan, ResearchAssignment, ResearchFindings, ComprehensiveReport } from '../../domain/entities/ResearchTypes.js';
-import { AIService } from '../../infrastructure/services/AIService.js';
+import { IAIProvider } from '../../domain/services/IAIProvider.js';
+import { ILogger } from '../../domain/services/ILogger.js';
 import { WebSearch, SearchResult } from '../../infrastructure/services/WebSearch.js';
 import { Result } from '../../shared/types.js';
+import { AI_CONFIG, SEARCH_CONFIG, REPORT_CONFIG } from '../../shared/constants.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -16,66 +18,64 @@ export interface ExecuteResearchResponse extends Result<ComprehensiveReport> {
 }
 
 export class ExecuteResearchUseCase {
-  private aiService: AIService;
+  private aiProvider: IAIProvider;
+  private logger: ILogger;
   private webSearch: WebSearch;
 
-  constructor() {
-    this.aiService = new AIService();
-    this.webSearch = new WebSearch();
+  constructor(aiProvider: IAIProvider, logger: ILogger) {
+    this.aiProvider = aiProvider;
+    this.logger = logger;
+    this.webSearch = new WebSearch(logger);
   }
 
   async execute(request: ResearchRequest): Promise<ExecuteResearchResponse> {
     try {
-      console.log('🔬 Starting 100% AI-Driven Multi-Agent Research System...');
-      console.log('━'.repeat(60));
+      this.logger.info('Starting 100% AI-Driven Multi-Agent Research System...');
 
-      // Initialize AI service
-      await this.aiService.initialize();
+      // Check AI provider availability
+      const isAvailable = await this.aiProvider.isAvailable();
+      if (!isAvailable) {
+        throw new Error('AI provider is not available');
+      }
 
       // Read input files if provided
       const fileContents = await this.readInputFiles(request.files || []);
       const contextData = fileContents.length > 0 ? `\n\nAdditional Context:\n${fileContents.join('\n\n')}` : '';
       
-      console.log('📋 Research Topic:', request.query);
+      this.logger.info(`Research Topic: ${request.query}`);
       if (fileContents.length > 0) {
-        console.log('📁 Input Files:', request.files?.length || 0);
+        this.logger.info(`Input Files: ${request.files?.length || 0}`);
       }
-      console.log();
 
-      // Step 1: 🧠 PLANNER AGENT - Pure AI Planning
-      console.log('🧠 PLANNER AGENT: AI creating research strategy...');
+      // Step 1: PLANNER AGENT - Pure AI Planning
+      this.logger.info('PLANNER AGENT: AI creating research strategy...');
       const researchPlan = await this.createResearchPlan(request.query, contextData);
-      console.log(`   ✓ Generated plan with ${researchPlan.research_areas.length} research areas`);
-      console.log();
+      this.logger.info(`Generated plan with ${researchPlan.research_areas.length} research areas`);
 
-      // Step 2: 📝 COORDINATOR AGENT - Research Assignment Distribution
-      console.log('📝 COORDINATOR AGENT: Distributing research assignments...');
-      const assignments = await this.distributeResearchAssignments(researchPlan, request.teamSize || 3);
-      console.log(`   ✓ Created ${assignments.length} research assignments`);
-      console.log();
+      // Step 2: COORDINATOR AGENT - Research Assignment Distribution
+      this.logger.info('COORDINATOR AGENT: Distributing research assignments...');
+      const assignments = await this.distributeResearchAssignments(researchPlan, request.teamSize || AI_CONFIG.DEFAULT_TEAM_SIZE);
+      this.logger.info(`Created ${assignments.length} research assignments`);
 
-      // Step 3: 🔍 RESEARCHER AGENTS - Parallel Research Execution
-      console.log('🔍 RESEARCHER AGENTS: Executing parallel research...');
+      // Step 3: RESEARCHER AGENTS - Parallel Research Execution
+      this.logger.info('RESEARCHER AGENTS: Executing parallel research...');
       const allFindings = await this.executeParallelResearch(assignments);
-      console.log(`   ✓ Completed research across ${allFindings.length} areas`);
-      console.log();
+      this.logger.info(`Completed research across ${allFindings.length} areas`);
 
-      // Step 4: 🎯 ANALYST AGENT - Critical Analysis and Gap Identification
-      console.log('🎯 ANALYST AGENT: Performing critical analysis...');
+      // Step 4: ANALYST AGENT - Critical Analysis and Gap Identification
+      this.logger.info('ANALYST AGENT: Performing critical analysis...');
       const criticalAnalysis = await this.performCriticalAnalysis(allFindings, request.query);
-      console.log('   ✓ Critical analysis completed with gap identification');
-      console.log();
+      this.logger.info('Critical analysis completed with gap identification');
 
-      // Step 5: 📊 SYNTHESIS AGENT - Comprehensive Report Generation
-      console.log('📊 SYNTHESIS AGENT: Generating comprehensive report...');
+      // Step 5: SYNTHESIS AGENT - Comprehensive Report Generation
+      this.logger.info('SYNTHESIS AGENT: Generating comprehensive report...');
       const comprehensiveReport = await this.generateComprehensiveReport(
         request.query,
         researchPlan,
         allFindings,
         criticalAnalysis
       );
-      console.log('   ✓ Comprehensive report generated');
-      console.log();
+      this.logger.info('Comprehensive report generated');
 
       // Step 6: Save report and optionally create tasks
       const reportPath = await this.saveReport(comprehensiveReport, request.query);
@@ -85,10 +85,10 @@ export class ExecuteResearchUseCase {
         tasksCreated = await this.createTasksFromReport(comprehensiveReport);
       }
 
-      console.log('✅ Research completed successfully!');
-      console.log(`📄 Report saved to: ${reportPath}`);
+      this.logger.info('Research completed successfully!');
+      this.logger.info(`Report saved to: ${reportPath}`);
       if (tasksCreated > 0) {
-        console.log(`📋 Created ${tasksCreated} tasks from research findings`);
+        this.logger.info(`Created ${tasksCreated} tasks from research findings`);
       }
 
       return {
@@ -111,7 +111,7 @@ export class ExecuteResearchUseCase {
 
 Generate a strategic research plan that covers all important aspects and provides a systematic approach to investigating this topic.`;
 
-    return await this.aiService.analyzeResearchQuery(query, context);
+    return await this.aiProvider.generateResearchPlan(query, context);
   }
 
   private async distributeResearchAssignments(plan: ResearchPlan, teamSize: number): Promise<ResearchAssignment[]> {
@@ -145,7 +145,7 @@ Generate a strategic research plan that covers all important aspects and provide
     const findings: ResearchFindings[] = [];
 
     for (const assignment of assignments) {
-      console.log(`   🔍 Researcher ${assignment.researcher_id}: Investigating ${assignment.focus_area}...`);
+      this.logger.info(`Researcher ${assignment.researcher_id}: Investigating ${assignment.focus_area}...`);
       
       // Perform web searches for this area
       const searchResults = await this.webSearch.batchSearch(assignment.search_queries);
@@ -157,7 +157,7 @@ Generate a strategic research plan that covers all important aspects and provide
       }
       
       // AI analysis of search results
-      const analysis = await this.aiService.conductResearchAnalysis(
+      const analysis = await this.aiProvider.analyzeResearchData(
         assignment.focus_area,
         assignment.search_queries,
         allResults
@@ -189,7 +189,7 @@ Provide critical analysis including:
 4. Quality assessment
 5. Improvement recommendations`;
 
-    return await this.aiService.generateStructured(prompt, {
+    return await this.aiProvider.generateStructuredContent(prompt, {
       meta_analysis: "string",
       gaps_identified: [{
         area: "string",
@@ -222,7 +222,7 @@ Critical Analysis: ${JSON.stringify(analysis, null, 2)}
 
 Create a comprehensive report with executive summary, detailed sections, strategic recommendations, implementation priorities, and next steps.`;
 
-    return await this.aiService.generateStructured(prompt, {
+    return await this.aiProvider.generateStructuredContent(prompt, {
       executive_summary: "string",
       research_quality_assessment: {
         overall_score: "number",
@@ -261,14 +261,10 @@ Create a comprehensive report with executive summary, detailed sections, strateg
   }
 
   private async generateSearchQueries(area: any): Promise<string[]> {
-    // Generate 3-5 search queries for each research area
-    return [
-      `${area.area} best practices`,
-      `${area.area} current trends 2024`,
-      `${area.area} implementation challenges`,
-      `${area.area} expert analysis`,
-      `${area.area} market research`
-    ];
+    // Generate search queries using templates
+    return SEARCH_CONFIG.DEFAULT_QUERY_TEMPLATES
+      .slice(0, AI_CONFIG.MAX_SEARCH_QUERIES_PER_AREA)
+      .map(template => template.replace('{area}', area.area));
   }
 
   private async readInputFiles(files: string[]): Promise<string[]> {
@@ -281,7 +277,7 @@ Create a comprehensive report with executive summary, detailed sections, strateg
           contents.push(`=== ${file} ===\n${content}`);
         }
       } catch (error) {
-        console.warn(`Could not read file: ${file}`);
+        this.logger.warn(`Could not read file: ${file}`);
       }
     }
 
@@ -300,7 +296,7 @@ Create a comprehensive report with executive summary, detailed sections, strateg
   private async saveReport(report: ComprehensiveReport, query: string): Promise<string> {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const filename = `research-${query.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${timestamp}.md`;
-    const reportPath = path.join(process.cwd(), 'research-reports', filename);
+    const reportPath = path.join(process.cwd(), AI_CONFIG.RESEARCH_REPORTS_DIR, filename);
     
     // Ensure directory exists
     await fs.mkdir(path.dirname(reportPath), { recursive: true });
@@ -313,12 +309,7 @@ Create a comprehensive report with executive summary, detailed sections, strateg
   }
 
   private generateMarkdownReport(report: ComprehensiveReport, query: string): string {
-    const qualityAssessment = report.research_quality_assessment || {
-      overall_score: 7,
-      confidence_level: 75,
-      strengths: ['Comprehensive coverage'],
-      weaknesses: ['Limited real-time data']
-    };
+    const qualityAssessment = report.research_quality_assessment || REPORT_CONFIG.QUALITY_ASSESSMENT_DEFAULTS;
 
     return `# Research Report: ${query}
 

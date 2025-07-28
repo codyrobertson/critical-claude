@@ -1,0 +1,7 @@
+I need permission to run the bash command. Once you grant permission, I'll execute:
+
+```bash
+npm run task-create
+```
+
+This will create a new task for API development using the updated command structure.

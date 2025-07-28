@@ -1,0 +1,88 @@
+# AI TESTING ENVIRONMENT - Claude + Critical Claude Integration
+FROM node:20-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    bash \
+    curl \
+    git \
+    python3 \
+    py3-pip \
+    jq \
+    vim \
+    && rm -rf /var/cache/apk/*
+
+# Create testing user
+RUN addgroup -g 1000 aitest && \
+    adduser -D -s /bin/bash -G aitest -u 1000 aitest
+
+# Switch to testing user
+USER aitest
+WORKDIR /home/aitest
+
+# Install Claude CLI (headless mode)
+RUN curl -fsSL https://install.anthropic.com | bash
+ENV PATH="/home/aitest/.local/bin:$PATH"
+
+# Create directory structure for AI testing
+RUN mkdir -p \
+    /home/aitest/.claude \
+    /home/aitest/.claude/testing-prompts \
+    /home/aitest/.claude/agent-configs \
+    /home/aitest/.claude/validation-logs \
+    /home/aitest/ai-tests \
+    /home/aitest/ai-tests/scenarios \
+    /home/aitest/ai-tests/results \
+    /home/aitest/ai-tests/scripts
+
+# Copy Critical Claude source and install globally
+COPY --chown=aitest:aitest . /home/aitest/critical-claude
+WORKDIR /home/aitest/critical-claude
+
+# Install Critical Claude dependencies and build
+RUN npm install && npm run build
+
+# Install Critical Claude globally in container
+USER root
+RUN npm install -g /home/aitest/critical-claude
+USER aitest
+
+# Copy AI testing framework files
+COPY --chown=aitest:aitest ai-testing/claude-md-injection.md /home/aitest/.claude/testing-prompts/
+COPY --chown=aitest:aitest ai-testing/.cursorrules /home/aitest/critical-claude/
+COPY --chown=aitest:aitest ai-testing/agents.md /home/aitest/.claude/agent-configs/
+COPY --chown=aitest:aitest ai-testing/zero-shot-validation-system.md /home/aitest/.claude/validation-framework/
+COPY --chown=aitest:aitest ai-testing/testing-hypothesis-methodology.md /home/aitest/.claude/methodology/
+
+# Copy testing scripts
+COPY --chown=aitest:aitest ai-testing/docker/scripts/ /home/aitest/ai-tests/scripts/
+COPY --chown=aitest:aitest ai-testing/docker/scripts/run-ai-adherence-tests.sh /home/aitest/ai-tests/
+
+# Make scripts executable
+RUN chmod +x /home/aitest/ai-tests/*.sh /home/aitest/ai-tests/scripts/*.sh
+
+# Create Claude configuration
+RUN mkdir -p /home/aitest/.claude && \
+    echo 'model = "claude-3-5-sonnet-20241022"' > /home/aitest/.claude/config.toml
+
+# Create container startup script
+RUN echo '#!/bin/bash' > /home/aitest/start-ai-testing.sh && \
+    echo 'echo "🧠 CRITICAL CLAUDE AI TESTING CONTAINER"' >> /home/aitest/start-ai-testing.sh && \
+    echo 'echo "======================================"' >> /home/aitest/start-ai-testing.sh && \
+    echo 'echo "🚀 Starting AI adherence testing..."' >> /home/aitest/start-ai-testing.sh && \
+    echo 'cd /home/aitest/ai-tests' >> /home/aitest/start-ai-testing.sh && \
+    echo 'bash run-ai-adherence-tests.sh' >> /home/aitest/start-ai-testing.sh && \
+    chmod +x /home/aitest/start-ai-testing.sh
+
+# Set working directory and default command
+WORKDIR /home/aitest
+CMD ["/home/aitest/start-ai-testing.sh"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD cc --version || exit 1
+
+# Container metadata
+LABEL maintainer="Critical Claude Team"
+LABEL description="AI Testing Environment with Claude CLI + Critical Claude Integration"
+LABEL version="2.3.9"

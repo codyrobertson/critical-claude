@@ -4,32 +4,43 @@
  * Entry point for the DDD-structured CLI application
  */
 import { Command } from 'commander';
-import { TaskService } from '../../../domains/task-management/dist/application/services/TaskService.js';
-import { TaskRepository } from '../../../domains/task-management/dist/infrastructure/TaskRepository.js';
-import { TemplateService } from '../../../domains/template-system/dist/application/services/TemplateService.js';
-import { TemplateRepository } from '../../../domains/template-system/dist/infrastructure/TemplateRepository.js';
-import { ResearchService } from '../../../domains/research-intelligence/dist/application/services/ResearchService.js';
-import { ViewerService } from '../../../domains/user-interface/dist/application/services/ViewerService.js';
-import { AnalyticsService } from '../../../domains/analytics/dist/index.js';
+// Use unified services (canonical implementations)
+import { TaskService } from '../../../src/services/TaskService.js';
+import { TemplateService } from '../../../src/services/TemplateService.js';
+import { ResearchService } from '../../../domains/research-intelligence/dist/src/application/services/ResearchService.js';
+import { ViewerService } from '../../../dist/services/ViewerService.js';
+import { FileStorage } from '../../../dist/storage/FileStorage.js';
+import { AnalyticsService } from '../../../src/services/AnalyticsService.js';
+import { TaskCommandHandler } from './handlers/task-command-handler.js';
+import { CliHelpers } from './utils/cli-helpers.js';
 import path from 'path';
 import os from 'os';
-class CLIApplication {
+export class CLIApplication {
     taskService;
     templateService;
     researchService;
     viewerService;
     analyticsService;
+    taskCommandHandler;
     constructor() {
-        // Setup task management domain
+        // Setup unified services with shared storage
         const storagePath = path.join(os.homedir(), '.critical-claude');
-        const taskRepository = new TaskRepository(storagePath);
-        this.taskService = new TaskService(taskRepository);
-        // Setup other domains
-        const templateRepository = new TemplateRepository(storagePath);
-        this.templateService = new TemplateService(templateRepository);
-        this.researchService = new ResearchService();
-        this.viewerService = new ViewerService();
-        this.analyticsService = new AnalyticsService();
+        const storage = new FileStorage(storagePath);
+        // Use unified service implementations (canonical)
+        this.taskService = new TaskService(storage);
+        this.templateService = new TemplateService(storage);
+        this.viewerService = new ViewerService(storage);
+        this.analyticsService = new AnalyticsService(storage);
+        // ResearchService initialized lazily to avoid AI provider initialization for basic operations
+        this.researchService = null;
+        // Initialize command handlers with lazy research service
+        this.taskCommandHandler = new TaskCommandHandler(this.taskService, () => this.getResearchService());
+    }
+    getResearchService() {
+        if (!this.researchService) {
+            this.researchService = new ResearchService();
+        }
+        return this.researchService;
     }
     async start() {
         const program = new Command();
@@ -154,246 +165,36 @@ class CLIApplication {
         await program.parseAsync(process.argv);
     }
     async handleTaskCommand(action, args, options) {
-        switch (action) {
-            case 'create':
-                if (!options.title) {
-                    console.error('❌ Title is required for task creation');
+        return CliHelpers.safeExecute(async () => {
+            switch (action) {
+                case 'create':
+                    return this.taskCommandHandler.handleCreate(options);
+                case 'list':
+                    return this.taskCommandHandler.handleList(options);
+                case 'view':
+                    return this.taskCommandHandler.handleView(args);
+                case 'update':
+                    return this.taskCommandHandler.handleUpdate(args, options);
+                case 'delete':
+                    return this.taskCommandHandler.handleDelete(args);
+                case 'archive':
+                    return this.taskCommandHandler.handleArchive(args);
+                case 'export':
+                    return this.taskCommandHandler.handleExport(options);
+                case 'import':
+                    return this.taskCommandHandler.handleImport(options);
+                case 'backup':
+                    return this.taskCommandHandler.handleBackup(options);
+                case 'ai':
+                    return this.taskCommandHandler.handleAi(args);
+                case 'research':
+                    return this.taskCommandHandler.handleResearch(args);
+                default:
+                    console.error(`❌ Unknown action: ${action}`);
+                    console.log('Available actions: create, list, view, update, delete, archive, export, import, backup, ai, research');
                     process.exit(1);
-                }
-                const createResult = await this.taskService.createTask({
-                    title: options.title,
-                    description: options.description,
-                    priority: options.priority,
-                    assignee: options.assignee,
-                    labels: options.labels || [],
-                    estimatedHours: options.hours
-                });
-                if (createResult.success && createResult.task) {
-                    console.log(`✅ Created task: ${createResult.task.title}`);
-                    console.log(`   ID: ${createResult.task.id.value}`);
-                }
-                else {
-                    console.error(`❌ Failed to create task: ${createResult.error}`);
-                    process.exit(1);
-                }
-                break;
-            case 'list':
-                const listResult = await this.taskService.listTasks({
-                    status: options.status === 'todo' ? undefined : options.status,
-                    assignee: options.assignee
-                });
-                if (listResult.success && listResult.tasks) {
-                    console.log(`📋 Found ${listResult.tasks.length} tasks:\n`);
-                    listResult.tasks.forEach(task => {
-                        console.log(`${task.status === 'done' ? '✅' : '📌'} ${task.title}`);
-                        console.log(`   ID: ${task.id.value}`);
-                        console.log(`   Status: ${task.status} | Priority: ${task.priority}`);
-                        if (task.assignee)
-                            console.log(`   Assignee: ${task.assignee}`);
-                        if (task.labels.length > 0)
-                            console.log(`   Labels: ${task.labels.join(', ')}`);
-                        console.log('');
-                    });
-                }
-                else {
-                    console.error(`❌ Failed to list tasks: ${listResult.error}`);
-                    process.exit(1);
-                }
-                break;
-            case 'view':
-                const taskId = args[0];
-                if (!taskId) {
-                    console.error('❌ Task ID is required');
-                    process.exit(1);
-                }
-                const viewResult = await this.taskService.viewTask({ taskId });
-                if (viewResult.success && viewResult.task) {
-                    const task = viewResult.task;
-                    console.log(`📋 Task: ${task.title}`);
-                    console.log(`   ID: ${task.id.value}`);
-                    console.log(`   Status: ${task.status}`);
-                    console.log(`   Priority: ${task.priority}`);
-                    console.log(`   Created: ${task.createdAt.toLocaleDateString()}`);
-                    console.log(`   Updated: ${task.updatedAt.toLocaleDateString()}`);
-                    if (task.description)
-                        console.log(`   Description: ${task.description}`);
-                    if (task.assignee)
-                        console.log(`   Assignee: ${task.assignee}`);
-                    if (task.estimatedHours)
-                        console.log(`   Estimated: ${task.estimatedHours}h`);
-                    if (task.labels.length > 0)
-                        console.log(`   Labels: ${task.labels.join(', ')}`);
-                }
-                else {
-                    console.error(`❌ Task not found: ${taskId}`);
-                    process.exit(1);
-                }
-                break;
-            case 'update':
-                const updateId = args[0];
-                if (!updateId) {
-                    console.error('❌ Task ID is required');
-                    process.exit(1);
-                }
-                const updateData = { taskId: updateId };
-                if (options.title)
-                    updateData.title = options.title;
-                if (options.description)
-                    updateData.description = options.description;
-                if (options.status)
-                    updateData.status = options.status;
-                if (options.priority)
-                    updateData.priority = options.priority;
-                if (options.assignee)
-                    updateData.assignee = options.assignee;
-                if (options.labels)
-                    updateData.labels = options.labels;
-                if (options.hours)
-                    updateData.estimatedHours = options.hours;
-                const updateResult = await this.taskService.updateTask(updateData);
-                if (updateResult.success && updateResult.task) {
-                    console.log(`✅ Updated task: ${updateResult.task.title}`);
-                }
-                else {
-                    console.error(`❌ Failed to update task: ${updateResult.error}`);
-                    process.exit(1);
-                }
-                break;
-            case 'delete':
-                const deleteId = args[0];
-                if (!deleteId) {
-                    console.error('❌ Task ID is required');
-                    process.exit(1);
-                }
-                const deleteResult = await this.taskService.deleteTask({ taskId: deleteId });
-                if (deleteResult.success) {
-                    console.log(`✅ Deleted task: ${deleteId}`);
-                }
-                else {
-                    console.error(`❌ Failed to delete task: ${deleteResult.error}`);
-                    process.exit(1);
-                }
-                break;
-            case 'archive':
-                const archiveId = args[0];
-                if (!archiveId) {
-                    console.error('❌ Task ID is required');
-                    process.exit(1);
-                }
-                const archiveResult = await this.taskService.archiveTask({ taskId: archiveId });
-                if (archiveResult.success && archiveResult.archivedTask) {
-                    console.log(`📦 Archived task: ${archiveResult.archivedTask.title}`);
-                }
-                else {
-                    console.error(`❌ Failed to archive task: ${archiveResult.error}`);
-                }
-                break;
-            case 'export':
-                const exportResult = await this.taskService.exportTasks({
-                    format: options.format,
-                    includeArchived: options.includeArchived,
-                    outputPath: options.file
-                });
-                if (exportResult.success) {
-                    console.log(`✅ Exported ${exportResult.taskCount} tasks to ${exportResult.exportPath}`);
-                }
-                else {
-                    console.error(`❌ Export failed: ${exportResult.error}`);
-                }
-                break;
-            case 'import':
-                if (!options.file) {
-                    console.error('❌ File path is required for import (use --file)');
-                    process.exit(1);
-                }
-                const importResult = await this.taskService.importTasks({
-                    filePath: options.file,
-                    format: options.format === 'json' ? 'json' : options.format,
-                    mergeStrategy: options.mergeStrategy
-                });
-                if (importResult.success) {
-                    console.log(`✅ ${importResult.summary}`);
-                    if (importResult.errors && importResult.errors.length > 0) {
-                        console.log('\n⚠️  Warnings:');
-                        importResult.errors.forEach(error => console.log(`   ${error}`));
-                    }
-                }
-                else {
-                    console.error(`❌ Import failed:`);
-                    importResult.errors?.forEach(error => console.error(`   ${error}`));
-                }
-                break;
-            case 'backup':
-                const backupResult = await this.taskService.backupTasks({
-                    format: options.format
-                });
-                if (backupResult.success) {
-                    console.log(`✅ Backup created: ${backupResult.backupPath}`);
-                    if (backupResult.cleanedUpCount && backupResult.cleanedUpCount > 0) {
-                        console.log(`   Cleaned up ${backupResult.cleanedUpCount} old backups`);
-                    }
-                }
-                else {
-                    console.error(`❌ Backup failed: ${backupResult.error}`);
-                }
-                break;
-            case 'ai':
-                const aiQuery = args[0];
-                if (!aiQuery) {
-                    console.error('❌ AI query is required');
-                    console.log('Usage: cc task ai "Create tasks for building a web app"');
-                    process.exit(1);
-                }
-                console.log('🤖 Generating AI-powered task breakdown...');
-                console.log(`📝 Query: ${aiQuery}`);
-                const aiResult = await this.researchService.executeResearch({
-                    query: `Create a comprehensive task breakdown for: ${aiQuery}. Generate specific, actionable tasks with priorities, descriptions, and estimated hours. Focus on practical implementation steps.`,
-                    outputFormat: 'tasks',
-                    maxDepth: 2
-                });
-                if (aiResult.success) {
-                    console.log('✅ AI task generation completed');
-                    if (aiResult.tasksCreated) {
-                        console.log(`📋 Created ${aiResult.tasksCreated} tasks`);
-                    }
-                }
-                else {
-                    console.error(`❌ AI task generation failed: ${aiResult.error}`);
-                }
-                break;
-            case 'research':
-                const researchQuery = args[0];
-                if (!researchQuery) {
-                    console.error('❌ Research query is required');
-                    console.log('Usage: cc task research "Research modern web frameworks"');
-                    process.exit(1);
-                }
-                console.log('🔍 Conducting AI research and generating tasks...');
-                console.log(`📝 Query: ${researchQuery}`);
-                const researchResult = await this.researchService.executeResearch({
-                    query: researchQuery,
-                    outputFormat: 'both',
-                    maxDepth: 3
-                });
-                if (researchResult.success) {
-                    console.log('✅ Research completed successfully');
-                    if (researchResult.reportPath) {
-                        console.log(`📄 Report saved: ${researchResult.reportPath}`);
-                    }
-                    if (researchResult.tasksCreated) {
-                        console.log(`📋 Created ${researchResult.tasksCreated} tasks`);
-                    }
-                }
-                else {
-                    console.error(`❌ Research failed: ${researchResult.error}`);
-                    process.exit(1);
-                }
-                break;
-            default:
-                console.error(`❌ Unknown action: ${action}`);
-                console.log('Available actions: create, list, view, update, delete, archive, export, import, backup, ai, research');
-                process.exit(1);
-        }
+            }
+        }, 'Task command failed');
     }
     async handleTemplateCommand(action, args, options) {
         switch (action) {
@@ -680,10 +481,50 @@ class CLIApplication {
         }
     }
 }
+// Application bootstrap function with proper error recovery
+async function main() {
+    let app;
+    try {
+        app = new CLIApplication();
+    }
+    catch (initError) {
+        console.error('❌ Failed to initialize CLI application:', initError);
+        console.error('🔧 Try running with --verbose for more details');
+        console.error('💡 Common fixes:');
+        console.error('   - Ensure ~/.critical-claude directory is writable');
+        console.error('   - Check disk space availability');
+        console.error('   - Verify Node.js permissions');
+        process.exit(1);
+    }
+    try {
+        await app.start();
+    }
+    catch (startError) {
+        console.error('❌ CLI Application startup failed:', startError);
+        // Attempt graceful degradation for common issues
+        if (startError instanceof Error) {
+            if (startError.message.includes('ENOENT') || startError.message.includes('permission')) {
+                console.error('🔧 Storage access issue. Attempting to create required directories...');
+                try {
+                    const path = await import('path');
+                    const fs = await import('fs/promises');
+                    const os = await import('os');
+                    const storageDir = path.join(os.homedir(), '.critical-claude');
+                    await fs.mkdir(storageDir, { recursive: true });
+                    console.log('✅ Created storage directory. Please try again.');
+                }
+                catch (recoveryError) {
+                    console.error('❌ Recovery failed:', recoveryError);
+                }
+            }
+        }
+        process.exit(1);
+    }
+}
 // Start the application
-const app = new CLIApplication();
-app.start().catch(error => {
-    console.error('❌ CLI Application failed:', error);
+main().catch(error => {
+    console.error('❌ Unexpected application error:', error);
+    console.error('📧 Please report this issue with the full error details');
     process.exit(1);
 });
 //# sourceMappingURL=index.js.map

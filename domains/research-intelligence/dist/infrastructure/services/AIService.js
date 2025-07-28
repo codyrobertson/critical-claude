@@ -1,70 +1,78 @@
 /**
- * AI Service - 1:1 Migration from legacy core/ai-service.ts
+ * AI Service - Infrastructure implementation of IAIProvider
  * Real AI integration using OpenAI, Anthropic, and Claude Code APIs
  */
 import fs from 'fs';
 import path from 'path';
-// Global provider detection cache
-let globalProviderDetected = false;
+import { AI_CONFIG, REPORT_CONFIG, ERROR_MESSAGES } from '../../shared/constants.js';
+/**
+ * Console Logger Implementation
+ */
+class ConsoleLogger {
+    debug(message, context) {
+        console.debug(`[DEBUG] ${message}`, context || '');
+    }
+    info(message, context) {
+        console.log(`ℹ️ ${message}`, context ? JSON.stringify(context) : '');
+    }
+    warn(message, context) {
+        console.warn(`⚠️ ${message}`, context ? JSON.stringify(context) : '');
+    }
+    error(message, error, context) {
+        console.error(`❌ ${message}`, error || '', context ? JSON.stringify(context) : '');
+    }
+}
 export class AIService {
     config;
     initialized = false;
-    constructor(config = { provider: 'mock' }) {
-        this.config = config;
+    logger;
+    constructor(config = {}, logger) {
+        this.config = { ...config };
+        this.logger = logger || new ConsoleLogger();
         // Load configuration from cc.env file if it exists (sync)
         this.loadEnvConfigSync();
-        // Only auto-detect provider if not already detected globally and not explicitly configured
-        if (config.provider === 'mock' && !globalProviderDetected) {
-            console.log('🔍 Auto-detecting AI provider...');
-            globalProviderDetected = true;
-            // Check for direct API keys first (most reliable)
-            if (process.env.OPENAI_API_KEY) {
-                console.log('🤖 Found OpenAI API key, using OpenAI provider');
-                this.config.provider = 'openai';
-                this.config.apiKey = process.env.OPENAI_API_KEY;
-                this.config.model = process.env.CC_AI_MODEL || this.config.model;
-            }
-            else if (process.env.ANTHROPIC_API_KEY) {
-                console.log('🤖 Found Anthropic API key, using Anthropic provider');
-                this.config.provider = 'anthropic';
-                this.config.apiKey = process.env.ANTHROPIC_API_KEY;
-                this.config.model = process.env.CC_AI_MODEL || this.config.model;
-            }
-            else {
-                console.log('🤖 No API keys found, will attempt Claude Code CLI as fallback...');
+        // Priority: Claude Code CLI > Anthropic API > OpenAI API > Mock
+        // Only auto-detect if no provider was explicitly configured
+        if (!config.provider) {
+            const forceClaudeCode = process.env.CC_AI_PROVIDER === 'claude-code';
+            const noApiKeys = !process.env.OPENAI_API_KEY && !process.env.ANTHROPIC_API_KEY;
+            if (forceClaudeCode || noApiKeys) {
                 this.config.provider = 'claude-code';
-            }
-        }
-        else if (config.provider === 'mock' && globalProviderDetected) {
-            // Use previously detected provider silently
-            if (process.env.OPENAI_API_KEY) {
-                this.config.provider = 'openai';
-                this.config.apiKey = process.env.OPENAI_API_KEY;
-                this.config.model = process.env.CC_AI_MODEL || this.config.model;
+                this.config.model = process.env.CC_AI_MODEL || 'sonnet';
+                this.logger.info('Auto-selected Claude Code CLI provider');
             }
             else if (process.env.ANTHROPIC_API_KEY) {
                 this.config.provider = 'anthropic';
                 this.config.apiKey = process.env.ANTHROPIC_API_KEY;
                 this.config.model = process.env.CC_AI_MODEL || this.config.model;
+                this.logger.info('Auto-selected Anthropic API provider');
+            }
+            else if (process.env.OPENAI_API_KEY) {
+                this.config.provider = 'openai';
+                this.config.apiKey = process.env.OPENAI_API_KEY;
+                this.config.model = process.env.CC_AI_MODEL || this.config.model;
+                this.logger.info('Auto-selected OpenAI API provider');
             }
             else {
-                this.config.provider = 'claude-code';
+                this.config.provider = 'mock';
+                this.logger.info('No AI providers available, using mock');
             }
         }
-        // Apply cc.env overrides
-        if (config.provider === 'mock') {
-            this.config.temperature = process.env.CC_AI_TEMPERATURE ?
-                parseFloat(process.env.CC_AI_TEMPERATURE) : this.config.temperature;
-            this.config.maxTokens = process.env.CC_AI_MAX_TOKENS ?
-                parseInt(process.env.CC_AI_MAX_TOKENS) : this.config.maxTokens;
+        else {
+            this.logger.info(`Using explicitly configured provider: ${this.config.provider}`);
         }
+        // Apply environment variable overrides
+        this.config.temperature = process.env.CC_AI_TEMPERATURE ?
+            parseFloat(process.env.CC_AI_TEMPERATURE) : this.config.temperature;
+        this.config.maxTokens = process.env.CC_AI_MAX_TOKENS ?
+            parseInt(process.env.CC_AI_MAX_TOKENS) : this.config.maxTokens;
     }
     loadEnvConfigSync() {
         try {
             // Look for cc.env in current working directory
-            const envPath = path.join(process.cwd(), 'cc.env');
+            const envPath = path.join(process.cwd(), AI_CONFIG.ENV_FILE_NAME);
             if (fs.existsSync(envPath)) {
-                console.log('📄 Loading configuration from cc.env');
+                this.logger.info('Loading configuration from cc.env');
                 const envContent = fs.readFileSync(envPath, 'utf8');
                 // Parse simple KEY=VALUE format (ignoring comments and empty lines)
                 const lines = envContent.split('\n');
@@ -78,86 +86,107 @@ export class AIService {
                         }
                     }
                 }
-                console.log('✅ Loaded cc.env configuration');
+                this.logger.info('Loaded cc.env configuration');
             }
         }
         catch (error) {
             // Silently ignore env loading errors
-            console.warn('⚠️  Could not load cc.env file:', error.message);
+            this.logger.warn('Could not load cc.env file', { error: error.message });
         }
     }
     async initialize() {
         if (this.initialized)
             return;
-        // Initialize AI provider
-        switch (this.config.provider) {
-            case 'openai':
-                await this.initializeOpenAI();
-                break;
-            case 'anthropic':
-                await this.initializeAnthropic();
-                break;
-            case 'claude-code':
-                await this.initializeClaudeCode();
-                break;
-            case 'local':
-                await this.initializeLocal();
-                break;
-            case 'mock':
-                await this.initializeMock();
-                break;
-            default:
-                throw new Error(`Unsupported AI provider: ${this.config.provider}`);
+        // Initialize AI provider with fallback logic
+        try {
+            switch (this.config.provider) {
+                case 'openai':
+                    await this.initializeOpenAI();
+                    break;
+                case 'anthropic':
+                    await this.initializeAnthropic();
+                    break;
+                case 'claude-code':
+                    await this.initializeClaudeCode();
+                    break;
+                case 'local':
+                    await this.initializeLocal();
+                    break;
+                case 'mock':
+                    await this.initializeMock();
+                    break;
+                default:
+                    throw new Error(`Unsupported AI provider: ${this.config.provider}`);
+            }
+            this.initialized = true;
         }
-        this.initialized = true;
+        catch (error) {
+            this.logger.error(`Failed to initialize ${this.config.provider} provider`, error);
+            // Fallback logic: try other providers if the primary one fails
+            if (this.config.provider === 'claude-code') {
+                this.logger.warn('Claude Code initialization failed, trying fallback providers...');
+                if (process.env.ANTHROPIC_API_KEY) {
+                    this.logger.info('Falling back to Anthropic API');
+                    this.config.provider = 'anthropic';
+                    this.config.apiKey = process.env.ANTHROPIC_API_KEY;
+                    await this.initializeAnthropic();
+                }
+                else if (process.env.OPENAI_API_KEY) {
+                    this.logger.info('Falling back to OpenAI API');
+                    this.config.provider = 'openai';
+                    this.config.apiKey = process.env.OPENAI_API_KEY;
+                    await this.initializeOpenAI();
+                }
+                else {
+                    this.logger.warn('No API keys available, falling back to mock provider');
+                    this.config.provider = 'mock';
+                    await this.initializeMock();
+                }
+                this.initialized = true;
+            }
+            else {
+                // For other providers, fall back to mock
+                this.logger.warn('Falling back to mock provider...');
+                this.config.provider = 'mock';
+                await this.initializeMock();
+                this.initialized = true;
+            }
+        }
     }
     // Private methods for AI provider initialization
     async initializeOpenAI() {
         if (!this.config.apiKey) {
-            throw new Error('OpenAI API key is required');
+            throw new Error(ERROR_MESSAGES.OPENAI_API_KEY_REQUIRED);
         }
-        console.log('✅ OpenAI provider initialized');
+        this.logger.info('OpenAI provider initialized');
     }
     async initializeAnthropic() {
         if (!this.config.apiKey) {
-            throw new Error('Anthropic API key is required');
+            throw new Error(ERROR_MESSAGES.ANTHROPIC_API_KEY_REQUIRED);
         }
-        console.log('✅ Anthropic provider initialized');
+        this.logger.info('Anthropic provider initialized');
     }
     async initializeClaudeCode() {
+        this.logger.info('Attempting to initialize Claude Code SDK...');
         try {
-            // Check if Claude Code CLI is available
-            const { spawn } = await import('child_process');
-            return new Promise((resolve, reject) => {
-                const testProcess = spawn('claude', ['--version'], {
-                    stdio: 'pipe'
-                });
-                testProcess.on('close', (code) => {
-                    if (code === 0) {
-                        console.log('✅ Claude Code CLI detected and available');
-                        resolve();
-                    }
-                    else {
-                        reject(new Error('Claude Code CLI not found or not working'));
-                    }
-                });
-                testProcess.on('error', (error) => {
-                    reject(new Error(`Claude Code CLI not available: ${error.message}`));
-                });
-            });
+            // TODO: Temporarily disabled due to TypeScript module resolution issues
+            // const { ClaudeCodeProvider } = await import('../../../../../src/ai/ClaudeCodeProvider.js');
+            // For now, throw error to trigger fallback to other providers
+            throw new Error('Claude Code SDK temporarily disabled for viewer compatibility');
         }
         catch (error) {
-            throw new Error(`Claude Code initialization failed: ${error.message}. Install with: npm install -g @anthropic-ai/claude-code`);
+            this.logger.error('Claude Code SDK initialization failed', error);
+            throw error; // Re-throw to trigger fallback
         }
     }
     async initializeLocal() {
         // Local model initialization would go here (ollama, etc.)
-        console.warn('Local AI integration not implemented yet, using mock');
+        this.logger.warn('Local AI integration not implemented yet, using mock');
         await this.initializeMock();
     }
     async initializeMock() {
         // Mock AI is always ready
-        console.log('Initialized mock AI service');
+        this.logger.info('Initialized mock AI service');
     }
     async callAI(prompt) {
         await this.initialize();
@@ -205,26 +234,26 @@ export class AIService {
             throw new Error('OpenAI API key required');
         }
         try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            const response = await fetch(AI_CONFIG.OPENAI_API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${this.config.apiKey}`
                 },
                 body: JSON.stringify({
-                    model: this.config.model || 'gpt-4',
+                    model: this.config.model || AI_CONFIG.DEFAULT_OPENAI_MODEL,
                     messages: [
                         {
                             role: 'system',
-                            content: 'You are an expert research analyst. Provide detailed, structured responses in the exact JSON format requested.'
+                            content: AI_CONFIG.RESEARCH_SYSTEM_MESSAGE
                         },
                         {
                             role: 'user',
                             content: prompt
                         }
                     ],
-                    max_tokens: this.config.maxTokens || 4000,
-                    temperature: this.config.temperature || 0.7
+                    max_tokens: this.config.maxTokens || AI_CONFIG.DEFAULT_MAX_TOKENS,
+                    temperature: this.config.temperature || AI_CONFIG.DEFAULT_TEMPERATURE
                 })
             });
             if (!response.ok) {
@@ -234,7 +263,7 @@ export class AIService {
             return result.choices[0]?.message?.content || '';
         }
         catch (error) {
-            console.warn(`OpenAI API call failed: ${error.message}`);
+            this.logger.warn(`OpenAI API call failed: ${error.message}`);
             throw error;
         }
     }
@@ -243,21 +272,21 @@ export class AIService {
             throw new Error('Anthropic API key required');
         }
         try {
-            const response = await fetch('https://api.anthropic.com/v1/messages', {
+            const response = await fetch(AI_CONFIG.ANTHROPIC_API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'x-api-key': this.config.apiKey,
-                    'anthropic-version': '2023-06-01'
+                    'anthropic-version': AI_CONFIG.ANTHROPIC_API_VERSION
                 },
                 body: JSON.stringify({
-                    model: this.config.model || 'claude-3-5-sonnet-20241022',
-                    max_tokens: this.config.maxTokens || 4000,
-                    temperature: this.config.temperature || 0.7,
+                    model: this.config.model || AI_CONFIG.DEFAULT_ANTHROPIC_MODEL,
+                    max_tokens: this.config.maxTokens || AI_CONFIG.DEFAULT_MAX_TOKENS,
+                    temperature: this.config.temperature || AI_CONFIG.DEFAULT_TEMPERATURE,
                     messages: [
                         {
                             role: 'user',
-                            content: `You are an expert research analyst. Provide detailed, structured responses in the exact JSON format requested.\n\n${prompt}`
+                            content: `${AI_CONFIG.RESEARCH_SYSTEM_MESSAGE}\n\n${prompt}`
                         }
                     ]
                 })
@@ -269,72 +298,21 @@ export class AIService {
             return result.content[0]?.text || '';
         }
         catch (error) {
-            console.warn(`Anthropic API call failed: ${error.message}`);
+            this.logger.warn(`Anthropic API call failed: ${error.message}`);
             throw error;
         }
     }
     async callClaudeCode(prompt) {
         try {
-            // Use Claude Code CLI to spawn a subprocess
-            const { spawn } = await import('child_process');
-            console.log('🤖 Using Claude Code CLI subprocess...');
-            return new Promise((resolve, reject) => {
-                const claudeProcess = spawn('claude', [
-                    '-p', // Print mode (non-interactive)
-                    '--output-format', 'json',
-                    '--max-turns', '1'
-                ], {
-                    stdio: ['pipe', 'pipe', 'pipe']
-                });
-                let stdout = '';
-                let stderr = '';
-                claudeProcess.stdout.on('data', (data) => {
-                    stdout += data.toString();
-                });
-                claudeProcess.stderr.on('data', (data) => {
-                    stderr += data.toString();
-                });
-                claudeProcess.on('close', (code) => {
-                    if (code === 0) {
-                        try {
-                            const response = JSON.parse(stdout);
-                            resolve(response.result || response.content || stdout);
-                        }
-                        catch (parseError) {
-                            // If JSON parsing fails, return raw stdout
-                            resolve(stdout);
-                        }
-                    }
-                    else {
-                        console.warn(`Claude Code process failed with code ${code}: ${stderr}`);
-                        reject(new Error(`Claude Code failed: ${stderr}`));
-                    }
-                });
-                claudeProcess.on('error', (error) => {
-                    console.warn(`Claude Code spawn error: ${error.message}`);
-                    reject(error);
-                });
-                // Send the prompt to claude stdin
-                claudeProcess.stdin.write(prompt);
-                claudeProcess.stdin.end();
-            });
+            this.logger.info('🤖 Using Claude Code SDK...');
+            // TODO: Temporarily disabled due to TypeScript module resolution issues
+            // const { ClaudeCodeProvider } = await import('../../../../../src/ai/ClaudeCodeProvider.js');
+            // For now, throw error to use fallback providers
+            throw new Error('Claude Code SDK temporarily disabled for viewer compatibility');
         }
         catch (error) {
-            console.warn(`Claude Code integration failed: ${error.message}`);
-            // Fallback to other providers
-            if (process.env.OPENAI_API_KEY) {
-                console.log('🔄 Falling back to OpenAI API');
-                this.config.provider = 'openai';
-                this.config.apiKey = process.env.OPENAI_API_KEY;
-                return await this.callOpenAI(prompt);
-            }
-            if (process.env.ANTHROPIC_API_KEY) {
-                console.log('🔄 Falling back to Anthropic API');
-                this.config.provider = 'anthropic';
-                this.config.apiKey = process.env.ANTHROPIC_API_KEY;
-                return await this.callAnthropic(prompt);
-            }
-            throw new Error('Claude Code not available and no fallback API keys found. Install Claude Code CLI or set OPENAI_API_KEY/ANTHROPIC_API_KEY.');
+            this.logger.warn(`Claude Code SDK integration failed: ${error.message}`);
+            throw new Error('Claude Code SDK not available. Install Claude Code SDK with: npm install @anthropic-ai/claude-code');
         }
     }
     async callLocal(prompt) {
@@ -344,7 +322,7 @@ export class AIService {
     }
     async callMock(prompt) {
         // Simulate AI response delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, AI_CONFIG.FALLBACK_DELAY_MS));
         // Return mock structured responses for research
         if (prompt.includes('Create a research plan')) {
             return JSON.stringify({
@@ -398,6 +376,48 @@ export class AIService {
             ]
         });
     }
+    // Implementation of IAIProvider interface
+    async isAvailable() {
+        try {
+            await this.initialize();
+            // Actually test the provider with a minimal request
+            switch (this.config.provider) {
+                case 'openai':
+                    if (!this.config.apiKey)
+                        return false;
+                    // Test with minimal token request
+                    await this.callOpenAI('test');
+                    break;
+                case 'anthropic':
+                    if (!this.config.apiKey)
+                        return false;
+                    await this.callAnthropic('test');
+                    break;
+                case 'claude-code':
+                    // Already tested CLI availability in initialize
+                    break;
+                case 'mock':
+                    // Mock is always available
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
+        catch (error) {
+            this.logger.warn('AI provider is not available', { error: error.message });
+            return false;
+        }
+    }
+    async generateResearchPlan(query, context) {
+        return await this.analyzeResearchQuery(query, context);
+    }
+    async analyzeResearchData(area, queries, searchResults) {
+        return await this.conductResearchAnalysis(area, queries, searchResults);
+    }
+    async generateStructuredContent(prompt, schema) {
+        return await this.generateStructured(prompt, schema);
+    }
     // Public methods for research system integration
     async analyzeResearchQuery(query, context) {
         const prompt = `Create a comprehensive research plan for: "${query}"${context || ''}
@@ -429,31 +449,12 @@ Return JSON with exactly this structure:
             return parsed;
         }
         catch (error) {
-            console.warn('Failed to parse AI response, using fallback research plan');
+            this.logger.warn(ERROR_MESSAGES.PARSE_ERRORS.AI_RESPONSE);
             return {
                 overview: `Comprehensive research plan for ${query}`,
-                research_areas: [
-                    {
-                        area: "Core Concepts and Fundamentals",
-                        importance: "Essential foundation understanding",
-                        depth_level: "Deep",
-                        expected_findings: "Fundamental principles and key concepts"
-                    },
-                    {
-                        area: "Current Best Practices",
-                        importance: "Industry standard approaches",
-                        depth_level: "Moderate",
-                        expected_findings: "Proven methodologies and techniques"
-                    },
-                    {
-                        area: "Implementation Strategies",
-                        importance: "Practical application guidance",
-                        depth_level: "Moderate",
-                        expected_findings: "Step-by-step implementation approaches"
-                    }
-                ],
-                methodology: "Multi-agent AI research with web search and analysis",
-                success_criteria: ["Comprehensive topic coverage", "Actionable recommendations", "Clear implementation guidance"],
+                research_areas: [...AI_CONFIG.DEFAULT_RESEARCH_AREAS],
+                methodology: AI_CONFIG.DEFAULT_METHODOLOGY,
+                success_criteria: [...AI_CONFIG.DEFAULT_SUCCESS_CRITERIA],
                 key_questions: [`What are the key aspects of ${query}?`, `What are the best practices?`, `How can this be implemented effectively?`]
             };
         }
@@ -464,7 +465,10 @@ Return JSON with exactly this structure:
 Search queries used: ${queries.join(', ')}
 
 Search results:
-${searchResults.map(r => `- ${r.title}: ${r.snippet || r.description || 'No description'}`).join('\n')}
+${searchResults.map(r => {
+            const result = r;
+            return `- ${result.title || 'No title'}: ${result.snippet || result.description || 'No description'}`;
+        }).join('\n')}
 
 Provide comprehensive analysis with this exact JSON structure:
 {
@@ -493,15 +497,15 @@ Provide comprehensive analysis with this exact JSON structure:
             return parsed;
         }
         catch (error) {
-            console.warn(`Failed to parse AI analysis for ${area}, using fallback`);
+            this.logger.warn(ERROR_MESSAGES.PARSE_ERRORS.ANALYSIS.replace('{area}', area));
             return {
                 focus_area: area,
                 executive_summary: `Analysis of ${area} based on available research data`,
-                detailed_analysis: "Comprehensive analysis indicates multiple viable approaches with various trade-offs and considerations.",
-                insights: ["Multiple approaches are available", "Implementation requires careful planning", "Best practices should be followed"],
-                technical_details: ["Technical implementation varies by use case", "Performance considerations are important"],
-                recommendations: ["Follow industry standards", "Conduct thorough testing", "Consider scalability requirements"],
-                gaps_identified: ["More specific use case analysis needed"],
+                detailed_analysis: REPORT_CONFIG.FALLBACK_RESPONSES.DETAILED_ANALYSIS,
+                insights: [...REPORT_CONFIG.FALLBACK_RESPONSES.INSIGHTS],
+                technical_details: [...REPORT_CONFIG.FALLBACK_RESPONSES.TECHNICAL_DETAILS],
+                recommendations: [...REPORT_CONFIG.FALLBACK_RESPONSES.RECOMMENDATIONS],
+                gaps_identified: [...REPORT_CONFIG.FALLBACK_RESPONSES.GAPS_IDENTIFIED],
                 sources: queries.map(q => `Search results for: ${q}`)
             };
         }
@@ -519,9 +523,9 @@ IMPORTANT: Respond with ONLY the JSON object, no additional text or formatting.`
             return parsed;
         }
         catch (error) {
-            console.warn(`Failed to generate structured response for schema: ${JSON.stringify(schema).substring(0, 100)}...`);
+            this.logger.warn(`Failed to generate structured response for schema: ${JSON.stringify(schema).substring(0, 100)}...`);
             // Return a basic fallback based on schema structure
-            if (schema.executive_summary) {
+            if (schema && typeof schema === 'object' && 'executive_summary' in schema) {
                 // This looks like a comprehensive report schema
                 return {
                     executive_summary: "Research analysis completed with available data",

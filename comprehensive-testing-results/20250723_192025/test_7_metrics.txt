@@ -1,0 +1,7 @@
+total_commands: 5
+create_commands: 1
+expand_commands: 0
+research_commands: 0
+ai_commands: 0
+template_commands: 0
+non_cc_commands: 0

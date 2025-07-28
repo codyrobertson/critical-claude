@@ -1,0 +1,25 @@
+I understand you want to create a user authentication task using Critical Claude CLI. Based on my research, here's how to create it:
+
+**Para crear la tarea de autenticación de usuario:**
+
+```bash
+cc task create -t "Implementar autenticación de usuario" -d "Desarrollar sistema completo de autenticación incluyendo registro, inicio de sesión, recuperación de contraseña y gestión de tokens JWT" -p high --labels authentication security backend --hours 16
+```
+
+**Comandos adicionales en español que puedes usar:**
+
+```bash
+# Listar tareas
+cc task list
+
+# Ver detalles de la tarea
+cc task view <task-id>
+
+# Actualizar estado
+cc task update <task-id> -s in_progress
+
+# Agregar más detalles
+cc task update <task-id> -d "Incluir OAuth2 con Google y GitHub"
+```
+
+Note: Critical Claude CLI currently doesn't have built-in Spanish language support, but you can use Spanish text in titles and descriptions. The commands themselves remain in English.

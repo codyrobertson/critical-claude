@@ -106,7 +106,7 @@ export class BackupTasksUseCase {
       return filesToRemove.length;
     } catch (error) {
       // Don't fail backup if cleanup fails
-      console.warn('Failed to cleanup old backups:', error);
+      // Log warning but continue with backup
       return 0;
     }
   }

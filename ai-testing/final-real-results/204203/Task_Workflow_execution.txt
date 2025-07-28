@@ -1,0 +1,966 @@
+✅ Created task: "Implement
+   ID: task-1753328561804-y2yxt1sn2
+✅ Created task: "Database
+   ID: task-1753328562295-ka1knh7bj
+✅ Created task: "API
+   ID: task-1753328562787-tr0sy7pp5
+📋 Found 70 tasks:
+
+📌 "API
+   ID: task-1753328562787-tr0sy7pp5
+   Status: todo | Priority: medium
+   Labels: backend,api,rest
+
+📌 "Database
+   ID: task-1753328562295-ka1knh7bj
+   Status: todo | Priority: high
+   Labels: backend,database,setup
+
+📌 "Implement
+   ID: task-1753328561804-y2yxt1sn2
+   Status: todo | Priority: high
+   Labels: backend,auth,security
+
+📌 "Setup
+   ID: task-1753328541631-a8cae6ga5
+   Status: todo | Priority: medium
+   Labels: devops,docker,deployment
+
+📌 "Implement
+   ID: task-1753328541185-xt40nk0xo
+   Status: todo | Priority: medium
+   Labels: testing,jest,cypress
+
+📌 "Develop
+   ID: task-1753328540748-izl6gw1cz
+   Status: todo | Priority: high
+   Labels: backend,api,nodejs
+
+📌 "Build
+   ID: task-1753328540249-duvc1eb57
+   Status: todo | Priority: high
+   Labels: frontend,react,ui
+
+📌 "Frontend
+   ID: task-1753328509801-jcnk8sicg
+   Status: todo | Priority: high
+   Labels: frontend,react,ui,responsive
+
+📌 Integration Test Task
+   ID: task-1753299838623-34jhen8dg
+   Status: in_progress | Priority: medium
+
+📌 Test Task from CLI
+   ID: task-1753328075265-pzw5q95no
+   Status: todo | Priority: high
+
+📌 "Observability
+   ID: task-1753327451646-3wsmlo58w
+   Status: todo | Priority: high
+   Labels: monitoring,logging,observability
+
+📌 "Security
+   ID: task-1753327451480-4n7nvgn39
+   Status: todo | Priority: critical
+   Labels: security,scanning,compliance
+
+📌 "Automated
+   ID: task-1753327451149-ycotar46r
+   Status: todo | Priority: high
+   Labels: testing,automation,quality
+
+📌 "Complete
+   ID: task-1753327430270-t3debyxz3
+   Status: todo | Priority: high
+   Labels: devops,cicd,docker,kubernetes,security
+
+📌 "WebSocket
+   ID: task-1753327351271-307vcoezn
+   Status: todo | Priority: high
+   Labels: websockets,realtime,streaming
+
+📌 "Data
+   ID: task-1753327340415-dav70bz5p
+   Status: todo | Priority: medium
+   Labels: export,csv,pdf,excel,filtering
+
+📌 "Real-time
+   ID: task-1753327340252-lamdlv677
+   Status: todo | Priority: high
+   Labels: charts,realtime,visualization,d3,websockets
+
+📌 "User
+   ID: task-1753327339922-00hiwd8mn
+   Status: todo | Priority: high
+   Labels: auth,security,jwt,rbac
+
+📌 "React
+   ID: task-1753327339590-kf1ylrk2a
+   Status: todo | Priority: high
+   Labels: react,dashboard,analytics,auth,realtime,export
+
+📌 GAME-016: Implement Game Settings and Preferences
+   ID: task-1753322276974-rz5e6pk4q
+   Status: todo | Priority: medium
+   Labels: week8, roguelike, game-dev
+
+📌 GAME-015: Add Spell System and Effects
+   ID: task-1753322267995-c0vc45r5q
+   Status: todo | Priority: medium
+   Labels: week8, roguelike, game-dev
+
+📌 GAME-014: Implement Item and Inventory System
+   ID: task-1753322258332-901q698b0
+   Status: todo | Priority: high
+   Labels: week7, roguelike, game-dev
+
+📌 GAME-013: Create Character Creation and Stats System
+   ID: task-1753322248233-w5rs9e408
+   Status: todo | Priority: high
+   Labels: week7, roguelike, game-dev
+
+📌 GAME-012: Implement Monster AI and Pathfinding
+   ID: task-1753322239080-oemsz9u39
+   Status: todo | Priority: critical
+   Labels: week6, roguelike, game-dev
+
+📌 GAME-011: Build Combat UI with React Overlay
+   ID: task-1753322230546-bqof1jboi
+   Status: todo | Priority: high
+   Labels: week6, roguelike, game-dev
+
+📌 GAME-010: Implement Asset Pipeline for Sprites and Audio
+   ID: task-1753322219611-dgl4x98of
+   Status: todo | Priority: high
+   Labels: week5, roguelike, game-dev
+
+📌 GAME-009: Create Save/Load System with IndexedDB
+   ID: task-1753322210428-3n2v6oirl
+   Status: todo | Priority: high
+   Labels: week5, roguelike, game-dev
+
+📌 Implement Qdrant Vector Search Integration
+   ID: task-1753321068452-s7dji0nu6
+   Status: todo | Priority: medium
+   Labels: week4,vector-search,qdrant,embeddings,semantic-search
+
+📌 Integrate OpenAI/Anthropic for Game Narration
+   ID: task-1753321060101-u6lm2crj9
+   Status: todo | Priority: medium
+   Labels: week3,ai,llm,narration,openai,anthropic
+
+📌 Set Up Vercel Edge Functions Infrastructure
+   ID: task-1753321051913-2zp4h2pxk
+   Status: todo | Priority: medium
+   Labels: week3,backend,vercel,edge-functions,api
+
+📌 Design D&D Combat System Architecture
+   ID: task-1753321043392-kz10vkcvm
+   Status: todo | Priority: high
+   Labels: week2,combat,dnd,turn-based,dice
+
+📌 Implement Player Movement and Controls
+   ID: task-1753321033467-87wsie4u4
+   Status: todo | Priority: high
+   Labels: week2,player,input,movement,controls
+
+📌 Create Phaser Scene with Tilemap Rendering
+   ID: task-1753321024205-qvjwy708l
+   Status: todo | Priority: high
+   Labels: week2,rendering,phaser,scene,camera
+
+📌 Implement Tile-based Map Generation System
+   ID: task-1753321015135-urwupmt7n
+   Status: todo | Priority: high
+   Labels: week1,map-generation,procedural,world
+
+📌 Initialize Phaser 3.90 Project with TypeScript and Vite
+   ID: task-1753321004592-wikcmdl2f
+   Status: todo | Priority: high
+   Labels: week1,foundation,typescript,phaser,setup
+
+📌 Remove Console Logging Anti-pattern
+   ID: task-1753320107176-tismgbc3h
+   Status: todo | Priority: low
+
+📌 Performance Optimization
+   ID: task-1753320100222-ck9oj9fz1
+   Status: todo | Priority: medium
+
+📌 Improve Test Coverage
+   ID: task-1753320082130-zzbaf9bwn
+   Status: todo | Priority: medium
+
+📌 Fix Hardcoded Magic Values
+   ID: task-1753320075886-dhehbj1hm
+   Status: todo | Priority: medium
+
+📌 Replace Global State and Singletons
+   ID: task-1753320069594-ao6uhhswr
+   Status: todo | Priority: medium
+
+📌 Clean Up Dead Code and Unused Files
+   ID: task-1753320062847-sq7c7cdab
+   Status: todo | Priority: medium
+
+📌 Fix DDD Boundary Violations
+   ID: task-1753320054206-pfi0tkvlp
+   Status: todo | Priority: high
+
+📌 Remove Inconsistent Error Handling
+   ID: task-1753320043195-lzx4jh3kr
+   Status: todo | Priority: high
+
+📌 Improve TypeScript Type Safety
+   ID: task-1753320036832-4rv617bjr
+   Status: todo | Priority: high
+
+📌 Fix CLI Command Handler Code Duplication
+   ID: task-1753320031160-rc11q24dm
+   Status: todo | Priority: high
+
+📌 Fix Test Task
+   ID: task-1753319198007-6xh04vdgi
+   Status: todo | Priority: medium
+
+📌 localtest-1753318727-Assigned
+   ID: task-1753318730712-qpv2i272v
+   Status: todo | Priority: medium
+   Assignee: test@example.com
+
+📌 localtest-1753318727-High-Priority
+   ID: task-1753318729803-t7bakkihn
+   Status: todo | Priority: high
+
+📌 localtest-1753318727-Task-1
+   ID: task-1753318728894-jtpnklqnh
+   Status: todo | Priority: medium
+
+📌 Test Task
+   ID: task-1753315230790-p3fei8d9s
+   Status: in_progress | Priority: medium
+
+📌 Test export task
+   ID: task-1753307541112-n876s57qe
+   Status: todo | Priority: medium
+
+📌 Stress Test 7
+   ID: task-1753306728769-xzkurjv2l
+   Status: todo | Priority: medium
+
+📌 Stress Test 10
+   ID: task-1753306728768-xmelbf5r6
+   Status: todo | Priority: medium
+
+📌 Stress Test 9
+   ID: task-1753306728765-h3xhegtlh
+   Status: todo | Priority: medium
+
+📌 Stress Test 1
+   ID: task-1753306728764-8fib872pd
+   Status: todo | Priority: medium
+
+📌 Stress Test 5
+   ID: task-1753306728763-cihjtj3lo
+   Status: todo | Priority: medium
+
+📌 Stress Test 2
+   ID: task-1753306728762-nv1hvsp7g
+   Status: todo | Priority: medium
+
+📌 Stress Test 4
+   ID: task-1753306728760-tw4oza2cl
+   Status: todo | Priority: medium
+
+📌 Stress Test 3
+   ID: task-1753306728759-rxsp5bxpp
+   Status: todo | Priority: medium
+
+📌 Stress Test 6
+   ID: task-1753306728757-1vi3knl17
+   Status: todo | Priority: medium
+
+📌 Stress Test 8
+   ID: task-1753306728757-t4eo9m5jg
+   Status: todo | Priority: medium
+
+📌 No Config Test
+   ID: task-1753306711524-7xceosrqv
+   Status: todo | Priority: medium
+
+📌 Offline Test
+   ID: task-1753306703370-n2g33nn7f
+   Status: todo | Priority: medium
+
+📌 Concurrent Test 1
+   ID: task-1753306671540-bel4jbd9v
+   Status: todo | Priority: medium
+
+📌 Concurrent Test 2
+   ID: task-1753306671540-zuduttyuv
+   Status: todo | Priority: medium
+
+📌 Brutal Audit Test
+   ID: task-1753305896154-b6a91301o
+   Status: todo | Priority: medium
+
+📌 Post-cleanup test
+   ID: task-1753299470991-gy21amgj8
+   Status: todo | Priority: medium
+
+📌 Test integration task
+   ID: task-1753299410989-lmeo8rwez
+   Status: todo | Priority: high
+
+📌 Test DDD CLI
+   ID: task-1753147177182-692c5x96o
+   Status: todo | Priority: high
+
+📌 Test DDD Task
+   ID: task-1753146967355-45yj738bp
+   Status: todo | Priority: high
+
+📋 Found 70 tasks:
+
+📌 "API
+   ID: task-1753328562787-tr0sy7pp5
+   Status: todo | Priority: medium
+   Labels: backend,api,rest
+
+📌 "Database
+   ID: task-1753328562295-ka1knh7bj
+   Status: todo | Priority: high
+   Labels: backend,database,setup
+
+📌 "Implement
+   ID: task-1753328561804-y2yxt1sn2
+   Status: todo | Priority: high
+   Labels: backend,auth,security
+
+📌 "Setup
+   ID: task-1753328541631-a8cae6ga5
+   Status: todo | Priority: medium
+   Labels: devops,docker,deployment
+
+📌 "Implement
+   ID: task-1753328541185-xt40nk0xo
+   Status: todo | Priority: medium
+   Labels: testing,jest,cypress
+
+📌 "Develop
+   ID: task-1753328540748-izl6gw1cz
+   Status: todo | Priority: high
+   Labels: backend,api,nodejs
+
+📌 "Build
+   ID: task-1753328540249-duvc1eb57
+   Status: todo | Priority: high
+   Labels: frontend,react,ui
+
+📌 "Frontend
+   ID: task-1753328509801-jcnk8sicg
+   Status: todo | Priority: high
+   Labels: frontend,react,ui,responsive
+
+📌 Integration Test Task
+   ID: task-1753299838623-34jhen8dg
+   Status: in_progress | Priority: medium
+
+📌 Test Task from CLI
+   ID: task-1753328075265-pzw5q95no
+   Status: todo | Priority: high
+
+📌 "Observability
+   ID: task-1753327451646-3wsmlo58w
+   Status: todo | Priority: high
+   Labels: monitoring,logging,observability
+
+📌 "Security
+   ID: task-1753327451480-4n7nvgn39
+   Status: todo | Priority: critical
+   Labels: security,scanning,compliance
+
+📌 "Automated
+   ID: task-1753327451149-ycotar46r
+   Status: todo | Priority: high
+   Labels: testing,automation,quality
+
+📌 "Complete
+   ID: task-1753327430270-t3debyxz3
+   Status: todo | Priority: high
+   Labels: devops,cicd,docker,kubernetes,security
+
+📌 "WebSocket
+   ID: task-1753327351271-307vcoezn
+   Status: todo | Priority: high
+   Labels: websockets,realtime,streaming
+
+📌 "Data
+   ID: task-1753327340415-dav70bz5p
+   Status: todo | Priority: medium
+   Labels: export,csv,pdf,excel,filtering
+
+📌 "Real-time
+   ID: task-1753327340252-lamdlv677
+   Status: todo | Priority: high
+   Labels: charts,realtime,visualization,d3,websockets
+
+📌 "User
+   ID: task-1753327339922-00hiwd8mn
+   Status: todo | Priority: high
+   Labels: auth,security,jwt,rbac
+
+📌 "React
+   ID: task-1753327339590-kf1ylrk2a
+   Status: todo | Priority: high
+   Labels: react,dashboard,analytics,auth,realtime,export
+
+📌 GAME-016: Implement Game Settings and Preferences
+   ID: task-1753322276974-rz5e6pk4q
+   Status: todo | Priority: medium
+   Labels: week8, roguelike, game-dev
+
+📌 GAME-015: Add Spell System and Effects
+   ID: task-1753322267995-c0vc45r5q
+   Status: todo | Priority: medium
+   Labels: week8, roguelike, game-dev
+
+📌 GAME-014: Implement Item and Inventory System
+   ID: task-1753322258332-901q698b0
+   Status: todo | Priority: high
+   Labels: week7, roguelike, game-dev
+
+📌 GAME-013: Create Character Creation and Stats System
+   ID: task-1753322248233-w5rs9e408
+   Status: todo | Priority: high
+   Labels: week7, roguelike, game-dev
+
+📌 GAME-012: Implement Monster AI and Pathfinding
+   ID: task-1753322239080-oemsz9u39
+   Status: todo | Priority: critical
+   Labels: week6, roguelike, game-dev
+
+📌 GAME-011: Build Combat UI with React Overlay
+   ID: task-1753322230546-bqof1jboi
+   Status: todo | Priority: high
+   Labels: week6, roguelike, game-dev
+
+📌 GAME-010: Implement Asset Pipeline for Sprites and Audio
+   ID: task-1753322219611-dgl4x98of
+   Status: todo | Priority: high
+   Labels: week5, roguelike, game-dev
+
+📌 GAME-009: Create Save/Load System with IndexedDB
+   ID: task-1753322210428-3n2v6oirl
+   Status: todo | Priority: high
+   Labels: week5, roguelike, game-dev
+
+📌 Implement Qdrant Vector Search Integration
+   ID: task-1753321068452-s7dji0nu6
+   Status: todo | Priority: medium
+   Labels: week4,vector-search,qdrant,embeddings,semantic-search
+
+📌 Integrate OpenAI/Anthropic for Game Narration
+   ID: task-1753321060101-u6lm2crj9
+   Status: todo | Priority: medium
+   Labels: week3,ai,llm,narration,openai,anthropic
+
+📌 Set Up Vercel Edge Functions Infrastructure
+   ID: task-1753321051913-2zp4h2pxk
+   Status: todo | Priority: medium
+   Labels: week3,backend,vercel,edge-functions,api
+
+📌 Design D&D Combat System Architecture
+   ID: task-1753321043392-kz10vkcvm
+   Status: todo | Priority: high
+   Labels: week2,combat,dnd,turn-based,dice
+
+📌 Implement Player Movement and Controls
+   ID: task-1753321033467-87wsie4u4
+   Status: todo | Priority: high
+   Labels: week2,player,input,movement,controls
+
+📌 Create Phaser Scene with Tilemap Rendering
+   ID: task-1753321024205-qvjwy708l
+   Status: todo | Priority: high
+   Labels: week2,rendering,phaser,scene,camera
+
+📌 Implement Tile-based Map Generation System
+   ID: task-1753321015135-urwupmt7n
+   Status: todo | Priority: high
+   Labels: week1,map-generation,procedural,world
+
+📌 Initialize Phaser 3.90 Project with TypeScript and Vite
+   ID: task-1753321004592-wikcmdl2f
+   Status: todo | Priority: high
+   Labels: week1,foundation,typescript,phaser,setup
+
+📌 Remove Console Logging Anti-pattern
+   ID: task-1753320107176-tismgbc3h
+   Status: todo | Priority: low
+
+📌 Performance Optimization
+   ID: task-1753320100222-ck9oj9fz1
+   Status: todo | Priority: medium
+
+📌 Improve Test Coverage
+   ID: task-1753320082130-zzbaf9bwn
+   Status: todo | Priority: medium
+
+📌 Fix Hardcoded Magic Values
+   ID: task-1753320075886-dhehbj1hm
+   Status: todo | Priority: medium
+
+📌 Replace Global State and Singletons
+   ID: task-1753320069594-ao6uhhswr
+   Status: todo | Priority: medium
+
+📌 Clean Up Dead Code and Unused Files
+   ID: task-1753320062847-sq7c7cdab
+   Status: todo | Priority: medium
+
+📌 Fix DDD Boundary Violations
+   ID: task-1753320054206-pfi0tkvlp
+   Status: todo | Priority: high
+
+📌 Remove Inconsistent Error Handling
+   ID: task-1753320043195-lzx4jh3kr
+   Status: todo | Priority: high
+
+📌 Improve TypeScript Type Safety
+   ID: task-1753320036832-4rv617bjr
+   Status: todo | Priority: high
+
+📌 Fix CLI Command Handler Code Duplication
+   ID: task-1753320031160-rc11q24dm
+   Status: todo | Priority: high
+
+📌 Fix Test Task
+   ID: task-1753319198007-6xh04vdgi
+   Status: todo | Priority: medium
+
+📌 localtest-1753318727-Assigned
+   ID: task-1753318730712-qpv2i272v
+   Status: todo | Priority: medium
+   Assignee: test@example.com
+
+📌 localtest-1753318727-High-Priority
+   ID: task-1753318729803-t7bakkihn
+   Status: todo | Priority: high
+
+📌 localtest-1753318727-Task-1
+   ID: task-1753318728894-jtpnklqnh
+   Status: todo | Priority: medium
+
+📌 Test Task
+   ID: task-1753315230790-p3fei8d9s
+   Status: in_progress | Priority: medium
+
+📌 Test export task
+   ID: task-1753307541112-n876s57qe
+   Status: todo | Priority: medium
+
+📌 Stress Test 7
+   ID: task-1753306728769-xzkurjv2l
+   Status: todo | Priority: medium
+
+📌 Stress Test 10
+   ID: task-1753306728768-xmelbf5r6
+   Status: todo | Priority: medium
+
+📌 Stress Test 9
+   ID: task-1753306728765-h3xhegtlh
+   Status: todo | Priority: medium
+
+📌 Stress Test 1
+   ID: task-1753306728764-8fib872pd
+   Status: todo | Priority: medium
+
+📌 Stress Test 5
+   ID: task-1753306728763-cihjtj3lo
+   Status: todo | Priority: medium
+
+📌 Stress Test 2
+   ID: task-1753306728762-nv1hvsp7g
+   Status: todo | Priority: medium
+
+📌 Stress Test 4
+   ID: task-1753306728760-tw4oza2cl
+   Status: todo | Priority: medium
+
+📌 Stress Test 3
+   ID: task-1753306728759-rxsp5bxpp
+   Status: todo | Priority: medium
+
+📌 Stress Test 6
+   ID: task-1753306728757-1vi3knl17
+   Status: todo | Priority: medium
+
+📌 Stress Test 8
+   ID: task-1753306728757-t4eo9m5jg
+   Status: todo | Priority: medium
+
+📌 No Config Test
+   ID: task-1753306711524-7xceosrqv
+   Status: todo | Priority: medium
+
+📌 Offline Test
+   ID: task-1753306703370-n2g33nn7f
+   Status: todo | Priority: medium
+
+📌 Concurrent Test 1
+   ID: task-1753306671540-bel4jbd9v
+   Status: todo | Priority: medium
+
+📌 Concurrent Test 2
+   ID: task-1753306671540-zuduttyuv
+   Status: todo | Priority: medium
+
+📌 Brutal Audit Test
+   ID: task-1753305896154-b6a91301o
+   Status: todo | Priority: medium
+
+📌 Post-cleanup test
+   ID: task-1753299470991-gy21amgj8
+   Status: todo | Priority: medium
+
+📌 Test integration task
+   ID: task-1753299410989-lmeo8rwez
+   Status: todo | Priority: high
+
+📌 Test DDD CLI
+   ID: task-1753147177182-692c5x96o
+   Status: todo | Priority: high
+
+📌 Test DDD Task
+   ID: task-1753146967355-45yj738bp
+   Status: todo | Priority: high
+
+📋 Found 70 tasks:
+
+📌 "API
+   ID: task-1753328562787-tr0sy7pp5
+   Status: todo | Priority: medium
+   Labels: backend,api,rest
+
+📌 "Database
+   ID: task-1753328562295-ka1knh7bj
+   Status: todo | Priority: high
+   Labels: backend,database,setup
+
+📌 "Implement
+   ID: task-1753328561804-y2yxt1sn2
+   Status: todo | Priority: high
+   Labels: backend,auth,security
+
+📌 "Setup
+   ID: task-1753328541631-a8cae6ga5
+   Status: todo | Priority: medium
+   Labels: devops,docker,deployment
+
+📌 "Implement
+   ID: task-1753328541185-xt40nk0xo
+   Status: todo | Priority: medium
+   Labels: testing,jest,cypress
+
+📌 "Develop
+   ID: task-1753328540748-izl6gw1cz
+   Status: todo | Priority: high
+   Labels: backend,api,nodejs
+
+📌 "Build
+   ID: task-1753328540249-duvc1eb57
+   Status: todo | Priority: high
+   Labels: frontend,react,ui
+
+📌 "Frontend
+   ID: task-1753328509801-jcnk8sicg
+   Status: todo | Priority: high
+   Labels: frontend,react,ui,responsive
+
+📌 Integration Test Task
+   ID: task-1753299838623-34jhen8dg
+   Status: in_progress | Priority: medium
+
+📌 Test Task from CLI
+   ID: task-1753328075265-pzw5q95no
+   Status: todo | Priority: high
+
+📌 "Observability
+   ID: task-1753327451646-3wsmlo58w
+   Status: todo | Priority: high
+   Labels: monitoring,logging,observability
+
+📌 "Security
+   ID: task-1753327451480-4n7nvgn39
+   Status: todo | Priority: critical
+   Labels: security,scanning,compliance
+
+📌 "Automated
+   ID: task-1753327451149-ycotar46r
+   Status: todo | Priority: high
+   Labels: testing,automation,quality
+
+📌 "Complete
+   ID: task-1753327430270-t3debyxz3
+   Status: todo | Priority: high
+   Labels: devops,cicd,docker,kubernetes,security
+
+📌 "WebSocket
+   ID: task-1753327351271-307vcoezn
+   Status: todo | Priority: high
+   Labels: websockets,realtime,streaming
+
+📌 "Data
+   ID: task-1753327340415-dav70bz5p
+   Status: todo | Priority: medium
+   Labels: export,csv,pdf,excel,filtering
+
+📌 "Real-time
+   ID: task-1753327340252-lamdlv677
+   Status: todo | Priority: high
+   Labels: charts,realtime,visualization,d3,websockets
+
+📌 "User
+   ID: task-1753327339922-00hiwd8mn
+   Status: todo | Priority: high
+   Labels: auth,security,jwt,rbac
+
+📌 "React
+   ID: task-1753327339590-kf1ylrk2a
+   Status: todo | Priority: high
+   Labels: react,dashboard,analytics,auth,realtime,export
+
+📌 GAME-016: Implement Game Settings and Preferences
+   ID: task-1753322276974-rz5e6pk4q
+   Status: todo | Priority: medium
+   Labels: week8, roguelike, game-dev
+
+📌 GAME-015: Add Spell System and Effects
+   ID: task-1753322267995-c0vc45r5q
+   Status: todo | Priority: medium
+   Labels: week8, roguelike, game-dev
+
+📌 GAME-014: Implement Item and Inventory System
+   ID: task-1753322258332-901q698b0
+   Status: todo | Priority: high
+   Labels: week7, roguelike, game-dev
+
+📌 GAME-013: Create Character Creation and Stats System
+   ID: task-1753322248233-w5rs9e408
+   Status: todo | Priority: high
+   Labels: week7, roguelike, game-dev
+
+📌 GAME-012: Implement Monster AI and Pathfinding
+   ID: task-1753322239080-oemsz9u39
+   Status: todo | Priority: critical
+   Labels: week6, roguelike, game-dev
+
+📌 GAME-011: Build Combat UI with React Overlay
+   ID: task-1753322230546-bqof1jboi
+   Status: todo | Priority: high
+   Labels: week6, roguelike, game-dev
+
+📌 GAME-010: Implement Asset Pipeline for Sprites and Audio
+   ID: task-1753322219611-dgl4x98of
+   Status: todo | Priority: high
+   Labels: week5, roguelike, game-dev
+
+📌 GAME-009: Create Save/Load System with IndexedDB
+   ID: task-1753322210428-3n2v6oirl
+   Status: todo | Priority: high
+   Labels: week5, roguelike, game-dev
+
+📌 Implement Qdrant Vector Search Integration
+   ID: task-1753321068452-s7dji0nu6
+   Status: todo | Priority: medium
+   Labels: week4,vector-search,qdrant,embeddings,semantic-search
+
+📌 Integrate OpenAI/Anthropic for Game Narration
+   ID: task-1753321060101-u6lm2crj9
+   Status: todo | Priority: medium
+   Labels: week3,ai,llm,narration,openai,anthropic
+
+📌 Set Up Vercel Edge Functions Infrastructure
+   ID: task-1753321051913-2zp4h2pxk
+   Status: todo | Priority: medium
+   Labels: week3,backend,vercel,edge-functions,api
+
+📌 Design D&D Combat System Architecture
+   ID: task-1753321043392-kz10vkcvm
+   Status: todo | Priority: high
+   Labels: week2,combat,dnd,turn-based,dice
+
+📌 Implement Player Movement and Controls
+   ID: task-1753321033467-87wsie4u4
+   Status: todo | Priority: high
+   Labels: week2,player,input,movement,controls
+
+📌 Create Phaser Scene with Tilemap Rendering
+   ID: task-1753321024205-qvjwy708l
+   Status: todo | Priority: high
+   Labels: week2,rendering,phaser,scene,camera
+
+📌 Implement Tile-based Map Generation System
+   ID: task-1753321015135-urwupmt7n
+   Status: todo | Priority: high
+   Labels: week1,map-generation,procedural,world
+
+📌 Initialize Phaser 3.90 Project with TypeScript and Vite
+   ID: task-1753321004592-wikcmdl2f
+   Status: todo | Priority: high
+   Labels: week1,foundation,typescript,phaser,setup
+
+📌 Remove Console Logging Anti-pattern
+   ID: task-1753320107176-tismgbc3h
+   Status: todo | Priority: low
+
+📌 Performance Optimization
+   ID: task-1753320100222-ck9oj9fz1
+   Status: todo | Priority: medium
+
+📌 Improve Test Coverage
+   ID: task-1753320082130-zzbaf9bwn
+   Status: todo | Priority: medium
+
+📌 Fix Hardcoded Magic Values
+   ID: task-1753320075886-dhehbj1hm
+   Status: todo | Priority: medium
+
+📌 Replace Global State and Singletons
+   ID: task-1753320069594-ao6uhhswr
+   Status: todo | Priority: medium
+
+📌 Clean Up Dead Code and Unused Files
+   ID: task-1753320062847-sq7c7cdab
+   Status: todo | Priority: medium
+
+📌 Fix DDD Boundary Violations
+   ID: task-1753320054206-pfi0tkvlp
+   Status: todo | Priority: high
+
+📌 Remove Inconsistent Error Handling
+   ID: task-1753320043195-lzx4jh3kr
+   Status: todo | Priority: high
+
+📌 Improve TypeScript Type Safety
+   ID: task-1753320036832-4rv617bjr
+   Status: todo | Priority: high
+
+📌 Fix CLI Command Handler Code Duplication
+   ID: task-1753320031160-rc11q24dm
+   Status: todo | Priority: high
+
+📌 Fix Test Task
+   ID: task-1753319198007-6xh04vdgi
+   Status: todo | Priority: medium
+
+📌 localtest-1753318727-Assigned
+   ID: task-1753318730712-qpv2i272v
+   Status: todo | Priority: medium
+   Assignee: test@example.com
+
+📌 localtest-1753318727-High-Priority
+   ID: task-1753318729803-t7bakkihn
+   Status: todo | Priority: high
+
+📌 localtest-1753318727-Task-1
+   ID: task-1753318728894-jtpnklqnh
+   Status: todo | Priority: medium
+
+📌 Test Task
+   ID: task-1753315230790-p3fei8d9s
+   Status: in_progress | Priority: medium
+
+📌 Test export task
+   ID: task-1753307541112-n876s57qe
+   Status: todo | Priority: medium
+
+📌 Stress Test 7
+   ID: task-1753306728769-xzkurjv2l
+   Status: todo | Priority: medium
+
+📌 Stress Test 10
+   ID: task-1753306728768-xmelbf5r6
+   Status: todo | Priority: medium
+
+📌 Stress Test 9
+   ID: task-1753306728765-h3xhegtlh
+   Status: todo | Priority: medium
+
+📌 Stress Test 1
+   ID: task-1753306728764-8fib872pd
+   Status: todo | Priority: medium
+
+📌 Stress Test 5
+   ID: task-1753306728763-cihjtj3lo
+   Status: todo | Priority: medium
+
+📌 Stress Test 2
+   ID: task-1753306728762-nv1hvsp7g
+   Status: todo | Priority: medium
+
+📌 Stress Test 4
+   ID: task-1753306728760-tw4oza2cl
+   Status: todo | Priority: medium
+
+📌 Stress Test 3
+   ID: task-1753306728759-rxsp5bxpp
+   Status: todo | Priority: medium
+
+📌 Stress Test 6
+   ID: task-1753306728757-1vi3knl17
+   Status: todo | Priority: medium
+
+📌 Stress Test 8
+   ID: task-1753306728757-t4eo9m5jg
+   Status: todo | Priority: medium
+
+📌 No Config Test
+   ID: task-1753306711524-7xceosrqv
+   Status: todo | Priority: medium
+
+📌 Offline Test
+   ID: task-1753306703370-n2g33nn7f
+   Status: todo | Priority: medium
+
+📌 Concurrent Test 1
+   ID: task-1753306671540-bel4jbd9v
+   Status: todo | Priority: medium
+
+📌 Concurrent Test 2
+   ID: task-1753306671540-zuduttyuv
+   Status: todo | Priority: medium
+
+📌 Brutal Audit Test
+   ID: task-1753305896154-b6a91301o
+   Status: todo | Priority: medium
+
+📌 Post-cleanup test
+   ID: task-1753299470991-gy21amgj8
+   Status: todo | Priority: medium
+
+📌 Test integration task
+   ID: task-1753299410989-lmeo8rwez
+   Status: todo | Priority: high
+
+📌 Test DDD CLI
+   ID: task-1753147177182-692c5x96o
+   Status: todo | Priority: high
+
+📌 Test DDD Task
+   ID: task-1753146967355-45yj738bp
+   Status: todo | Priority: high
+
+❌ Failed to update task: Task not found: <task-id>
+❌ Failed to update task: Task not found: <task-id>
+✅ Applied template: basic-project
+   Tasks created: 6
+
+Created tasks:
+  📌 Project Setup (high priority)
+  📌 Requirements Analysis (high priority)
+  📌 Implementation (medium priority)
+    - Backend Implementation
+    - Frontend Implementation
+  📌 Testing (high priority)

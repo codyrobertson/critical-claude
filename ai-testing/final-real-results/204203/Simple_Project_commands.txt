@@ -1,0 +1,7 @@
+cc template apply basic-project -v project_name="Web Development Project"
+cc task create -t "Build React Frontend" -d "Create responsive user interface with React, implement routing and state management" -p high -s todo --labels frontend,react,ui --hours 32
+cc task create -t "Develop REST API" -d "Build Node.js/Express API with authentication, database integration, and endpoint validation" -p high -s todo --labels backend,api,nodejs --hours 28
+cc task create -t "Implement Test Suite" -d "Write unit tests, integration tests, and e2e tests for frontend and backend components" -p medium -s todo --labels testing,jest,cypress --hours 16
+cc task create -t "Setup CI/CD Pipeline" -d "Configure deployment pipeline with Docker, automated testing, and production deployment" -p medium -s todo --labels devops,docker,deployment --hours 12
+cc task list --status todo
+cc analytics stats

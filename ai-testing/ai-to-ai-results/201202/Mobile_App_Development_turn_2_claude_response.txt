@@ -1,0 +1,120 @@
+🔍 CRITICAL CLAUDE TESTING MODE ACTIVATED
+
+Initiating comprehensive task management demonstration with Critical Claude CLI.
+
+Ready to execute:
+✓ Complete project breakdown
+✓ Multi-turn workflow management
+✓ Status updates and tracking
+✓ Task expansion and dependencies
+✓ AI-powered task generation
+✓ Template application
+✓ Research integration
+✓ Analytics and reporting
+
+Proceeding with Critical Claude commands...
+
+```bash
+# First, analyze the current mobile-dev-003 task tree
+cc task view mobile-dev-003 --include-subtasks --depth all
+
+# Expected: 📋 Displaying mobile-dev-003: Mobile Development Track with 23 subtasks
+
+# Research technical debt patterns in mobile development
+cc task research "mobile development technical debt patterns offline sync mechanisms GPS tracking accuracy issues" --format tasks --priority high
+
+# Expected: ✅ Research completed, 7 actionable tasks created
+
+# Create comprehensive technical debt analysis task
+cc task create -t "Technical Debt Analysis - Mobile Dev Track" -d "Analyze accumulated technical debt in mobile-dev-003 tree, identify root causes, assess impact on performance and maintainability" -p critical -s in_progress --labels technical-debt,analysis,mobile --hours 8
+
+# Expected: ✅ Created task: Technical Debt Analysis - Mobile Dev Track (ID: tech-debt-001)
+
+# Expand technical debt analysis into specific categories
+cc task expand tech-debt-001 --breakdown technical --depth 2
+
+# Expected: ✅ Generated 6 subtasks for Technical Debt Analysis
+
+# Create parallel debugging track for GPS/Bluetooth issues
+cc task create -t "GPS & Bluetooth Debugging Track" -d "Systematic debugging of GPS accuracy issues on older Android devices and Bluetooth connectivity problems with fitness wearables" -p high -s todo --labels debugging,gps,bluetooth,mobile --hours 24
+
+# Expected: ✅ Created task: GPS & Bluetooth Debugging Track (ID: debug-gps-bt-001)
+
+# Expand debugging track into device-specific and issue-specific tasks
+cc task expand debug-gps-bt-001 --breakdown issue-based --depth 3
+
+# Expected: ✅ Generated 12 subtasks for GPS & Bluetooth Debugging Track
+
+# Create GPS accuracy investigation subtasks
+cc task create -t "GPS Accuracy Analysis - Android Legacy Devices" -d "Investigate GPS accuracy degradation on Android API levels 21-25, analyze network transition handling" -p high -s todo --labels gps,android,legacy-devices --hours 6
+
+# Expected: ✅ Created task: GPS Accuracy Analysis - Android Legacy Devices (ID: gps-android-001)
+
+cc task create -t "Network Transition GPS Handling" -d "Debug GPS accuracy loss during WiFi-cellular transitions, implement robust reconnection logic" -p high -s todo --labels gps,networking,transitions --hours 8
+
+# Expected: ✅ Created task: Network Transition GPS Handling (ID: gps-network-001)
+
+# Create Bluetooth debugging tasks
+cc task create -t "Bluetooth Wearable Connection Stability" -d "Debug intermittent Bluetooth disconnections with fitness wearables, analyze connection lifecycle management" -p high -s todo --labels bluetooth,wearables,connectivity --hours 10
+
+# Expected: ✅ Created task: Bluetooth Wearable Connection Stability (ID: bt-wearable-001)
+
+# Create technical debt remediation plan
+cc task create -t "Technical Debt Remediation Plan" -d "Prioritized plan for addressing identified technical debt without blocking core development track" -p high -s todo --labels refactoring,planning,technical-debt --hours 4
+
+# Expected: ✅ Created task: Technical Debt Remediation Plan (ID: tech-debt-plan-001)
+
+# Expand remediation plan into priority tiers
+cc task expand tech-debt-plan-001 --breakdown priority --depth 2
+
+# Expected: ✅ Generated 8 subtasks for Technical Debt Remediation Plan
+
+# Create integration testing scenarios
+cc task create -t "Edge Case Integration Testing Suite" -d "Comprehensive test scenarios covering GPS accuracy, Bluetooth connectivity, and offline sync edge cases" -p medium -s todo --labels testing,integration,edge-cases --hours 12
+
+# Expected: ✅ Created task: Edge Case Integration Testing Suite (ID: integration-test-001)
+
+# Expand testing suite into specific scenario categories
+cc task expand integration-test-001 --breakdown scenario-based --depth 2
+
+# Expected: ✅ Generated 9 subtasks for Edge Case Integration Testing Suite
+
+# Create Sprint 3 risk assessment tasks
+cc task create -t "Sprint 3 Deliverable Risk Assessment" -d "Analyze potential delays to Sprint 3 deliverables due to technical debt and debugging work, create mitigation strategies" -p critical -s todo --labels risk-assessment,sprint-planning,deliverables --hours 3
+
+# Expected: ✅ Created task: Sprint 3 Deliverable Risk Assessment (ID: sprint3-risk-001)
+
+# Create performance benchmarking tasks
+cc task create -t "Mobile Performance Benchmarking Suite" -d "Establish baseline performance metrics and create automated benchmarking for GPS, Bluetooth, and sync operations" -p medium -s todo --labels performance,benchmarking,mobile --hours 6
+
+# Expected: ✅ Created task: Mobile Performance Benchmarking Suite (ID: perf-bench-001)
+
+# Set up task dependencies to prevent blocking core development
+cc task dependencies tech-debt-plan-001 --add mobile-dev-003 --type blocks-if-failed
+cc task dependencies debug-gps-bt-001 --add integration-test-001 --type prerequisite
+cc task dependencies sprint3-risk-001 --add tech-debt-plan-001 --type prerequisite
+
+# Expected: ✅ Dependencies established for non-blocking workflow
+
+# Apply mobile debugging template for systematic approach
+cc template apply mobile-debugging-workflow --variables project=mobile-dev-003,priority=high,sprint=sprint3
+
+# Expected: ✅ Applied mobile-debugging-workflow template, 15 additional tasks created
+
+# Generate AI-powered task breakdown for offline sync issues
+cc task ai "Create detailed technical breakdown for offline sync mechanism edge cases in mobile applications, including conflict resolution and data consistency strategies"
+
+# Expected: ✅ AI generated 11 specialized tasks for offline sync improvements
+
+# Start the critical analysis tasks
+cc task start tech-debt-001
+cc task start sprint3-risk-001
+
+# Expected: ✅ Started Technical Debt Analysis - Mobile Dev Track
+# Expected: ✅ Started Sprint 3 Deliverable Risk Assessment
+
+# View current task status for validation
+cc task list --status in_progress --priority high,critical --assignee current
+
+# Expected: 📋 Showing 2 in-progress high/critical priority tasks
+```

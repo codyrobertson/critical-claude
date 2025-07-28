@@ -4,7 +4,7 @@
  */
 
 import { TaskService } from '../../../../src/services/TaskService.js';
-import { ResearchService } from '../../../../domains/research-intelligence/dist/application/services/ResearchService.js';
+import { ResearchService } from '../../../../domains/research-intelligence/dist/src/application/services/ResearchService.js';
 import { TaskCommandOptions, CommandArgs, UpdateTaskData } from '../types/cli-types.js';
 import { CliHelpers } from '../utils/cli-helpers.js';
 import { timeOperation, logMetric } from '../../../../shared/simple-observability.js';

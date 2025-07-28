@@ -1,0 +1,41 @@
+✅ Created task: "React
+   ID: task-1753327339590-kf1ylrk2a
+error: unknown option '--breakdown'
+✅ Created task: "User
+   ID: task-1753327339922-00hiwd8mn
+error: unknown option '--breakdown'
+✅ Created task: "Real-time
+   ID: task-1753327340252-lamdlv677
+✅ Created task: "Data
+   ID: task-1753327340415-dav70bz5p
+🔍 Conducting AI research and generating tasks...
+📝 Query: "React
+🔍 Auto-detecting AI provider...
+🤖 No API keys found, will attempt Claude Code CLI as fallback...
+🔬 Starting 100% AI-Driven Multi-Agent Research System...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Claude Code CLI detected and available
+📋 Research Topic: "React
+
+🧠 PLANNER AGENT: AI creating research strategy...
+🤖 Using Claude Code CLI subprocess...
+❌ Template not found: react-dashboard
+error: unknown option '--add'
+❌ Unknown action: start
+Available actions: create, list, view, update, delete, archive, export, import, backup, ai, research
+error: unknown option '--breakdown'
+✅ Created task: "WebSocket
+   ID: task-1753327351271-307vcoezn
+🤖 Generating AI-powered task breakdown...
+📝 Query: "Analyze
+🔍 Auto-detecting AI provider...
+🤖 No API keys found, will attempt Claude Code CLI as fallback...
+🔬 Starting 100% AI-Driven Multi-Agent Research System...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Claude Code CLI detected and available
+📋 Research Topic: Create a comprehensive task breakdown for: "Analyze. Generate specific, actionable tasks with priorities, descriptions, and estimated hours. Focus on practical implementation steps.
+
+🧠 PLANNER AGENT: AI creating research strategy...
+🤖 Using Claude Code CLI subprocess...
+❌ Unknown analytics action: insights
+Available actions: stats, export, clear

@@ -9,7 +9,7 @@ import { Command } from 'commander';
 // Use unified services (canonical implementations)
 import { TaskService } from '../../../src/services/TaskService.js';
 import { TemplateService } from '../../../src/services/TemplateService.js';
-import { ResearchService } from '../../../domains/research-intelligence/dist/application/services/ResearchService.js';
+import { ResearchService } from '../../../domains/research-intelligence/dist/src/application/services/ResearchService.js';
 import { ViewerService } from '../../../dist/services/ViewerService.js';
 import { FileStorage } from '../../../dist/storage/FileStorage.js';
 import { AnalyticsService } from '../../../src/services/AnalyticsService.js';

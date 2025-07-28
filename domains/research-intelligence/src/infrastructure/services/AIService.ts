@@ -192,22 +192,10 @@ export class AIService implements IAIProvider {
   private async initializeClaudeCode(): Promise<void> {
     this.logger.info('Attempting to initialize Claude Code SDK...');
     try {
-      // Import our ClaudeCodeProvider with proper SDK integration
-      const { ClaudeCodeProvider } = await import('../../../../src/ai/ClaudeCodeProvider.js');
-      
-      const claudeProvider = new ClaudeCodeProvider({
-        maxTurns: 1,
-        cwd: process.cwd(),
-        timeout: 5000
-      }, this.logger);
-      
-      // Test Claude Code SDK availability
-      const isAvailable = await claudeProvider.isAvailable();
-      if (!isAvailable) {
-        throw new Error('Claude Code SDK not available');
-      }
-      
-      this.logger.info('Claude Code SDK provider initialized successfully');
+      // TODO: Temporarily disabled due to TypeScript module resolution issues
+      // const { ClaudeCodeProvider } = await import('../../../../../src/ai/ClaudeCodeProvider.js');
+      // For now, throw error to trigger fallback to other providers
+      throw new Error('Claude Code SDK temporarily disabled for viewer compatibility');
       
     } catch (error) {
       this.logger.error('Claude Code SDK initialization failed', error as Error);
@@ -356,32 +344,10 @@ export class AIService implements IAIProvider {
     try {
       this.logger.info('🤖 Using Claude Code SDK...');
       
-      // Import our ClaudeCodeProvider with proper SDK integration
-      const { ClaudeCodeProvider } = await import('../../../../src/ai/ClaudeCodeProvider.js');
-      
-      const claudeProvider = new ClaudeCodeProvider({
-        maxTurns: 5,
-        cwd: process.cwd(),
-        timeout: 60000
-      }, this.logger);
-      
-      // Check if Claude Code SDK is available
-      const isAvailable = await claudeProvider.isAvailable();
-      if (!isAvailable) {
-        throw new Error('Claude Code SDK not available');
-      }
-      
-      // Execute the prompt using the SDK
-      const response = await claudeProvider.execute(prompt);
-      
-      if (response.success) {
-        this.logger.debug('Claude Code SDK request successful', { responseLength: response.content.length });
-        return response.content;
-      } else {
-        const error = response.error || 'Unknown Claude Code SDK error';
-        this.logger.error('Claude Code SDK request failed', new Error(error));
-        throw new Error(error);
-      }
+      // TODO: Temporarily disabled due to TypeScript module resolution issues
+      // const { ClaudeCodeProvider } = await import('../../../../../src/ai/ClaudeCodeProvider.js');
+      // For now, throw error to use fallback providers
+      throw new Error('Claude Code SDK temporarily disabled for viewer compatibility');
 
     } catch (error) {
       this.logger.warn(`Claude Code SDK integration failed: ${(error as Error).message}`);

@@ -1,0 +1,100 @@
+🔍 CRITICAL CLAUDE TESTING MODE ACTIVATED
+
+Initiating comprehensive task management demonstration with Critical Claude CLI.
+
+Ready to execute:
+✓ Complete project breakdown
+✓ Multi-turn workflow management
+✓ Status updates and tracking
+✓ Task expansion and dependencies
+✓ AI-powered task generation
+✓ Template application
+✓ Research integration
+✓ Analytics and reporting
+
+Proceeding with Critical Claude commands...
+
+```bash
+# Creating master migration project task
+cc task create -t "Legacy to Cloud-Native Microservices Migration" -d "Complete migration of monolithic application to Kubernetes-based microservices with full CI/CD, monitoring, and disaster recovery implementation" -p critical -s planning --labels migration,kubernetes,microservices,cloud-native,devops --hours 320
+
+# Expected: ✅ Created task: Legacy to Cloud-Native Microservices Migration (ID: migration-001)
+
+# Expanding into comprehensive project breakdown
+cc task expand migration-001 --breakdown technical --depth 3
+
+# Expected: ✅ Generated 45 subtasks across 8 major phases
+
+# Creating AI-powered research tasks for architecture planning
+cc task research "microservices decomposition strategies legacy system assessment cloud-native patterns Kubernetes deployment best practices" --format tasks --priority high
+
+# Expected: ✅ Research completed, 12 actionable tasks created
+
+# Applying enterprise migration template
+cc template apply enterprise-migration --variables project_type=monolith_to_microservices,platform=kubernetes,timeline=6_months,team_size=8
+
+# Expected: ✅ Applied enterprise migration template, 25 tasks added
+
+# Creating phase-based workflow
+cc task create -t "Phase 1: Legacy System Assessment & Architecture Design" -d "Analyze existing monolith, identify service boundaries, design target microservices architecture" -p high -s todo --labels assessment,architecture --hours 80
+
+# Expected: ✅ Created task: Phase 1: Legacy System Assessment & Architecture Design (ID: phase1-001)
+
+cc task create -t "Phase 2: Infrastructure & Kubernetes Setup" -d "Provision cloud infrastructure, configure Kubernetes clusters, implement networking and security" -p high -s todo --labels infrastructure,k8s --hours 60
+
+# Expected: ✅ Created task: Phase 2: Infrastructure & Kubernetes Setup (ID: phase2-001)
+
+cc task create -t "Phase 3: CI/CD Pipeline Implementation" -d "Build automated deployment pipelines, implement testing strategies, configure GitOps workflows" -p high -s todo --labels cicd,automation --hours 45
+
+# Expected: ✅ Created task: Phase 3: CI/CD Pipeline Implementation (ID: phase3-001)
+
+cc task create -t "Phase 4: Monitoring & Observability" -d "Implement comprehensive monitoring, logging, tracing, and alerting across microservices" -p high -s todo --labels monitoring,observability --hours 35
+
+# Expected: ✅ Created task: Phase 4: Monitoring & Observability (ID: phase4-001)
+
+cc task create -t "Phase 5: Zero-Downtime Migration Strategy" -d "Implement blue-green deployment, database migration strategies, traffic routing" -p critical -s todo --labels migration,zero-downtime --hours 50
+
+# Expected: ✅ Created task: Phase 5: Zero-Downtime Migration Strategy (ID: phase5-001)
+
+cc task create -t "Phase 6: Disaster Recovery & Business Continuity" -d "Implement backup strategies, cross-region replication, disaster recovery procedures" -p high -s todo --labels dr,backup,continuity --hours 30
+
+# Expected: ✅ Created task: Phase 6: Disaster Recovery & Business Continuity (ID: phase6-001)
+
+# Setting up task dependencies
+cc task dependencies phase2-001 --add phase1-001
+cc task dependencies phase3-001 --add phase2-001
+cc task dependencies phase4-001 --add phase2-001
+cc task dependencies phase5-001 --add phase3-001,phase4-001
+cc task dependencies phase6-001 --add phase5-001
+
+# Expected: ✅ Dependencies configured for sequential execution
+
+# Starting with Phase 1
+cc task start phase1-001
+
+# Expected: ✅ Started task: Phase 1: Legacy System Assessment & Architecture Design
+
+# Expanding Phase 1 into detailed subtasks
+cc task expand phase1-001 --breakdown technical --depth 2
+
+# Expected: ✅ Generated 15 subtasks for Phase 1
+
+# AI-powered task generation for specific technical areas
+cc task ai "Generate detailed implementation tasks for Kubernetes service mesh integration with Istio including security policies and traffic management"
+
+# Expected: ✅ Generated 8 Istio service mesh tasks
+
+cc task ai "Create comprehensive CI/CD pipeline tasks for multi-service deployment with automated testing, security scanning, and progressive rollouts"
+
+# Expected: ✅ Generated 12 CI/CD pipeline tasks
+
+# Setting up analytics tracking
+cc analytics insights --project migration-001
+
+# Expected: ✅ Analytics configured for migration project tracking
+
+# Creating backup and export strategy
+cc task backup --destination ./migration-project-backup-$(date +%Y%m%d)
+
+# Expected: ✅ Project backup created: migration-project-backup-20250724
+```

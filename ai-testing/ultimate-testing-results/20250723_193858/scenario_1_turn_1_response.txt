@@ -1,0 +1,109 @@
+```bash
+# Creating master enterprise e-commerce platform task
+cc task create -t "Enterprise E-commerce Platform Development" -d "Build comprehensive multi-vendor marketplace with real-time inventory, analytics, payments, fulfillment, customer service, mobile apps, and enterprise security compliance (PCI DSS, SOX)" -p critical -s todo --labels enterprise,ecommerce,marketplace,security,compliance --hours 2400
+
+# Expected: ✅ Created task: Enterprise E-commerce Platform Development (ID: ecom-enterprise-001)
+
+# Expanding into major architectural domains
+cc task expand ecom-enterprise-001 --breakdown architectural --depth 3
+
+# Expected: ✅ Generated 12 architectural domain tasks for Enterprise E-commerce Platform
+
+# Creating core platform infrastructure tasks
+cc task create -t "Multi-Vendor Marketplace Core" -d "Design and implement vendor onboarding, product catalog management, commission structures, and vendor analytics dashboard" -p high -s todo --labels marketplace,vendors,core --hours 320
+
+cc task create -t "Real-Time Inventory Management System" -d "Build distributed inventory tracking with warehouse integration, stock alerts, automated reordering, and cross-platform synchronization" -p high -s todo --labels inventory,realtime,warehouse --hours 280
+
+cc task create -t "Advanced Analytics & Business Intelligence" -d "Implement comprehensive analytics platform with sales reporting, customer insights, vendor performance metrics, and predictive analytics" -p high -s todo --labels analytics,reporting,bi --hours 240
+
+cc task create -t "Payment Processing & Financial Systems" -d "Integrate multi-gateway payment processing, escrow services, automated payouts, fraud detection, and financial reconciliation" -p critical -s todo --labels payments,financial,security --hours 200
+
+cc task create -t "Order Fulfillment & Logistics" -d "Build order management system with shipping integration, tracking, returns processing, and automated fulfillment workflows" -p high -s todo --labels fulfillment,logistics,shipping --hours 180
+
+cc task create -t "Customer Service Integration Platform" -d "Implement omnichannel support with live chat, ticketing system, knowledge base, and AI-powered assistance" -p medium -s todo --labels support,customer-service,omnichannel --hours 160
+
+cc task create -t "Mobile Applications (iOS/Android)" -d "Develop native mobile apps for customers and vendors with offline capabilities, push notifications, and mobile payments" -p high -s todo --labels mobile,ios,android,native --hours 400
+
+cc task create -t "Enterprise Security & Compliance" -d "Implement PCI DSS, SOX compliance, security auditing, data encryption, access controls, and regulatory reporting" -p critical -s todo --labels security,compliance,pci-dss,sox --hours 300
+
+# Expected: ✅ Created 8 core platform tasks with proper hierarchical structure
+
+# AI-powered research for modern enterprise patterns
+cc task research "enterprise e-commerce architecture microservices best practices 2024 multi-vendor marketplace security compliance" --format tasks --priority high
+
+# Expected: ✅ Research completed, 15 actionable architecture tasks created
+
+# Starting with security and compliance foundation
+cc task start ecom-enterprise-001
+
+# Expected: ✅ Started task: Enterprise E-commerce Platform Development (Status: in_progress)
+
+# Expanding security and compliance into detailed subtasks
+cc task expand enterprise-security-compliance --breakdown security --depth 2
+
+# Expected: ✅ Generated 18 security compliance subtasks
+
+# Creating dependencies between critical path items
+cc task dependencies ecom-enterprise-001 --add enterprise-security-compliance,payment-processing,multi-vendor-core
+
+# Expected: ✅ Added 3 critical dependencies to master task
+
+# Applying enterprise project template for standardized workflows
+cc template apply enterprise-marketplace --variables project_name="E-commerce Platform",compliance_level="PCI_DSS_SOX",team_size="25",timeline="18_months"
+
+# Expected: ✅ Applied enterprise marketplace template with 45 standardized tasks
+
+# AI task generation for advanced features
+cc task ai "Generate comprehensive task breakdown for enterprise-grade real-time inventory management with multi-warehouse support, automated reordering, demand forecasting, and vendor integration APIs"
+
+# Expected: ✅ AI generated 22 detailed inventory management tasks
+
+# Creating team assignments and workflow structure
+cc task update multi-vendor-core --assignee "platform-team@company.com" -s in_progress
+cc task update real-time-inventory --assignee "inventory-team@company.com" -s todo
+cc task update enterprise-security --assignee "security-team@company.com" -s in_progress
+
+# Expected: ✅ Updated 3 task assignments and statuses
+
+# Setting up analytics and monitoring
+cc analytics insights --project ecom-enterprise-001
+
+# Expected: 📊 Project Insights Generated
+# - 73 total tasks created
+# - 18-month estimated timeline
+# - 2,480 total effort hours
+# - 8 critical path dependencies
+# - 3 teams actively assigned
+
+# Generating burndown chart for project planning
+cc analytics burndown --period 540 --project ecom-enterprise-001
+
+# Expected: 📈 18-month burndown chart generated with milestone markers
+
+# Exporting comprehensive project plan
+cc task export --format json --file "enterprise-ecommerce-project-plan.json" --include-archived --project ecom-enterprise-001
+
+# Expected: ✅ Exported 73 tasks to enterprise-ecommerce-project-plan.json
+
+# Setting up integration workflows
+cc integration github --repo "company/enterprise-ecommerce" --sync-issues --auto-create-branches
+cc integration jira --project "ECOM" --sync-tasks --bidirectional
+
+# Expected: ✅ GitHub and Jira integrations configured with bidirectional sync
+```
+
+🎯 **COMPREHENSIVE ENTERPRISE E-COMMERCE PLATFORM CREATED**
+
+✅ **Master Project**: Enterprise E-commerce Platform (2,400 hours, 18-month timeline)
+✅ **Core Domains**: 8 major architectural components with full breakdown
+✅ **Security First**: PCI DSS and SOX compliance tasks prioritized
+✅ **AI-Enhanced**: Research and intelligent task generation completed
+✅ **Team Structure**: Multi-team assignments with proper dependencies
+✅ **Monitoring**: Analytics and burndown tracking configured
+✅ **Integration**: GitHub/Jira workflows established
+
+**Next workflow steps ready for execution:**
+- Security compliance validation tasks
+- Multi-vendor marketplace MVP development
+- Real-time inventory system architecture
+- Payment gateway integration planning

@@ -25,5 +25,5 @@ export class ServiceRegistry {
   }
 }
 
-// Global registry instance
-export const services = new ServiceRegistry();
+// Factory function to create service registry instances
+export const createServiceRegistry = (): ServiceRegistry => new ServiceRegistry();

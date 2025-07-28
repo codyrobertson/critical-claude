@@ -1,0 +1,15 @@
+I need to build a comprehensive data analytics platform for our enterprise clients. The system needs to handle real-time data ingestion from multiple sources (APIs, databases, file uploads), process it through ML pipelines for predictive analytics, and serve interactive dashboards with sub-second query performance. 
+
+Key requirements:
+- Ingest data from 50+ external APIs, PostgreSQL/MongoDB databases, and CSV/JSON file uploads
+- Real-time stream processing using Apache Kafka with 100k+ events/second
+- ML pipeline for customer churn prediction, revenue forecasting, and anomaly detection
+- Interactive React dashboards with real-time updates via WebSockets
+- Multi-tenant architecture supporting 500+ enterprise clients
+- 99.9% uptime SLA with auto-scaling and disaster recovery
+- GDPR/SOX compliance with audit logging and data encryption
+- Performance targets: <200ms API response times, <2 second dashboard load times
+
+I need this broken down into a complete project plan with realistic timelines, team assignments, technical dependencies, and risk mitigation strategies. The project should be structured for a 6-month delivery timeline with a team of 12 engineers across backend, ML, frontend, and DevOps specializations.
+
+Create comprehensive tasks with proper prioritization, identify critical path dependencies, and include specific technology recommendations for each component. Also factor in testing strategies, security reviews, and phased rollout planning.

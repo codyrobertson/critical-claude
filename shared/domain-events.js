@@ -4,7 +4,9 @@
  */
 // Simple event emitter
 export class EventEmitter {
-    listeners = new Map();
+    constructor() {
+        this.listeners = new Map();
+    }
     emit(event) {
         const handlers = this.listeners.get(event.type) || [];
         handlers.forEach(handler => {
@@ -31,4 +33,3 @@ export class EventEmitter {
 }
 // Global event bus
 export const eventBus = new EventEmitter();
-//# sourceMappingURL=domain-events.js.map

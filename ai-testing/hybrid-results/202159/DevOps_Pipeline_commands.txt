@@ -1,0 +1,18 @@
+cc task create -t "Complete CI/CD Pipeline with Docker, Kubernetes & Blue-Green Deployments" -d "Build comprehensive DevOps pipeline including containerization, orchestration, automated testing, security scanning, blue-green deployments, monitoring and logging" -p high -s todo --labels devops,cicd,docker,kubernetes,security --hours 80
+cc task expand cicd-pipeline-001 --breakdown technical --depth 3
+cc task create -t "Docker Multi-Stage Build Configuration" -d "Design and implement optimized Docker multi-stage builds with security hardening, layer caching, and minimal base images" -p high -s todo --labels docker,containerization --hours 8 --parent cicd-pipeline-001
+cc task create -t "Kubernetes Deployment Manifests" -d "Create comprehensive K8s manifests including deployments, services, ingress, configmaps, secrets, and resource quotas" -p high -s todo --labels kubernetes,deployment --hours 12 --parent cicd-pipeline-001
+cc task create -t "Blue-Green Deployment Strategy" -d "Implement automated blue-green deployment with traffic switching, rollback capabilities, and zero-downtime deployments" -p high -s todo --labels deployment,automation --hours 16 --parent cicd-pipeline-001
+cc task research "modern CI/CD security scanning tools container vulnerability assessment SAST DAST pipeline integration" --format tasks --priority high
+cc task ai "Generate comprehensive monitoring and observability stack for Kubernetes microservices with Prometheus, Grafana, ELK, and distributed tracing"
+cc task create -t "Automated Test Pipeline Integration" -d "Implement unit tests, integration tests, e2e tests, performance tests, and security tests in CI pipeline with parallel execution" -p high -s todo --labels testing,automation,quality --hours 20
+cc task expand test-pipeline-005 --breakdown workflow --depth 2
+cc task create -t "Security Scanning Integration" -d "Integrate SAST, DAST, container scanning, dependency scanning, and infrastructure security scanning into CI/CD pipeline" -p critical -s todo --labels security,scanning,compliance --hours 14
+cc task create -t "Observability Stack Setup" -d "Deploy and configure Prometheus, Grafana, ELK Stack, Jaeger tracing, and custom alerting for comprehensive system observability" -p high -s todo --labels monitoring,logging,observability --hours 18
+cc task start docker-build-002
+cc task list --parent cicd-pipeline-001 --status todo
+cc template apply devops-pipeline --variables project=cicd-demo,environment=production,registry=ghcr.io
+cc task dependencies k8s-deploy-003 --add docker-build-002
+cc task dependencies bg-deploy-004 --add k8s-deploy-003
+cc task dependencies observability-007 --add k8s-deploy-003
+cc task suggest "optimize CI/CD pipeline performance and resource utilization"

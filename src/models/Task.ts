@@ -5,6 +5,9 @@
 
 import { Priority, TaskStatus, DEFAULT_PRIORITY, DEFAULT_TASK_STATUS, BaseEntity, Timestamp } from '../../shared/domain-types';
 
+// Re-export types for external consumption
+export { Priority, TaskStatus } from '../../shared/domain-types';
+
 export interface Task extends BaseEntity {
   title: string;
   description: string;
