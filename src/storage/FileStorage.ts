@@ -16,7 +16,12 @@ export class FileStorage {
   private fileLocks = new Map<string, Promise<void>>();
   private resolvedBasePath?: string;
 
-  constructor(private basePath?: string) {}
+  constructor(private basePath?: string) {
+    // Auto-migration flag for backward compatibility
+    this.shouldAttemptMigration = true;
+  }
+
+  private shouldAttemptMigration: boolean;
 
   /**
    * Get the resolved base path (project-aware or global)
@@ -182,40 +187,87 @@ export class FileStorage {
   private async loadTasksFromDirectory(): Promise<void> {
     try {
       const basePath = await this.getBasePath();
-      const tasksDir = path.join(basePath, 'tasks');
+      const projectTasksDir = path.join(basePath, 'tasks');
+      const globalTasksDir = path.join(os.homedir(), '.critical-claude', 'tasks');
+      
       await this.withRetry(async () => {
-        await fs.mkdir(tasksDir, { recursive: true });
+        await fs.mkdir(projectTasksDir, { recursive: true });
       }, 'createTasksDirectory');
       
       const collectionCache = new Map<string, unknown>();
+      let totalTasksLoaded = 0;
       
+      // 1. Load from project-specific directory first
       try {
-        const files = await fs.readdir(tasksDir);
-        const taskFiles = files.filter(f => f.endsWith('.json') && !f.startsWith('.'));
+        const projectFiles = await fs.readdir(projectTasksDir);
+        const projectTaskFiles = projectFiles.filter(f => f.endsWith('.json') && !f.startsWith('.'));
         
-        logger.debug(`Loading ${taskFiles.length} task files from directory`, { tasksDir });
+        logger.debug(`Loading ${projectTaskFiles.length} task files from project directory`, { dir: projectTasksDir });
         
-        for (const file of taskFiles) {
+        for (const file of projectTaskFiles) {
           try {
-            const filePath = path.join(tasksDir, file);
+            const filePath = path.join(projectTasksDir, file);
             const content = await fs.readFile(filePath, 'utf-8');
             const task = JSON.parse(content);
             
             if (task.id) {
               collectionCache.set(task.id, task);
+              totalTasksLoaded++;
             }
           } catch (error) {
-            logger.warn(`Failed to load task file ${file}`, error);
+            logger.warn(`Failed to load project task file ${file}`, error);
           }
         }
       } catch (error) {
-        logger.debug('Tasks directory not found or empty, starting with empty collection');
+        logger.debug('Project tasks directory not found or empty', { dir: projectTasksDir });
+      }
+      
+      // 2. Load from global directory as fallback (for backward compatibility)
+      // Only if project directory is empty or we're in global mode
+      const isProjectMode = basePath !== path.join(os.homedir(), '.critical-claude');
+      
+      if (totalTasksLoaded === 0 || !isProjectMode) {
+        try {
+          const globalFiles = await fs.readdir(globalTasksDir);
+          const globalTaskFiles = globalFiles.filter(f => f.endsWith('.json') && !f.startsWith('.') && f !== 'corrupted-task.json');
+          
+          logger.debug(`Loading ${globalTaskFiles.length} task files from global directory`, { dir: globalTasksDir });
+          
+          for (const file of globalTaskFiles) {
+            try {
+              const filePath = path.join(globalTasksDir, file);
+              const content = await fs.readFile(filePath, 'utf-8');
+              const task = JSON.parse(content);
+              
+              if (task.id && !collectionCache.has(task.id)) {
+                collectionCache.set(task.id, task);
+                totalTasksLoaded++;
+              }
+            } catch (error) {
+              logger.warn(`Failed to load global task file ${file}`, error);
+            }
+          }
+          
+          // If we loaded tasks from global directory and we're in project mode,
+          // suggest migration
+          if (totalTasksLoaded > 0 && isProjectMode && collectionCache.size > 0) {
+            logger.info(`Loaded ${collectionCache.size} tasks from global directory. Consider running migration to project-specific storage.`);
+          }
+          
+        } catch (error) {
+          logger.debug('Global tasks directory not found or empty', { dir: globalTasksDir });
+        }
       }
       
       this.cache.set('tasks', collectionCache);
-      logger.info(`Loaded ${collectionCache.size} tasks from individual files`, { tasksDir });
+      logger.info(`Loaded ${collectionCache.size} tasks from individual files`, { 
+        projectDir: projectTasksDir,
+        globalDir: globalTasksDir,
+        totalLoaded: totalTasksLoaded
+      });
+      
     } catch (error) {
-      logger.error('Failed to load tasks from directory', error);
+      logger.error('Failed to load tasks from directories', error);
       this.cache.set('tasks', new Map());
     }
   }
@@ -326,6 +378,20 @@ export class FileStorage {
 
   async findAll<T>(collection: string): Promise<T[]> {
     await this.ensureCollectionLoaded(collection);
+    
+    // Attempt one-time migration for tasks collection if needed
+    if (collection === 'tasks' && this.shouldAttemptMigration) {
+      this.shouldAttemptMigration = false; // Only try once per instance
+      const migrationResult = await this.migrateTasks();
+      
+      if (migrationResult.migrated > 0) {
+        logger.info(`Migrated ${migrationResult.migrated} tasks, reloading collection`);
+        // Reload collection after migration
+        this.loadedCollections.delete(collection);
+        this.cache.delete(collection);
+        await this.ensureCollectionLoaded(collection);
+      }
+    }
     
     const collectionCache = this.cache.get(collection)!;
     return Array.from(collectionCache.values()) as T[];

@@ -1277,22 +1277,26 @@ class TerminalViewer {
     const title = '🌙 Critical Claude Task Viewer';
     const projectInfo = this.getProjectInfo();
     
-    // Title bar
-    this.renderBuffer.lines.push('\x1b[44m\x1b[37m'); // Blue background, white text
-    this.renderBuffer.lines.push(title.padEnd(width));
+    // Professional title bar with better padding
+    this.renderBuffer.lines.push('\x1b[44m\x1b[97m'); // Blue background, bright white text
+    const titlePadding = Math.max(0, width - ViewerHelpers.getDisplayLength(title));
+    const leftPad = Math.floor(titlePadding / 2);
+    const rightPad = titlePadding - leftPad;
+    this.renderBuffer.lines.push(' '.repeat(leftPad) + title + ' '.repeat(rightPad));
     this.renderBuffer.lines.push('\x1b[0m\n'); // Reset
     
-    // Info bar with better task count display
+    // Enhanced info bar with consistent spacing
     let infoLine = `📊 ${this.filteredTasks.length}/${this.tasks.length} tasks`;
     if (projectInfo) {
-      infoLine += ` | 📁 ${projectInfo}`;
+      infoLine += ` │ 📁 ${projectInfo}`;
     }
     if (this.statusFilter) {
-      infoLine += ` | 🔍 ${this.statusFilter}`;
+      infoLine += ` │ 🔍 ${this.statusFilter}`;
     }
     
-    this.renderBuffer.lines.push('\x1b[100m\x1b[37m'); // Dark gray background, white text
-    this.renderBuffer.lines.push(infoLine.padEnd(width));
+    this.renderBuffer.lines.push('\x1b[100m\x1b[97m'); // Dark gray background, bright white text
+    const infoPadding = Math.max(0, width - ViewerHelpers.getDisplayLength(infoLine));
+    this.renderBuffer.lines.push(' ' + infoLine + ' '.repeat(infoPadding - 1));
     this.renderBuffer.lines.push('\x1b[0m\n'); // Reset
   }
 
@@ -1338,26 +1342,26 @@ class TerminalViewer {
   // This method is implemented below
 
 
-  // Professional, clear status and priority indicators with text badges and Unicode symbols
+  // Professional, clear status and priority indicators with enhanced visual design
   private getStatusIcon(status: string): string {
     const icons = {
-      todo: '⚪︎',         // Inactive white circle for todo
-      in_progress: '⚫︎',  // Active black circle for in progress  
-      done: '✓',         // Checkmark for completed
-      blocked: '⊘',       // Prohibition symbol for blocked
-      archived: '□'       // Square for archived
+      todo: '\x1b[37m○\x1b[0m',         // Gray circle for todo
+      in_progress: '\x1b[33m●\x1b[0m',  // Yellow filled circle for in progress  
+      done: '\x1b[32m✓\x1b[0m',         // Green checkmark for completed
+      blocked: '\x1b[31m⊘\x1b[0m',       // Red prohibition symbol for blocked
+      archived: '\x1b[90m□\x1b[0m'       // Dark gray square for archived
     };
-    return icons[status as keyof typeof icons] || '?';
+    return icons[status as keyof typeof icons] || '\x1b[90m?\x1b[0m';
   }
 
   private getPriorityIcon(priority: string): string {
     const badges = {
-      critical: '\x1b[41m\x1b[97m[CRIT]\x1b[0m',  // Red background, white text
-      high: '\x1b[43m\x1b[30m[HIGH]\x1b[0m',      // Yellow background, black text
-      medium: '\x1b[46m\x1b[30m[MED]\x1b[0m',     // Cyan background, black text
-      low: '\x1b[47m\x1b[30m[LOW]\x1b[0m'         // White background, black text
+      critical: '\x1b[41m\x1b[97m CRIT \x1b[0m',  // Red background, white text
+      high: '\x1b[43m\x1b[30m HIGH \x1b[0m',      // Yellow background, black text
+      medium: '\x1b[46m\x1b[30m MED  \x1b[0m',     // Cyan background, black text
+      low: '\x1b[47m\x1b[30m LOW  \x1b[0m'         // White background, black text
     };
-    return badges[priority as keyof typeof badges] || '\x1b[90m[UNK]\x1b[0m';
+    return badges[priority as keyof typeof badges] || '\x1b[90m UNK  \x1b[0m';
   }
   
   private getStatusColor(status: string): string {
@@ -1379,6 +1383,34 @@ class TerminalViewer {
       low: '\x1b[90m'         // Dark gray
     };
     return colors[priority as keyof typeof colors] || '\x1b[37m';
+  }
+
+  // Helper method for truncating text while preserving ANSI escape sequences
+  private truncateWithAnsi(text: string, maxLength: number): string {
+    let result = '';
+    let displayLength = 0;
+    let i = 0;
+    
+    while (i < text.length && displayLength < maxLength) {
+      if (text[i] === '\x1b' && text[i + 1] === '[') {
+        // Find the end of the ANSI sequence
+        let j = i + 2;
+        while (j < text.length && !/[a-zA-Z]/.test(text[j])) {
+          j++;
+        }
+        if (j < text.length) {
+          j++; // Include the ending character
+        }
+        result += text.slice(i, j);
+        i = j;
+      } else {
+        result += text[i];
+        displayLength++;
+        i++;
+      }
+    }
+    
+    return result;
   }
   
   // Complete moveSelection method implementation
@@ -1458,36 +1490,68 @@ class TerminalViewer {
   }
   
   private renderSplitView(width: number, height: number): void {
-    // Split view implementation for showing task details side by side
-    const leftWidth = Math.floor(width * 0.4);
-    const rightWidth = width - leftWidth - 1;
+    // Responsive split view that adapts to terminal size
+    const isNarrow = width < 100;
+    const isVeryNarrow = width < 80;
     
+    // Adjust proportions based on terminal width
+    let leftWidth: number;
+    if (isVeryNarrow) {
+      // For very narrow terminals, use full width and stack vertically
+      this.renderStackedView(width, height);
+      return;
+    } else if (isNarrow) {
+      leftWidth = Math.floor(width * 0.5); // 50/50 split for narrow terminals
+    } else {
+      leftWidth = Math.floor(width * 0.45); // 45/55 split for wider terminals
+    }
+    
+    const rightWidth = width - leftWidth - 1;
     const selectedTask = this.filteredTasks[this.selectedIndex];
     const visibleTasks = height - 2;
     const startIndex = Math.max(0, this.selectedIndex - Math.floor(visibleTasks / 2));
     
-    // Top border
-    this.renderBuffer.lines.push('┌' + '─'.repeat(leftWidth - 1) + '┬' + '─'.repeat(rightWidth - 1) + '┐\n');
+    // Responsive labels based on width
+    const leftLabel = isNarrow ? ' TASKS ' : ' TASK LIST ';
+    const rightLabel = isNarrow ? ' INFO ' : ' DETAILS ';
+    const leftLabelPad = Math.max(0, Math.floor((leftWidth - 1 - ViewerHelpers.getDisplayLength(leftLabel)) / 2));
+    const rightLabelPad = Math.max(0, Math.floor((rightWidth - 1 - ViewerHelpers.getDisplayLength(rightLabel)) / 2));
     
-    // Content rows
+    // Professional top border with responsive labels
+    this.renderBuffer.lines.push('┌');
+    this.renderBuffer.lines.push('─'.repeat(leftLabelPad));
+    this.renderBuffer.lines.push(leftLabel);
+    this.renderBuffer.lines.push('─'.repeat(Math.max(0, leftWidth - 1 - leftLabelPad - ViewerHelpers.getDisplayLength(leftLabel))));
+    this.renderBuffer.lines.push('┬');
+    this.renderBuffer.lines.push('─'.repeat(rightLabelPad));
+    this.renderBuffer.lines.push(rightLabel);
+    this.renderBuffer.lines.push('─'.repeat(Math.max(0, rightWidth - 1 - rightLabelPad - ViewerHelpers.getDisplayLength(rightLabel))));
+    this.renderBuffer.lines.push('┐\n');
+    
+    // Content rows with responsive formatting
+    const taskDetailLines = selectedTask ? ViewerHelpers.getTaskDetailLines(selectedTask, rightWidth - 3) : [];
+    
     for (let i = 0; i < visibleTasks; i++) {
       const taskIndex = startIndex + i;
       
-      // Left side - task list
+      // Left side - task list with responsive content
+      this.renderBuffer.lines.push('│');
       if (taskIndex < this.filteredTasks.length) {
         const task = this.filteredTasks[taskIndex];
         const isSelected = taskIndex === this.selectedIndex;
-        this.renderSplitTaskLine(task, isSelected, leftWidth - 1);
+        this.renderResponsiveSplitTaskLine(task, isSelected, leftWidth - 2, isNarrow);
       } else {
-        this.renderBuffer.lines.push(' '.repeat(leftWidth - 1));
+        this.renderBuffer.lines.push(' '.repeat(leftWidth - 2));
       }
       
       this.renderBuffer.lines.push('│');
       
-      // Right side - task details
-      if (selectedTask && i < ViewerHelpers.getTaskDetailLines(selectedTask).length) {
-        const detailLine = ViewerHelpers.getTaskDetailLines(selectedTask)[i];
-        this.renderBuffer.lines.push(this.padLineToWidth(detailLine, rightWidth - 1));
+      // Right side - task details with responsive formatting
+      if (i < taskDetailLines.length) {
+        const detailLine = taskDetailLines[i];
+        const maxDetailWidth = rightWidth - 3;
+        const processedLine = ViewerHelpers.renderDetailLineWithHighlighting(detailLine, maxDetailWidth);
+        this.renderBuffer.lines.push(' ' + this.padLineToWidth(processedLine, maxDetailWidth));
       } else {
         this.renderBuffer.lines.push(' '.repeat(rightWidth - 1));
       }
@@ -1495,7 +1559,7 @@ class TerminalViewer {
       this.renderBuffer.lines.push('│\n');
     }
     
-    // Bottom border
+    // Professional bottom border
     this.renderBuffer.lines.push('└' + '─'.repeat(leftWidth - 1) + '┴' + '─'.repeat(rightWidth - 1) + '┘\n');
   }
   
@@ -1505,26 +1569,34 @@ class TerminalViewer {
     
     let line = `${statusIcon} ${priorityIcon} ${task.title}`;
     
-    // Smart truncation for split view
-    if (line.length > width - 3) {
-      let truncateAt = width - 6; // Leave space for '...'
-      while (truncateAt > 0 && line[truncateAt] !== ' ') {
-        truncateAt--;
-      }
-      
-      if (truncateAt <= 0) {
-        truncateAt = width - 6;
-      }
-      
-      line = line.substring(0, truncateAt).trim() + '...';
+    // Add assignee for split view context
+    if (task.assignee) {
+      line += ` \x1b[36m@${task.assignee}\x1b[0m`;
     }
     
+    // Smart truncation for split view with ANSI awareness
+    const displayLength = ViewerHelpers.getDisplayLength(line);
+    if (displayLength > width - 3) {
+      line = this.truncateWithAnsi(line, width - 6) + '...';
+    }
+    
+    // Full-width highlighting for split view
     if (isSelected) {
-      this.renderBuffer.lines.push('\x1b[7m'); // Reverse video
-      this.renderBuffer.lines.push(line.padEnd(width));
+      this.renderBuffer.lines.push('\x1b[44m\x1b[97m'); // Blue background, bright white text
+      this.renderBuffer.lines.push(line);
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - currentDisplayLength;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
       this.renderBuffer.lines.push('\x1b[0m'); // Reset
     } else {
-      this.renderBuffer.lines.push(line.padEnd(width));
+      this.renderBuffer.lines.push(line);
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - currentDisplayLength;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
     }
   }
   
@@ -1533,11 +1605,142 @@ class TerminalViewer {
     return 'critical_claude';
   }
   
-  // Add missing helper methods that are being called
+  // Enhanced helper method for padding lines with ANSI code awareness
   private padLineToWidth(line: string, targetWidth: number): string {
-    // For lines without ANSI codes, simple padding works
-    const padding = Math.max(0, targetWidth - line.length);
+    const displayLength = ViewerHelpers.getDisplayLength(line);
+    const padding = Math.max(0, targetWidth - displayLength);
     return line + ' '.repeat(padding);
+  }
+
+  // Responsive split task line rendering based on available width
+  private renderResponsiveSplitTaskLine(task: Task, isSelected: boolean, width: number, isNarrow: boolean): void {
+    const statusIcon = this.getStatusIcon(task.status);
+    const priorityIcon = isNarrow ? this.getCompactPriorityIcon(task.priority) : this.getPriorityIcon(task.priority);
+    
+    let line = `${statusIcon} ${priorityIcon} ${task.title}`;
+    
+    // Add assignee only if there's space and not narrow
+    if (!isNarrow && task.assignee && width > 50) {
+      line += ` \x1b[36m@${task.assignee}\x1b[0m`;
+    }
+    
+    // Smart truncation with responsive behavior
+    const displayLength = ViewerHelpers.getDisplayLength(line);
+    if (displayLength > width - 3) {
+      line = this.truncateWithAnsi(line, width - 6) + '...';
+    }
+    
+    // Responsive highlighting
+    if (isSelected) {
+      this.renderBuffer.lines.push('\x1b[44m\x1b[97m');
+      this.renderBuffer.lines.push(line);
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - currentDisplayLength;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
+      this.renderBuffer.lines.push('\x1b[0m');
+    } else {
+      this.renderBuffer.lines.push(line);
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - currentDisplayLength;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
+    }
+  }
+
+  // Compact priority icon for narrow terminals
+  private getCompactPriorityIcon(priority: string): string {
+    const badges = {
+      critical: '\x1b[41m\x1b[97mC\x1b[0m',  // Single letter for space
+      high: '\x1b[43m\x1b[30mH\x1b[0m',
+      medium: '\x1b[46m\x1b[30mM\x1b[0m',
+      low: '\x1b[47m\x1b[30mL\x1b[0m'
+    };
+    return badges[priority as keyof typeof badges] || '\x1b[90m?\x1b[0m';
+  }
+
+  // Stacked view for very narrow terminals
+  private renderStackedView(width: number, height: number): void {
+    const selectedTask = this.filteredTasks[this.selectedIndex];
+    const availableHeight = height - 4; // Header, separator, footer
+    const taskListHeight = Math.floor(availableHeight * 0.6);
+    const detailHeight = availableHeight - taskListHeight - 1; // -1 for separator
+    
+    // Header
+    this.renderBuffer.lines.push('┌' + ' TASKS (STACKED VIEW) '.padEnd(width - 2, '─') + '┐\n');
+    
+    // Task list section
+    const startIndex = Math.max(0, this.selectedIndex - Math.floor(taskListHeight / 2));
+    for (let i = 0; i < taskListHeight; i++) {
+      const taskIndex = startIndex + i;
+      if (taskIndex < this.filteredTasks.length) {
+        const task = this.filteredTasks[taskIndex];
+        const isSelected = taskIndex === this.selectedIndex;
+        this.renderCompactTaskLine(task, isSelected, width);
+      } else {
+        this.renderBuffer.lines.push('│' + ' '.repeat(width - 2) + '│\n');
+      }
+    }
+    
+    // Separator
+    this.renderBuffer.lines.push('├' + '─'.repeat(width - 2) + '┤\n');
+    
+    // Details section
+    if (selectedTask) {
+      const detailLines = ViewerHelpers.getTaskDetailLines(selectedTask, width - 6).slice(0, detailHeight);
+      for (let i = 0; i < detailHeight; i++) {
+        if (i < detailLines.length) {
+          const detailLine = detailLines[i];
+          const processedLine = ViewerHelpers.renderDetailLineWithHighlighting(detailLine, width - 3);
+          this.renderBuffer.lines.push('│ ' + this.padLineToWidth(processedLine, width - 3) + '│\n');
+        } else {
+          this.renderBuffer.lines.push('│' + ' '.repeat(width - 2) + '│\n');
+        }
+      }
+    } else {
+      for (let i = 0; i < detailHeight; i++) {
+        this.renderBuffer.lines.push('│' + ' '.repeat(width - 2) + '│\n');
+      }
+    }
+    
+    // Bottom border
+    this.renderBuffer.lines.push('└' + '─'.repeat(width - 2) + '┘\n');
+  }
+
+  // Compact task line for stacked view
+  private renderCompactTaskLine(task: Task, isSelected: boolean, width: number): void {
+    const statusIcon = this.getStatusIcon(task.status);
+    const priorityIcon = this.getCompactPriorityIcon(task.priority);
+    
+    let line = `${statusIcon}${priorityIcon} ${task.title}`;
+    
+    // Very aggressive truncation for compact view
+    const maxLength = width - 6;
+    if (ViewerHelpers.getDisplayLength(line) > maxLength) {
+      line = this.truncateWithAnsi(line, maxLength - 3) + '...';
+    }
+    
+    if (isSelected) {
+      this.renderBuffer.lines.push('│\x1b[44m\x1b[97m ');
+      this.renderBuffer.lines.push(line);
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - currentDisplayLength - 3;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
+      this.renderBuffer.lines.push('\x1b[0m│\n');
+    } else {
+      this.renderBuffer.lines.push('│ ');
+      this.renderBuffer.lines.push(line);
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - currentDisplayLength - 3;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
+      this.renderBuffer.lines.push('│\n');
+    }
   }
   
   private renderTaskList(width: number, height: number): void {
@@ -1548,24 +1751,36 @@ class TerminalViewer {
     const startIndex = Math.max(0, this.selectedIndex - Math.floor(visibleTasks / 2));
     const endIndex = Math.min(totalTasks, startIndex + visibleTasks);
     
-    // Top border with pagination info
+    // Professional top border with pagination info
     const paginationInfo = totalTasks > visibleTasks ? 
-      ` (${startIndex + 1}-${endIndex}/${totalTasks}) ` : '';
-    const borderTop = '┌' + '─'.repeat(width - 2 - paginationInfo.length) + paginationInfo + '┐';
+      ` (${startIndex + 1}-${endIndex}/${totalTasks}) ` : ' TASKS ';
+    const borderWidth = width - 2;
+    const paginationLength = ViewerHelpers.getDisplayLength(paginationInfo);
+    const leftBorderLength = Math.floor((borderWidth - paginationLength) / 2);
+    const rightBorderLength = borderWidth - leftBorderLength - paginationLength;
+    
+    const borderTop = '┌' + '─'.repeat(leftBorderLength) + paginationInfo + '─'.repeat(rightBorderLength) + '┐';
     this.renderBuffer.lines.push(borderTop + '\n');
     
     if (totalTasks === 0) {
+      // Enhanced empty state message
       const emptyMsg = this.statusFilter ? 
         `No ${this.statusFilter} tasks found` : 
         'No tasks found - use "cc task create" to add tasks';
-      const padding = Math.floor((width - emptyMsg.length - 2) / 2);
-      this.renderBuffer.lines.push('│' + ' '.repeat(padding) + emptyMsg + 
-        ' '.repeat(width - padding - emptyMsg.length - 2) + '│\n');
+      const padding = Math.floor((width - ViewerHelpers.getDisplayLength(emptyMsg) - 2) / 2);
+      const rightPadding = width - padding - ViewerHelpers.getDisplayLength(emptyMsg) - 2;
+      this.renderBuffer.lines.push('│' + ' '.repeat(padding) + '\x1b[90m' + emptyMsg + '\x1b[0m' + 
+        ' '.repeat(rightPadding) + '│\n');
+        
+      // Add some vertical padding for better appearance
+      for (let i = 1; i < visibleTasks; i++) {
+        this.renderBuffer.lines.push('│' + ' '.repeat(width - 2) + '│\n');
+      }
     } else {
       for (let i = 0; i < visibleTasks; i++) {
         const taskIndex = startIndex + i;
-        if (taskIndex < endIndex) {
-          this.renderTaskLine(this.filteredTasks[taskIndex], taskIndex === this.selectedIndex, width - 2);
+        if (taskIndex < totalTasks) {
+          this.renderTaskLine(this.filteredTasks[taskIndex], taskIndex === this.selectedIndex, width);
         } else {
           this.renderBuffer.lines.push('│' + ' '.repeat(width - 2) + '│\n');
         }
@@ -1583,72 +1798,77 @@ class TerminalViewer {
     // Build clean line without complex color handling
     let line = `${statusIcon} ${priorityIcon} ${task.title}`;
     
-    // Add assignee if present
+    // Add assignee with professional styling
     if (task.assignee) {
-      line += ` @${task.assignee}`;
+      line += ` \x1b[36m@${task.assignee}\x1b[0m`;
     }
     
-    // Add labels if present (first 2 only to avoid clutter)
+    // Add labels with subtle styling (first 2 only to avoid clutter)
     if (task.labels && task.labels.length > 0) {
       const labelText = task.labels.slice(0, 2).join(',');
       if (labelText.trim()) {
-        line += ` #${labelText}`;
+        line += ` \x1b[90m#${labelText}\x1b[0m`;
       }
     }
     
-    // Smart truncation that doesn't break in the middle of words
+    // Calculate display length accounting for ANSI codes
+    const displayLength = ViewerHelpers.getDisplayLength(line);
     const maxLength = width - 4; // Leave space for borders
-    if (line.length > maxLength) {
-      // Find last space before the limit
-      let truncateAt = maxLength - 3; // Leave space for '...'
-      while (truncateAt > 0 && line[truncateAt] !== ' ') {
-        truncateAt--;
-      }
-      
-      // If no space found, just truncate at limit
-      if (truncateAt <= 0) {
-        truncateAt = maxLength - 3;
-      }
-      
-      line = line.substring(0, truncateAt).trim() + '...';
+    
+    // Smart truncation that preserves ANSI codes
+    if (displayLength > maxLength) {
+      line = this.truncateWithAnsi(line, maxLength - 3) + '...';
     }
     
-    // Highlight selected line with better contrast
+    // Professional full-width row highlighting
     if (isSelected) {
-      this.renderBuffer.lines.push('│\x1b[7m'); // Reverse video
-      this.renderBuffer.lines.push(line.padEnd(width - 2));
-      this.renderBuffer.lines.push('\x1b[0m│\n'); // Reset
+      // Use blue background with white text for better contrast
+      this.renderBuffer.lines.push('│\x1b[44m\x1b[97m'); // Blue background, bright white text
+      this.renderBuffer.lines.push(line);
+      // Pad remaining space with background color
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - 2 - currentDisplayLength;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
+      this.renderBuffer.lines.push('\x1b[0m│\n'); // Reset and close
     } else {
       this.renderBuffer.lines.push('│');
-      this.renderBuffer.lines.push(line.padEnd(width - 2));
+      this.renderBuffer.lines.push(line);
+      // Pad to maintain alignment
+      const currentDisplayLength = ViewerHelpers.getDisplayLength(line);
+      const remainingSpace = width - 2 - currentDisplayLength;
+      if (remainingSpace > 0) {
+        this.renderBuffer.lines.push(' '.repeat(remainingSpace));
+      }
       this.renderBuffer.lines.push('│\n');
     }
   }
   
   private renderFooter(width: number): void {
-    // Separator line
+    // Separator line for visual clarity
     this.renderBuffer.lines.push('├' + '─'.repeat(width - 2) + '┤\n');
     
-    // Keyboard shortcuts with clear, professional formatting
+    // Enhanced keyboard shortcuts with better organization
     const shortcuts = [
-      '↑↓ Navigate | SPACE Toggle Status | TAB Details | ENTER Edit | F Filter | R Refresh | Q Quit'
+      '\x1b[96m↑↓\x1b[0m Navigate \x1b[90m|\x1b[0m \x1b[96mSPACE\x1b[0m Status \x1b[90m|\x1b[0m \x1b[96mTAB\x1b[0m Details \x1b[90m|\x1b[0m \x1b[96mENTER\x1b[0m Edit',
+      '\x1b[96mF\x1b[0m Filter \x1b[90m|\x1b[0m \x1b[96mR\x1b[0m Refresh \x1b[90m|\x1b[0m \x1b[96mQ\x1b[0m Quit \x1b[90m|\x1b[0m \x1b[96m?\x1b[0m Help'
     ];
     
     shortcuts.forEach(shortcut => {
-      const padding = Math.max(0, width - shortcut.length - 2);
+      const displayLength = ViewerHelpers.getDisplayLength(shortcut);
+      const padding = Math.max(0, width - displayLength - 2);
       const leftPad = Math.floor(padding / 2);
       const rightPad = padding - leftPad;
       
       this.renderBuffer.lines.push('│');
       this.renderBuffer.lines.push(' '.repeat(leftPad));
-      this.renderBuffer.lines.push('\x1b[90m'); // Dark gray for subtlety
       this.renderBuffer.lines.push(shortcut);
-      this.renderBuffer.lines.push('\x1b[0m'); // Reset
       this.renderBuffer.lines.push(' '.repeat(rightPad));
       this.renderBuffer.lines.push('│\n');
     });
     
-    // Bottom border
+    // Professional bottom border
     this.renderBuffer.lines.push('└' + '─'.repeat(width - 2) + '┘');
   }
   
@@ -1658,13 +1878,19 @@ class TerminalViewer {
     const newHeight = process.stdout.rows || 24;
     
     if (newWidth !== this.terminalWidth || newHeight !== this.terminalHeight) {
-      this.terminalWidth = Math.max(40, newWidth);
-      this.terminalHeight = Math.max(10, newHeight);
+      // Enhanced minimum sizes with responsive scaling
+      this.terminalWidth = Math.max(60, newWidth); // Increased minimum for better UX
+      this.terminalHeight = Math.max(12, newHeight); // Increased minimum for better UX
+      
+      // Adjust pagination based on terminal size
+      this.pageSize = Math.max(10, Math.floor((this.terminalHeight - 6) * 0.8));
+      
       this.needsFullRedraw = true;
       
       logger.debug('Terminal dimensions updated', {
         width: this.terminalWidth,
-        height: this.terminalHeight
+        height: this.terminalHeight,
+        pageSize: this.pageSize
       });
     }
   }
