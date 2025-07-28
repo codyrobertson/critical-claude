@@ -1338,26 +1338,26 @@ class TerminalViewer {
   // This method is implemented below
 
 
-  // Professional, clear status and priority indicators
+  // Professional, clear status and priority indicators with text badges and Unicode symbols
   private getStatusIcon(status: string): string {
     const icons = {
-      todo: '⭕',        // Clear circle for todo
-      in_progress: '🟡', // Yellow circle for in progress  
-      done: '✅',        // Green checkmark for completed
-      blocked: '🔴',     // Red circle for blocked
-      archived: '📦'     // Box for archived
+      todo: '⚪︎',         // Inactive white circle for todo
+      in_progress: '⚫︎',  // Active black circle for in progress  
+      done: '✓',         // Checkmark for completed
+      blocked: '⊘',       // Prohibition symbol for blocked
+      archived: '□'       // Square for archived
     };
-    return icons[status as keyof typeof icons] || '❓';
+    return icons[status as keyof typeof icons] || '?';
   }
 
   private getPriorityIcon(priority: string): string {
-    const icons = {
-      critical: '🔥',    // Fire for critical
-      high: '🔺',       // Red triangle for high
-      medium: '🔶',     // Orange diamond for medium  
-      low: '🔹'         // Blue diamond for low
+    const badges = {
+      critical: '\x1b[41m\x1b[97m[CRIT]\x1b[0m',  // Red background, white text
+      high: '\x1b[43m\x1b[30m[HIGH]\x1b[0m',      // Yellow background, black text
+      medium: '\x1b[46m\x1b[30m[MED]\x1b[0m',     // Cyan background, black text
+      low: '\x1b[47m\x1b[30m[LOW]\x1b[0m'         // White background, black text
     };
-    return icons[priority as keyof typeof icons] || '❓';
+    return badges[priority as keyof typeof badges] || '\x1b[90m[UNK]\x1b[0m';
   }
   
   private getStatusColor(status: string): string {
