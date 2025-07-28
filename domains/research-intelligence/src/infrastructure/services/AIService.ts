@@ -190,37 +190,27 @@ export class AIService implements IAIProvider {
   }
 
   private async initializeClaudeCode(): Promise<void> {
-    this.logger.info('Attempting to initialize Claude Code CLI...');
+    this.logger.info('Attempting to initialize Claude Code SDK...');
     try {
-      // Test Claude Code CLI directly with spawn
-      const { spawn } = await import('child_process');
+      // Import our ClaudeCodeProvider with proper SDK integration
+      const { ClaudeCodeProvider } = await import('../../../../src/ai/ClaudeCodeProvider.js');
       
-      await new Promise<void>((resolve, reject) => {
-        const testProcess = spawn('claude', ['--version'], {
-          stdio: 'pipe',
-          timeout: 5000
-        });
-
-        testProcess.on('close', (code) => {
-          if (code === 0) {
-            resolve();
-          } else {
-            reject(new Error('Claude Code CLI not available (non-zero exit code)'));
-          }
-        });
-
-        testProcess.on('error', (error) => {
-          reject(new Error(`Claude Code CLI spawn error: ${error.message}`));
-        });
-
-        // Auto-reject after timeout
-        setTimeout(() => reject(new Error('Claude Code CLI test timeout')), 5000);
-      });
+      const claudeProvider = new ClaudeCodeProvider({
+        maxTurns: 1,
+        cwd: process.cwd(),
+        timeout: 5000
+      }, this.logger);
       
-      this.logger.info('Claude Code CLI provider initialized successfully');
+      // Test Claude Code SDK availability
+      const isAvailable = await claudeProvider.isAvailable();
+      if (!isAvailable) {
+        throw new Error('Claude Code SDK not available');
+      }
+      
+      this.logger.info('Claude Code SDK provider initialized successfully');
       
     } catch (error) {
-      this.logger.error('Claude Code initialization failed', error as Error);
+      this.logger.error('Claude Code SDK initialization failed', error as Error);
       throw error; // Re-throw to trigger fallback
     }
   }
@@ -364,55 +354,38 @@ export class AIService implements IAIProvider {
 
   private async callClaudeCode(prompt: string): Promise<string> {
     try {
-      this.logger.info('Using Claude Code CLI subprocess...');
-      const { spawn } = await import('child_process');
+      this.logger.info('🤖 Using Claude Code SDK...');
       
-      return new Promise((resolve, reject) => {
-        const model = (this.config.model as 'sonnet' | 'opus') || 'sonnet';
-        const args = [
-          '--model', model,
-          '--print',
-          prompt  // Pass prompt as argument
-        ];
-        
-        this.logger.debug('Spawning Claude Code process', { args: args.slice(0, -1).concat(['<prompt>']) }); // Hide prompt in logs
-        
-        const claudeProcess = spawn('claude', args, {
-          stdio: 'pipe'
-        });
-
-        let output = '';
-        let errorOutput = '';
-
-        claudeProcess.stdout?.on('data', (data) => {
-          output += data.toString();
-        });
-
-        claudeProcess.stderr?.on('data', (data) => {
-          errorOutput += data.toString();
-        });
-
-        claudeProcess.on('close', (code) => {
-          if (code === 0) {
-            this.logger.debug('Claude Code request successful', { responseLength: output.length });
-            this.logger.debug('Claude Code raw response', { preview: output.substring(0, 200) + '...' });
-            resolve(output.trim());
-          } else {
-            const error = errorOutput || `Claude Code exited with code ${code}`;
-            this.logger.error('Claude Code request failed', new Error(error));
-            reject(new Error(error));
-          }
-        });
-
-        claudeProcess.on('error', (error) => {
-          this.logger.error('Claude Code spawn error', error);
-          reject(error);
-        });
-      });
+      // Import our ClaudeCodeProvider with proper SDK integration
+      const { ClaudeCodeProvider } = await import('../../../../src/ai/ClaudeCodeProvider.js');
+      
+      const claudeProvider = new ClaudeCodeProvider({
+        maxTurns: 5,
+        cwd: process.cwd(),
+        timeout: 60000
+      }, this.logger);
+      
+      // Check if Claude Code SDK is available
+      const isAvailable = await claudeProvider.isAvailable();
+      if (!isAvailable) {
+        throw new Error('Claude Code SDK not available');
+      }
+      
+      // Execute the prompt using the SDK
+      const response = await claudeProvider.execute(prompt);
+      
+      if (response.success) {
+        this.logger.debug('Claude Code SDK request successful', { responseLength: response.content.length });
+        return response.content;
+      } else {
+        const error = response.error || 'Unknown Claude Code SDK error';
+        this.logger.error('Claude Code SDK request failed', new Error(error));
+        throw new Error(error);
+      }
 
     } catch (error) {
-      this.logger.warn(`Claude Code integration failed: ${(error as Error).message}`);
-      throw new Error('Claude Code not available. Install Claude Code CLI with: npm install -g @anthropic-ai/claude-code');
+      this.logger.warn(`Claude Code SDK integration failed: ${(error as Error).message}`);
+      throw new Error('Claude Code SDK not available. Install Claude Code SDK with: npm install @anthropic-ai/claude-code');
     }
   }
 
