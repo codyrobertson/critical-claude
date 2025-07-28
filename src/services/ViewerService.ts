@@ -87,8 +87,8 @@ export class ViewerService {
         errors.push('Storage base path is not accessible');
       }
       
-      // Test storage read capability
-      await this.storage.findAll<any>('__health_check');
+      // Test storage read capability - use actual tasks collection
+      await this.storage.findAll<any>('tasks');
     } catch (error) {
       errors.push(`Storage is not accessible: ${error instanceof Error ? error.message : error}`);
     }
@@ -1705,9 +1705,9 @@ class TerminalViewer {
       throw new Error('Interactive terminal (TTY) required for both input and output');
     }
     
-    // Test storage accessibility
+    // Test storage accessibility - use actual tasks collection  
     try {
-      await this.storage.findAll<any>('__health_check');
+      await this.storage.findAll<any>('tasks');
     } catch (error) {
       throw new Error(`Storage system inaccessible: ${ViewerHelpers.getErrorMessage(error)}`);
     }
