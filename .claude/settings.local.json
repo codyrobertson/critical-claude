@@ -11,7 +11,10 @@
       "Bash(cc task ai \"Build AI verb system with expand, research, deps commands for Critical Claude task management. Include task template system, agentic research with multiple roles, and intelligent dependency analysis. Target team size 2, intermediate experience.\" --teamSize 2 --apply)",
       "Bash(ls:*)",
       "Bash(node:*)",
-      "Bash(./packages/critical-claude/dist/cli.js task ai \"Create React component for user profile display with avatar upload\")"
+      "Bash(./packages/critical-claude/dist/cli.js task ai \"Create React component for user profile display with avatar upload\")",
+      "Bash(python3:*)",
+      "Bash(cc viewer:*)",
+      "Bash(timeout 5 cc viewer:*)"
     ],
     "deny": []
   }

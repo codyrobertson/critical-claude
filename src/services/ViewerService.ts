@@ -23,6 +23,7 @@ export interface ViewerOptions {
   refreshInterval?: number;
   maxRetries?: number;
   timeout?: number;
+  useTextual?: boolean; // New option to use Textual viewer
 }
 
 export interface ViewerResult {
@@ -117,7 +118,7 @@ export class ViewerService {
     return { success: errors.length === 0, errors };
   }
 
-  async launchViewer(options: ViewerOptions): Promise<ViewerResult> {
+  async launchOriginalViewer(options: ViewerOptions): Promise<ViewerResult> {
     try {
       logger.info('Launching task viewer', options);
       
@@ -2110,5 +2111,119 @@ class TerminalViewer {
         return lockAcquired;
       }
     };
+  }
+
+  /**
+   * Launch Safe Textual Viewer (Python TUI with terminal safety)
+   */
+  async launchTextualViewer(options: ViewerOptions = {}): Promise<ViewerResult> {
+    try {
+      logger.info('Launching safe Textual viewer...');
+      
+      // Check dependencies first
+      const dependencyCheck = await this.checkDependencies();
+      if (!dependencyCheck.success) {
+        const errorMessage = [
+          '❌ Critical Claude Viewer - Dependency Check Failed',
+          '',
+          'The following issues must be resolved:',
+          ...dependencyCheck.errors.map(error => `  • ${error}`),
+          '',
+          'Please fix these issues and try again.'
+        ].join('\n');
+        
+        logger.error('Viewer dependency check failed', { errors: dependencyCheck.errors });
+        console.error(errorMessage);
+        
+        return {
+          success: false,
+          error: 'Dependency validation failed. See console for details.'
+        };
+      }
+
+      // Use spawn to launch the safe Python viewer directly
+      const { spawn } = await import('child_process');
+      const path = await import('path');
+      
+      // Find the textual viewer script
+      const viewerPath = path.join(__dirname, '..', '..', 'textual_viewer.py');
+      
+      // Check if Python and textual viewer exist
+      try {
+        const fs = await import('fs/promises');
+        await fs.access(viewerPath);
+      } catch (error) {
+        logger.error('Textual viewer script not found', { path: viewerPath });
+        return {
+          success: false,
+          error: `Textual viewer script not found at ${viewerPath}`
+        };
+      }
+
+      logger.info(`Launching safe textual viewer from: ${viewerPath}`);
+      
+      // Launch the safe Python viewer
+      const pythonProcess = spawn('python3', [viewerPath], {
+        stdio: 'inherit', // Pass through stdin/stdout/stderr
+        env: {
+          ...process.env,
+          PYTHONPATH: path.dirname(viewerPath),
+          CRITICAL_CLAUDE_LOG_LEVEL: options.logLevel || 'info'
+        }
+      });
+
+      // Handle process events
+      return new Promise((resolve) => {
+        pythonProcess.on('exit', (code, signal) => {
+          if (signal) {
+            logger.info(`Textual viewer terminated by signal: ${signal}`);
+            resolve({ success: true, exitCode: 0 });
+          } else if (code === 0) {
+            logger.info('Textual viewer exited successfully');
+            resolve({ success: true, exitCode: code });
+          } else {
+            logger.error(`Textual viewer exited with code: ${code}`);
+            resolve({
+              success: false,
+              error: `Viewer process exited with code ${code}`,
+              exitCode: code
+            });
+          }
+        });
+
+        pythonProcess.on('error', (error) => {
+          logger.error('Failed to launch textual viewer process', error);
+          resolve({
+            success: false,
+            error: `Failed to launch viewer: ${error.message}`
+          });
+        });
+
+        // Log successful start
+        logger.info('Safe textual viewer process started successfully');
+      });
+
+    } catch (error) {
+      logger.error('Critical textual viewer failure', error);
+      return {
+        success: false,
+        error: `Textual viewer failed: ${error instanceof Error ? error.message : String(error)}`
+      };
+    }
+  }
+
+  /**
+   * Main viewer entry point - uses safe Textual viewer by default
+   */
+  async launchViewer(options: ViewerOptions = {}): Promise<ViewerResult> {
+    // Default to safe textual viewer (new behavior)
+    // Use legacy terminal viewer only if explicitly requested
+    if (options.useTextual === false) {
+      logger.info('Using legacy terminal viewer (explicitly requested)');
+      return this.launchOriginalViewer(options);
+    } else {
+      logger.info('Using safe textual viewer (default)');
+      return this.launchTextualViewer(options);
+    }
   }
 }
